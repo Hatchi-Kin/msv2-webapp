@@ -1,5 +1,4 @@
-import React from 'react';
-import { MOCHA_THEME, getGradientBackground } from '@/constants/theme';
+import React from "react";
 
 interface ErrorMessageProps {
   title: string;
@@ -8,23 +7,10 @@ interface ErrorMessageProps {
 
 const ErrorMessage: React.FC<ErrorMessageProps> = ({ title, message }) => {
   return (
-    <div
-      className="flex flex-col items-center justify-center h-full"
-      style={{ background: getGradientBackground() }}
-    >
-      <div
-        className="p-8 rounded-2xl backdrop-blur-lg max-w-md text-center"
-        style={{
-          backgroundColor: MOCHA_THEME.colors.background,
-          border: `1px solid ${MOCHA_THEME.colors.border}`,
-        }}
-      >
-        <p className="text-xl font-bold mb-4" style={{ color: MOCHA_THEME.colors.primary }}>
-          {title}
-        </p>
-        <p className="text-sm" style={{ color: MOCHA_THEME.colors.text, opacity: MOCHA_THEME.opacity.visible }}>
-          {message}
-        </p>
+    <div className="flex flex-col items-center justify-center h-full bg-gradient-to-br from-[hsl(30,30%,82%)] to-[hsl(30,23%,70%)]">
+      <div className="p-8 rounded-2xl backdrop-blur-lg max-w-md text-center bg-background border border-border">
+        <p className="text-xl font-bold mb-4 text-primary">{title}</p>
+        <p className="text-sm text-foreground opacity-70">{message}</p>
       </div>
     </div>
   );

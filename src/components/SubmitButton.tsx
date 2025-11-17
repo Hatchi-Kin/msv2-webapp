@@ -1,7 +1,5 @@
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import { MOCHA_THEME, getPrimaryGradient } from '@/constants/theme';
-import { useThemeHover } from '@/hooks/useThemeHover';
+import React from "react";
+import { Button } from "@/components/ui/button";
 
 interface SubmitButtonProps {
   loading: boolean;
@@ -9,20 +7,16 @@ interface SubmitButtonProps {
   children: React.ReactNode;
 }
 
-const SubmitButton: React.FC<SubmitButtonProps> = ({ loading, loadingText, children }) => {
-  const { handleButtonMouseEnter, handleButtonMouseLeave } = useThemeHover();
-
+const SubmitButton: React.FC<SubmitButtonProps> = ({
+  loading,
+  loadingText,
+  children,
+}) => {
   return (
     <Button
       type="submit"
       disabled={loading}
-      className="w-full h-12 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 mt-6"
-      style={{
-        background: getPrimaryGradient(),
-        boxShadow: MOCHA_THEME.shadows.lg,
-      }}
-      onMouseEnter={(e) => handleButtonMouseEnter(e, loading)}
-      onMouseLeave={(e) => handleButtonMouseLeave(e, loading)}
+      className="w-full h-12 text-primary-foreground font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 mt-6 bg-primary disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
     >
       {loading ? (
         <div className="flex items-center justify-center gap-2">

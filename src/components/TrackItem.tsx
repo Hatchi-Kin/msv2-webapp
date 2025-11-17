@@ -1,7 +1,6 @@
-import React from 'react';
-import type { MegasetTrack } from '@/types/api';
-import { Play, Sparkles } from 'lucide-react';
-import { MOCHA_THEME } from '@/constants/theme';
+import React from "react";
+import type { MegasetTrack } from "@/types/api";
+import { Play, Sparkles, Heart, ListPlus } from "lucide-react";
 
 interface TrackItemProps {
   track: MegasetTrack;
@@ -9,78 +8,86 @@ interface TrackItemProps {
   onFindSimilar?: (trackId: number) => void;
 }
 
-const TrackItem: React.FC<TrackItemProps> = ({ track, onClick, onFindSimilar }) => {
+const TrackItem: React.FC<TrackItemProps> = ({
+  track,
+  onClick,
+  onFindSimilar,
+}) => {
   return (
-    <div
-      className="group flex items-center justify-between p-3 rounded-xl cursor-pointer transition-all duration-300"
-      style={{
-        backgroundColor: 'transparent',
-        border: '1px solid transparent',
-      }}
-      onMouseEnter={(e) => {
-        const target = e.currentTarget as HTMLDivElement;
-        target.style.backgroundColor = MOCHA_THEME.colors.border;
-        target.style.borderColor = MOCHA_THEME.colors.borderHover;
-        target.style.transform = 'translateX(4px)';
-      }}
-      onMouseLeave={(e) => {
-        const target = e.currentTarget as HTMLDivElement;
-        target.style.backgroundColor = 'transparent';
-        target.style.borderColor = 'transparent';
-        target.style.transform = 'translateX(0)';
-      }}
-    >
-      <div className="flex items-center space-x-3 flex-1 min-w-0" onClick={() => onClick(track)}>
-        <div
-          className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300"
-          style={{ backgroundColor: MOCHA_THEME.colors.border }}
-        >
-          <Play className="h-4 w-4" style={{ color: MOCHA_THEME.colors.primary }} />
-        </div>
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium truncate" style={{ color: MOCHA_THEME.colors.text }}>
-            {track.title || track.filename}
-          </p>
-          {track.artist && (
-            <p
-              className="text-xs truncate"
-              style={{ color: MOCHA_THEME.colors.text, opacity: MOCHA_THEME.opacity.semiTransparent }}
-            >
-              {track.artist}
-            </p>
-          )}
-        </div>
-      </div>
-      <div className="flex items-center gap-2 flex-shrink-0">
-        {track.tracknumber && (
-          <span className="text-xs" style={{ color: MOCHA_THEME.colors.secondary }}>
+    <div className="group flex items-center gap-4 p-3 rounded-xl cursor-pointer transition-all duration-300 bg-transparent border border-transparent hover:bg-muted hover:border-muted-foreground hover:translate-x-1">
+      {/* Track Number */}
+      <div className="flex-shrink-0 w-8 text-center">
+        {track.tracknumber ? (
+          <span className="text-sm font-medium text-secondary">
             {track.tracknumber}
           </span>
+        ) : (
+          <span className="text-sm text-foreground opacity-30">—</span>
         )}
+      </div>
+
+      {/* Track Info - clickable area */}
+      <div className="flex-1 min-w-0" onClick={() => onClick(track)}>
+        <p className="text-sm font-medium truncate text-foreground">
+          {track.title || track.filename}
+        </p>
+        {track.artist && (
+          <p className="text-xs truncate text-foreground opacity-60">
+            {track.artist}
+          </p>
+        )}
+      </div>
+
+      {/* Action Buttons */}
+      <div className="flex items-center gap-1 flex-shrink-0">
+        {/* Play Button */}
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            // TODO: Implement play functionality
+            console.log("Play track:", track.id);
+          }}
+          className="p-2 rounded-lg transition-all duration-300 bg-transparent text-primary opacity-50 hover:bg-primary/10 hover:scale-110 hover:opacity-100"
+          title="Play track"
+        >
+          <Play className="h-5 w-5" />
+        </button>
+
+        {/* Add to Favorites Button */}
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            // TODO: Implement add to favorites functionality
+            console.log("Add to favorites:", track.id);
+          }}
+          className="p-2 rounded-lg transition-all duration-300 bg-transparent text-primary opacity-50 hover:bg-primary/10 hover:scale-110 hover:opacity-100"
+          title="Add to favorites"
+        >
+          <Heart className="h-5 w-5" />
+        </button>
+
+        {/* Add to Playlist Button */}
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            // TODO: Implement add to playlist functionality
+            console.log("Add to playlist:", track.id);
+          }}
+          className="p-2 rounded-lg transition-all duration-300 bg-transparent text-primary opacity-50 hover:bg-primary/10 hover:scale-110 hover:opacity-100"
+          title="Add to playlist"
+        >
+          <ListPlus className="h-5 w-5" />
+        </button>
+
+        {/* Find Similar Button */}
         {onFindSimilar && (
           <button
             onClick={(e) => {
               e.stopPropagation();
               onFindSimilar(track.id);
             }}
-            className="p-2 rounded-lg transition-all duration-300"
-            style={{
-              backgroundColor: MOCHA_THEME.colors.border,
-              color: MOCHA_THEME.colors.primary,
-              opacity: MOCHA_THEME.opacity.medium,
-            }}
-            onMouseEnter={(e) => {
-              const target = e.currentTarget as HTMLButtonElement;
-              target.style.backgroundColor = MOCHA_THEME.colors.borderHover;
-              target.style.transform = 'scale(1.15)';
-              target.style.opacity = '1';
-            }}
-            onMouseLeave={(e) => {
-              const target = e.currentTarget as HTMLButtonElement;
-              target.style.backgroundColor = MOCHA_THEME.colors.border;
-              target.style.transform = 'scale(1)';
-              target.style.opacity = String(MOCHA_THEME.opacity.medium);
-            }}
+            className="p-2 rounded-lg transition-all duration-300 bg-transparent text-primary opacity-50 hover:bg-primary/10 hover:scale-110 hover:opacity-100"
+            title="Find similar tracks"
           >
             <Sparkles className="h-5 w-5" />
           </button>

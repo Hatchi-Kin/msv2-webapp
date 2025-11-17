@@ -1,29 +1,225 @@
-import React from 'react';
+import React from "react";
+
+const notes = [
+  {
+    symbol: "♪",
+    left: "10%",
+    top: "20%",
+    size: "text-4xl",
+    delay: "0s",
+    color: "text-primary",
+    opacity: "opacity-20",
+    hover: "note-hover-0",
+  },
+  {
+    symbol: "♫",
+    left: "80%",
+    top: "30%",
+    size: "text-4xl",
+    delay: "1s",
+    color: "text-primary",
+    opacity: "opacity-20",
+    hover: "note-hover-1",
+  },
+  {
+    symbol: "♪",
+    left: "20%",
+    top: "60%",
+    size: "text-4xl",
+    delay: "2s",
+    color: "text-primary",
+    opacity: "opacity-20",
+    hover: "note-hover-2",
+  },
+  {
+    symbol: "♫",
+    left: "70%",
+    top: "70%",
+    size: "text-4xl",
+    delay: "3s",
+    color: "text-primary",
+    opacity: "opacity-20",
+    hover: "note-hover-3",
+  },
+  {
+    symbol: "♪",
+    left: "40%",
+    top: "15%",
+    size: "text-4xl",
+    delay: "4s",
+    color: "text-primary",
+    opacity: "opacity-20",
+    hover: "note-hover-4",
+  },
+  {
+    symbol: "♫",
+    left: "90%",
+    top: "80%",
+    size: "text-4xl",
+    delay: "5s",
+    color: "text-primary",
+    opacity: "opacity-20",
+    hover: "note-hover-5",
+  },
+  {
+    symbol: "♬",
+    left: "15%",
+    top: "80%",
+    size: "text-3xl",
+    delay: "6s",
+    color: "text-secondary",
+    opacity: "opacity-15",
+    hover: "note-hover-6",
+  },
+  {
+    symbol: "♩",
+    left: "60%",
+    top: "10%",
+    size: "text-3xl",
+    delay: "7s",
+    color: "text-secondary",
+    opacity: "opacity-15",
+    hover: "note-hover-7",
+  },
+  {
+    symbol: "♬",
+    left: "5%",
+    top: "40%",
+    size: "text-3xl",
+    delay: "1.5s",
+    color: "text-primary",
+    opacity: "opacity-15",
+    hover: "note-hover-0",
+  },
+  {
+    symbol: "♪",
+    left: "50%",
+    top: "50%",
+    size: "text-5xl",
+    delay: "2.5s",
+    color: "text-secondary",
+    opacity: "opacity-[0.12]",
+    hover: "note-hover-1",
+  },
+  {
+    symbol: "♩",
+    left: "85%",
+    top: "15%",
+    size: "text-3xl",
+    delay: "3.5s",
+    color: "text-primary",
+    opacity: "opacity-[0.18]",
+    hover: "note-hover-2",
+  },
+  {
+    symbol: "♫",
+    left: "30%",
+    top: "85%",
+    size: "text-4xl",
+    delay: "4.5s",
+    color: "text-secondary",
+    opacity: "opacity-[0.16]",
+    hover: "note-hover-3",
+  },
+  {
+    symbol: "♪",
+    left: "65%",
+    top: "45%",
+    size: "text-3xl",
+    delay: "5.5s",
+    color: "text-primary",
+    opacity: "opacity-[0.14]",
+    hover: "note-hover-4",
+  },
+  {
+    symbol: "♬",
+    left: "25%",
+    top: "35%",
+    size: "text-4xl",
+    delay: "6.5s",
+    color: "text-secondary",
+    opacity: "opacity-[0.17]",
+    hover: "note-hover-5",
+  },
+  {
+    symbol: "♫",
+    left: "95%",
+    top: "55%",
+    size: "text-3xl",
+    delay: "7.5s",
+    color: "text-primary",
+    opacity: "opacity-[0.13]",
+    hover: "note-hover-6",
+  },
+  {
+    symbol: "♩",
+    left: "45%",
+    top: "75%",
+    size: "text-5xl",
+    delay: "0.5s",
+    color: "text-secondary",
+    opacity: "opacity-[0.11]",
+    hover: "note-hover-7",
+  },
+  {
+    symbol: "♪",
+    left: "75%",
+    top: "25%",
+    size: "text-3xl",
+    delay: "1.8s",
+    color: "text-primary",
+    opacity: "opacity-[0.19]",
+    hover: "note-hover-0",
+  },
+  {
+    symbol: "♬",
+    left: "12%",
+    top: "50%",
+    size: "text-4xl",
+    delay: "2.8s",
+    color: "text-secondary",
+    opacity: "opacity-[0.14]",
+    hover: "note-hover-1",
+  },
+  {
+    symbol: "♫",
+    left: "55%",
+    top: "90%",
+    size: "text-3xl",
+    delay: "3.8s",
+    color: "text-primary",
+    opacity: "opacity-[0.16]",
+    hover: "note-hover-2",
+  },
+  {
+    symbol: "♩",
+    left: "88%",
+    top: "65%",
+    size: "text-4xl",
+    delay: "4.8s",
+    color: "text-secondary",
+    opacity: "opacity-15",
+    hover: "note-hover-3",
+  },
+];
 
 const FloatingMusicNotes: React.FC = () => {
   return (
     <div className="fixed inset-0 overflow-hidden z-0 select-none">
-      <span className="absolute left-[10%] top-[20%] text-4xl animate-float note-hover-0 pointer-events-auto transition-all duration-300" style={{ animationDelay: '0s', color: '#8B5E3C', opacity: 0.2, userSelect: 'none' }}>♪</span>
-      <span className="absolute left-[80%] top-[30%] text-4xl animate-float note-hover-1 pointer-events-auto transition-all duration-300" style={{ animationDelay: '1s', color: '#8B5E3C', opacity: 0.2, userSelect: 'none' }}>♫</span>
-      <span className="absolute left-[20%] top-[60%] text-4xl animate-float note-hover-2 pointer-events-auto transition-all duration-300" style={{ animationDelay: '2s', color: '#8B5E3C', opacity: 0.2, userSelect: 'none' }}>♪</span>
-      <span className="absolute left-[70%] top-[70%] text-4xl animate-float note-hover-3 pointer-events-auto transition-all duration-300" style={{ animationDelay: '3s', color: '#8B5E3C', opacity: 0.2, userSelect: 'none' }}>♫</span>
-      <span className="absolute left-[40%] top-[15%] text-4xl animate-float note-hover-4 pointer-events-auto transition-all duration-300" style={{ animationDelay: '4s', color: '#8B5E3C', opacity: 0.2, userSelect: 'none' }}>♪</span>
-      <span className="absolute left-[90%] top-[80%] text-4xl animate-float note-hover-5 pointer-events-auto transition-all duration-300" style={{ animationDelay: '5s', color: '#8B5E3C', opacity: 0.2, userSelect: 'none' }}>♫</span>
-      <span className="absolute left-[15%] top-[80%] text-3xl animate-float note-hover-6 pointer-events-auto transition-all duration-300" style={{ animationDelay: '6s', color: '#CE9A6A', opacity: 0.15, userSelect: 'none' }}>♬</span>
-      <span className="absolute left-[60%] top-[10%] text-3xl animate-float note-hover-7 pointer-events-auto transition-all duration-300" style={{ animationDelay: '7s', color: '#CE9A6A', opacity: 0.15, userSelect: 'none' }}>♩</span>
-
-      <span className="absolute left-[5%] top-[40%] text-3xl animate-float note-hover-0 pointer-events-auto transition-all duration-300" style={{ animationDelay: '1.5s', color: '#8B5E3C', opacity: 0.15, userSelect: 'none' }}>♬</span>
-      <span className="absolute left-[50%] top-[50%] text-5xl animate-float note-hover-1 pointer-events-auto transition-all duration-300" style={{ animationDelay: '2.5s', color: '#CE9A6A', opacity: 0.12, userSelect: 'none' }}>♪</span>
-      <span className="absolute left-[85%] top-[15%] text-3xl animate-float note-hover-2 pointer-events-auto transition-all duration-300" style={{ animationDelay: '3.5s', color: '#8B5E3C', opacity: 0.18, userSelect: 'none' }}>♩</span>
-      <span className="absolute left-[30%] top-[85%] text-4xl animate-float note-hover-3 pointer-events-auto transition-all duration-300" style={{ animationDelay: '4.5s', color: '#CE9A6A', opacity: 0.16, userSelect: 'none' }}>♫</span>
-      <span className="absolute left-[65%] top-[45%] text-3xl animate-float note-hover-4 pointer-events-auto transition-all duration-300" style={{ animationDelay: '5.5s', color: '#8B5E3C', opacity: 0.14, userSelect: 'none' }}>♪</span>
-      <span className="absolute left-[25%] top-[35%] text-4xl animate-float note-hover-5 pointer-events-auto transition-all duration-300" style={{ animationDelay: '6.5s', color: '#CE9A6A', opacity: 0.17, userSelect: 'none' }}>♬</span>
-      <span className="absolute left-[95%] top-[55%] text-3xl animate-float note-hover-6 pointer-events-auto transition-all duration-300" style={{ animationDelay: '7.5s', color: '#8B5E3C', opacity: 0.13, userSelect: 'none' }}>♫</span>
-      <span className="absolute left-[45%] top-[75%] text-5xl animate-float note-hover-7 pointer-events-auto transition-all duration-300" style={{ animationDelay: '0.5s', color: '#CE9A6A', opacity: 0.11, userSelect: 'none' }}>♩</span>
-      <span className="absolute left-[75%] top-[25%] text-3xl animate-float note-hover-0 pointer-events-auto transition-all duration-300" style={{ animationDelay: '1.8s', color: '#8B5E3C', opacity: 0.19, userSelect: 'none' }}>♪</span>
-      <span className="absolute left-[12%] top-[50%] text-4xl animate-float note-hover-1 pointer-events-auto transition-all duration-300" style={{ animationDelay: '2.8s', color: '#CE9A6A', opacity: 0.14, userSelect: 'none' }}>♬</span>
-      <span className="absolute left-[55%] top-[90%] text-3xl animate-float note-hover-2 pointer-events-auto transition-all duration-300" style={{ animationDelay: '3.8s', color: '#8B5E3C', opacity: 0.16, userSelect: 'none' }}>♫</span>
-      <span className="absolute left-[88%] top-[65%] text-4xl animate-float note-hover-3 pointer-events-auto transition-all duration-300" style={{ animationDelay: '4.8s', color: '#CE9A6A', opacity: 0.15, userSelect: 'none' }}>♩</span>
+      {notes.map((note, i) => (
+        <span
+          key={i}
+          className={`absolute ${note.size} animate-float ${note.hover} pointer-events-auto transition-all duration-300 ${note.color} ${note.opacity}`}
+          style={{
+            left: note.left,
+            top: note.top,
+            animationDelay: note.delay,
+            userSelect: "none",
+          }}
+        >
+          {note.symbol}
+        </span>
+      ))}
     </div>
   );
 };

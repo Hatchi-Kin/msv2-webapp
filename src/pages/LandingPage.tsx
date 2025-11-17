@@ -1,18 +1,16 @@
-import React, { useState } from 'react';
-import { useAuth } from '@/context/AuthContext';
-import { Mail, Lock } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
-import AuthPageLayout from '@/components/AuthPageLayout';
-import FormInput from '@/components/FormInput';
-import SubmitButton from '@/components/SubmitButton';
-import { MOCHA_THEME } from '@/constants/theme';
-import { useThemeHover } from '@/hooks/useThemeHover';
+import React, { useState } from "react";
+import { useAuth } from "@/context/AuthContext";
+import { Mail, Lock } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
+import AuthPageLayout from "@/components/AuthPageLayout";
+import FormInput from "@/components/FormInput";
+import SubmitButton from "@/components/SubmitButton";
+import ErrorAlert from "@/components/ErrorAlert";
 
 const LandingPage: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const { login, loading, error } = useAuth();
-  const { handleLinkMouseEnter, handleLinkMouseLeave } = useThemeHover();
   const location = useLocation();
 
   // Check if redirected due to session expiration
@@ -26,21 +24,15 @@ const LandingPage: React.FC = () => {
   return (
     <AuthPageLayout
       title="Welcome back"
-      subtitle="Sign in to access your music library"
-      description="Your personal music universe, beautifully organized and ready to discover"
+      subtitle="Continue your musical exploration"
+      description="Navigate through sound similarities and make sonic discoveries"
       footer={
         <div className="text-center mt-6">
-          <p
-            className="text-sm"
-            style={{ color: MOCHA_THEME.colors.text, opacity: MOCHA_THEME.opacity.visible }}
-          >
-            Don't have an account?{' '}
+          <p className="text-sm text-foreground opacity-70">
+            Don't have an account?{" "}
             <Link
               to="/register"
-              className="font-semibold transition-colors"
-              style={{ color: MOCHA_THEME.colors.primary }}
-              onMouseEnter={handleLinkMouseEnter}
-              onMouseLeave={handleLinkMouseLeave}
+              className="font-semibold transition-colors text-primary hover:text-secondary"
             >
               Register
             </Link>
@@ -48,7 +40,6 @@ const LandingPage: React.FC = () => {
         </div>
       }
     >
-
       <form onSubmit={handleSubmit} className="space-y-5">
         <FormInput
           id="email"
@@ -73,38 +64,13 @@ const LandingPage: React.FC = () => {
         />
 
         {sessionExpired && (
-          <div
-            className="p-4 text-sm rounded-xl flex items-center gap-2"
-            style={{
-              color: MOCHA_THEME.colors.secondary,
-              backgroundColor: MOCHA_THEME.colors.border,
-              border: `1px solid ${MOCHA_THEME.colors.borderHover}`,
-            }}
-          >
-            <div
-              className="w-2 h-2 rounded-full"
-              style={{ backgroundColor: MOCHA_THEME.colors.secondary }}
-            ></div>
-            <span>Your session has expired. Please sign in again.</span>
-          </div>
+          <ErrorAlert
+            message="Your session has expired. Please sign in again."
+            variant="warning"
+          />
         )}
 
-        {error && (
-          <div
-            className="p-4 text-sm rounded-xl flex items-center gap-2"
-            style={{
-              color: MOCHA_THEME.colors.primary,
-              backgroundColor: MOCHA_THEME.colors.border,
-              border: `1px solid ${MOCHA_THEME.colors.borderHover}`,
-            }}
-          >
-            <div
-              className="w-2 h-2 rounded-full"
-              style={{ backgroundColor: MOCHA_THEME.colors.primary }}
-            ></div>
-            <span>{error}</span>
-          </div>
-        )}
+        {error && <ErrorAlert message={error} variant="error" />}
 
         <SubmitButton loading={loading} loadingText="Signing in...">
           Sign in

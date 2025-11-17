@@ -1,23 +1,28 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { api } from '@/lib/api';
-import type { ArtistListResponse, AlbumListResponse, TrackListResponse, MegasetTrack, SimilarTrack, SimilarTrackListResponse } from '@/types/api';
-import { useAuth } from '@/context/AuthContext';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import ArtistCard from '@/components/ArtistCard';
-import AlbumCard from '@/components/AlbumCard';
-import TrackItem from '@/components/TrackItem';
-import SimilarTrackCard from '@/components/SimilarTrackCard';
-import FloatingMusicNotes from '@/components/FloatingMusicNotes';
-import LoadingSpinner from '@/components/LoadingSpinner';
-import ErrorMessage from '@/components/ErrorMessage';
-import { Music } from 'lucide-react';
-import { MOCHA_THEME, getGradientBackground } from '@/constants/theme';
+import React, { useEffect, useState, useCallback } from "react";
+import { api } from "@/lib/api";
+import type {
+  ArtistListResponse,
+  AlbumListResponse,
+  TrackListResponse,
+  MegasetTrack,
+  SimilarTrack,
+  SimilarTrackListResponse,
+} from "@/types/api";
+import { useAuth } from "@/context/AuthContext";
+import { useNavigate, useLocation } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import FloatingMusicNotes from "@/components/FloatingMusicNotes";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import ErrorMessage from "@/components/ErrorMessage";
+import ArtistsView from "./MusicLibraryPage/views/ArtistsView";
+import AlbumsView from "./MusicLibraryPage/views/AlbumsView";
+import TracksView from "./MusicLibraryPage/views/TracksView";
+import SimilarTracksView from "./MusicLibraryPage/views/SimilarTracksView";
 
-type View = 'artists' | 'albums' | 'tracks' | 'similar';
+type View = "artists" | "albums" | "tracks" | "similar";
 
 const MusicLibraryPage: React.FC = () => {
-  const [currentView, setCurrentView] = useState<View>('artists');
+  const [currentView, setCurrentView] = useState<View>("artists");
   const [artists, setArtists] = useState<string[]>([]);
   const [selectedArtist, setSelectedArtist] = useState<string | null>(null);
   const [albums, setAlbums] = useState<string[]>([]);
@@ -26,7 +31,8 @@ const MusicLibraryPage: React.FC = () => {
 
   // Similar tracks state
   const [similarTracks, setSimilarTracks] = useState<SimilarTrack[]>([]);
-  const [currentSimilarTrack, setCurrentSimilarTrack] = useState<MegasetTrack | null>(null);
+  const [currentSimilarTrack, setCurrentSimilarTrack] =
+    useState<MegasetTrack | null>(null);
   // Track the first track in the recommendation chain (future: "Back to Origin" feature)
   // const [originTrack, setOriginTrack] = useState<MegasetTrack | null>(null);
 
@@ -44,7 +50,7 @@ const MusicLibraryPage: React.FC = () => {
   // Reset view when logo is clicked
   useEffect(() => {
     if (location.state?.resetView) {
-      setCurrentView('artists');
+      setCurrentView("artists");
       setSelectedArtist(null);
       setSelectedAlbum(null);
       setAlbums([]);
@@ -65,28 +71,32 @@ const MusicLibraryPage: React.FC = () => {
     };
 
     handleResize(); // Set initial value
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   // Redirect if not authenticated
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
-      navigate('/');
+      navigate("/");
     }
   }, [isAuthenticated, authLoading, navigate]);
 
   // Fetch Artists
   useEffect(() => {
-    if (isAuthenticated && accessToken && currentView === 'artists') {
+    if (isAuthenticated && accessToken && currentView === "artists") {
       const fetchArtists = async () => {
         try {
           setPageLoading(true);
-          const response: ArtistListResponse = await api.music.getArtists(accessToken);
+          const response: ArtistListResponse = await api.music.getArtists(
+            accessToken
+          );
           setArtists(response.artists);
         } catch (err) {
-          console.error('Failed to fetch artists:', err);
-          setPageError(err instanceof Error ? err.message : 'An unknown error occurred');
+          console.error("Failed to fetch artists:", err);
+          setPageError(
+            err instanceof Error ? err.message : "An unknown error occurred"
+          );
         } finally {
           setPageLoading(false);
         }
@@ -97,15 +107,25 @@ const MusicLibraryPage: React.FC = () => {
 
   // Fetch Albums for selected artist
   useEffect(() => {
-    if (isAuthenticated && accessToken && currentView === 'albums' && selectedArtist) {
+    if (
+      isAuthenticated &&
+      accessToken &&
+      currentView === "albums" &&
+      selectedArtist
+    ) {
       const fetchAlbums = async () => {
         try {
           setPageLoading(true);
-          const response: AlbumListResponse = await api.music.getAlbumsByArtist(selectedArtist, accessToken);
+          const response: AlbumListResponse = await api.music.getAlbumsByArtist(
+            selectedArtist,
+            accessToken
+          );
           setAlbums(response.albums);
         } catch (err) {
           console.error(`Failed to fetch albums for ${selectedArtist}:`, err);
-          setPageError(err instanceof Error ? err.message : 'An unknown error occurred');
+          setPageError(
+            err instanceof Error ? err.message : "An unknown error occurred"
+          );
         } finally {
           setPageLoading(false);
         }
@@ -116,7 +136,13 @@ const MusicLibraryPage: React.FC = () => {
 
   // Fetch Tracks for selected album
   useEffect(() => {
-    if (isAuthenticated && accessToken && currentView === 'tracks' && selectedArtist && selectedAlbum) {
+    if (
+      isAuthenticated &&
+      accessToken &&
+      currentView === "tracks" &&
+      selectedArtist &&
+      selectedAlbum
+    ) {
       const fetchTracks = async () => {
         try {
           setPageLoading(true);
@@ -126,65 +152,88 @@ const MusicLibraryPage: React.FC = () => {
           );
           setTracks(response.tracks);
         } catch (err) {
-          console.error(`Failed to fetch tracks for ${selectedAlbum} by ${selectedArtist}:`, err);
-          setPageError(err instanceof Error ? err.message : 'An unknown error occurred');
+          console.error(
+            `Failed to fetch tracks for ${selectedAlbum} by ${selectedArtist}:`,
+            err
+          );
+          setPageError(
+            err instanceof Error ? err.message : "An unknown error occurred"
+          );
         } finally {
           setPageLoading(false);
         }
       };
       fetchTracks();
     }
-  }, [isAuthenticated, accessToken, currentView, selectedArtist, selectedAlbum]);
+  }, [
+    isAuthenticated,
+    accessToken,
+    currentView,
+    selectedArtist,
+    selectedAlbum,
+  ]);
 
   const handleArtistClick = useCallback((artistName: string) => {
     setSelectedArtist(artistName);
-    setCurrentView('albums');
+    setCurrentView("albums");
     setCurrentPage(1); // Reset to first page when changing view
   }, []);
 
   const handleAlbumClick = useCallback((albumTitle: string) => {
     setSelectedAlbum(albumTitle);
-    setCurrentView('tracks');
+    setCurrentView("tracks");
   }, []);
 
   const handleTrackClick = useCallback((track: MegasetTrack) => {
-    console.log('Track clicked:', track.title || track.filename);
+    console.log("Track clicked:", track.title || track.filename);
     // Future: Implement playback or recommendation logic here
   }, []);
 
-  const handleFindSimilar = useCallback(async (trackId: number) => {
-    if (!accessToken) return;
+  const handlePlayTrack = useCallback((trackId: number) => {
+    console.log("Playing track:", trackId);
+    // Future: Implement playback functionality
+  }, []);
 
-    try {
-      setPageLoading(true);
-      setPageError(null);
+  const handleFindSimilar = useCallback(
+    async (trackId: number) => {
+      if (!accessToken) return;
 
-      // Find the track details
-      const track = tracks.find(t => t.id === trackId) ||
-        similarTracks.find(st => st.track.id === trackId)?.track;
+      try {
+        setPageLoading(true);
+        setPageError(null);
 
-      if (!track) {
-        console.error('Track not found');
-        return;
+        // Find the track details
+        const track =
+          tracks.find((t) => t.id === trackId) ||
+          similarTracks.find((st) => st.track.id === trackId)?.track;
+
+        if (!track) {
+          console.error("Track not found");
+          return;
+        }
+
+        // // If this is the first similar tracks request, save as origin
+        // if (currentView !== 'similar') {
+        //   setOriginTrack(track);
+        // }
+
+        setCurrentSimilarTrack(track);
+
+        const response: SimilarTrackListResponse =
+          await api.music.getSimilarTracks(trackId, accessToken);
+        setSimilarTracks(response.tracks);
+        setCurrentView("similar");
+      } catch (err) {
+        console.error("Failed to fetch similar tracks:", err);
+        setPageError(
+          err instanceof Error ? err.message : "An unknown error occurred"
+        );
+      } finally {
+        setPageLoading(false);
       }
-
-      // // If this is the first similar tracks request, save as origin
-      // if (currentView !== 'similar') {
-      //   setOriginTrack(track);
-      // }
-
-      setCurrentSimilarTrack(track);
-
-      const response: SimilarTrackListResponse = await api.music.getSimilarTracks(trackId, accessToken);
-      setSimilarTracks(response.tracks);
-      setCurrentView('similar');
-    } catch (err) {
-      console.error('Failed to fetch similar tracks:', err);
-      setPageError(err instanceof Error ? err.message : 'An unknown error occurred');
-    } finally {
-      setPageLoading(false);
-    }
-  }, [accessToken, tracks, similarTracks, currentView]);
+    },
+    [accessToken, tracks, similarTracks, currentView]
+  );
 
   const handleViewArtist = useCallback((artistName: string) => {
     // Clear similar tracks state and navigate to artist's albums
@@ -192,23 +241,23 @@ const MusicLibraryPage: React.FC = () => {
     setCurrentSimilarTrack(null);
     // setOriginTrack(null);
     setSelectedArtist(artistName);
-    setCurrentView('albums');
+    setCurrentView("albums");
     setCurrentPage(1);
   }, []);
 
   const handleBack = useCallback(() => {
-    if (currentView === 'similar') {
+    if (currentView === "similar") {
       // Go back to the original tracklist
-      setCurrentView('tracks');
+      setCurrentView("tracks");
       setSimilarTracks([]);
       setCurrentSimilarTrack(null);
       // setOriginTrack(null);
-    } else if (currentView === 'tracks') {
-      setCurrentView('albums');
+    } else if (currentView === "tracks") {
+      setCurrentView("albums");
       setSelectedAlbum(null);
       setTracks([]);
-    } else if (currentView === 'albums') {
-      setCurrentView('artists');
+    } else if (currentView === "albums") {
+      setCurrentView("artists");
       setSelectedArtist(null);
       setAlbums([]);
     }
@@ -216,14 +265,13 @@ const MusicLibraryPage: React.FC = () => {
   }, [currentView]);
 
   // Calculate pagination for artists
-  const totalPages = Math.ceil(artists.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const paginatedArtists = artists.slice(startIndex, endIndex);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   if (authLoading || pageLoading) {
@@ -234,45 +282,56 @@ const MusicLibraryPage: React.FC = () => {
     return (
       <ErrorMessage
         title={`Error: ${pageError}`}
-        message={`Please ensure your backend is running and accessible at ${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}`}
+        message={`Please ensure your backend is running and accessible at ${
+          import.meta.env.VITE_API_BASE_URL || "http://localhost:8000"
+        }`}
       />
     );
   }
 
   return (
-    <div className="min-h-screen relative" style={{ background: getGradientBackground() }}>
+    <div className="min-h-screen relative bg-gradient-to-br from-[hsl(30,30%,82%)] to-[hsl(30,23%,70%)]">
       <FloatingMusicNotes />
       <div className="container max-w-6xl mx-auto p-6 space-y-6 relative z-10">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 rounded-2xl backdrop-blur-lg" style={{ backgroundColor: MOCHA_THEME.colors.background }}>
+        <div className="flex items-center justify-between p-6 rounded-2xl backdrop-blur-lg bg-background">
           <div className="space-y-1">
-            <h1 className="text-3xl font-bold tracking-tight" style={{ color: MOCHA_THEME.colors.text }}>
-              {currentView === 'artists' && 'Your Music Library'}
-              {currentView === 'albums' && selectedArtist && `Albums by ${selectedArtist}`}
-              {currentView === 'tracks' && selectedAlbum && `Tracks in ${selectedAlbum}`}
-              {currentView === 'similar' && currentSimilarTrack && 'Similar Tracks'}
+            <h1 className="text-3xl font-bold tracking-tight text-foreground">
+              {currentView === "artists" && "Your Music Library"}
+              {currentView === "albums" &&
+                selectedArtist &&
+                `Albums by ${selectedArtist}`}
+              {currentView === "tracks" &&
+                selectedAlbum &&
+                `Tracks in ${selectedAlbum}`}
+              {currentView === "similar" &&
+                currentSimilarTrack &&
+                "Similar Tracks"}
             </h1>
-            {currentView === 'albums' && selectedArtist && (
-              <p className="text-sm" style={{ color: MOCHA_THEME.colors.text, opacity: MOCHA_THEME.opacity.visible }}>Browse albums by this artist</p>
+            {currentView === "albums" && selectedArtist && (
+              <p className="text-sm text-foreground opacity-70">
+                Browse albums by this artist
+              </p>
             )}
-            {currentView === 'tracks' && selectedAlbum && (
-              <p className="text-sm" style={{ color: MOCHA_THEME.colors.text, opacity: MOCHA_THEME.opacity.visible }}>All tracks in this album</p>
+            {currentView === "tracks" && selectedAlbum && (
+              <p className="text-sm text-foreground opacity-70">
+                All tracks in this album
+              </p>
             )}
-            {currentView === 'similar' && currentSimilarTrack && (
+            {currentView === "similar" && currentSimilarTrack && (
               <div className="flex items-center gap-2">
-                <div
-                  className="px-3 py-1 rounded-lg"
-                  style={{
-                    backgroundColor: MOCHA_THEME.colors.border,
-                    border: `1px solid ${MOCHA_THEME.colors.borderHover}`
-                  }}
-                >
-                  <p className="text-sm" style={{ color: MOCHA_THEME.colors.text }}>
-                    Similar to: <span className="font-bold" style={{ color: MOCHA_THEME.colors.primary }}>
-                      {currentSimilarTrack.title || currentSimilarTrack.filename}
+                <div className="px-3 py-1 rounded-lg bg-muted border border-muted-foreground">
+                  <p className="text-sm text-foreground">
+                    Similar to:{" "}
+                    <span className="font-bold text-primary">
+                      {currentSimilarTrack.title ||
+                        currentSimilarTrack.filename}
                     </span>
                     {currentSimilarTrack.artist && (
-                      <span style={{ opacity: MOCHA_THEME.opacity.visible }}> by {currentSimilarTrack.artist}</span>
+                      <span className="opacity-70">
+                        {" "}
+                        by {currentSimilarTrack.artist}
+                      </span>
                     )}
                   </p>
                 </div>
@@ -280,26 +339,11 @@ const MusicLibraryPage: React.FC = () => {
             )}
           </div>
 
-          {currentView !== 'artists' && (
+          {currentView !== "artists" && (
             <Button
               onClick={handleBack}
               variant="outline"
-              className="flex items-center space-x-2 border-2 rounded-xl font-semibold transition-all duration-300 hover:-translate-y-0.5"
-              style={{
-                borderColor: MOCHA_THEME.colors.border,
-                backgroundColor: MOCHA_THEME.colors.background,
-                color: MOCHA_THEME.colors.primary
-              }}
-              onMouseEnter={(e) => {
-                const target = e.target as HTMLButtonElement;
-                target.style.borderColor = MOCHA_THEME.colors.primary;
-                target.style.boxShadow = MOCHA_THEME.shadows.md;
-              }}
-              onMouseLeave={(e) => {
-                const target = e.target as HTMLButtonElement;
-                target.style.borderColor = MOCHA_THEME.colors.border;
-                target.style.boxShadow = 'none';
-              }}
+              className="flex items-center space-x-2 border-2 rounded-xl font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:border-primary hover:shadow-md border-border bg-background text-primary"
             >
               <span>← Back</span>
             </Button>
@@ -307,168 +351,42 @@ const MusicLibraryPage: React.FC = () => {
         </div>
 
         {/* Content */}
-        <div className="backdrop-blur-lg rounded-2xl p-6" style={{ backgroundColor: MOCHA_THEME.colors.background, border: `1px solid ${MOCHA_THEME.colors.border}` }}>
-          {currentView === 'artists' && (
-            <>
-              {artists.length === 0 ? (
-                <div className="text-center py-12">
-                  <Music className="h-12 w-12 mx-auto mb-4" style={{ color: MOCHA_THEME.colors.primary, opacity: MOCHA_THEME.opacity.medium }} />
-                  <p className="text-sm" style={{ color: MOCHA_THEME.colors.text, opacity: MOCHA_THEME.opacity.visible }}>No artists found in your library.</p>
-                </div>
-              ) : (
-                <>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                    {paginatedArtists.map((artistName) => (
-                      <ArtistCard key={artistName} artistName={artistName} onClick={handleArtistClick} />
-                    ))}
-                  </div>
-
-                  {/* Pagination Controls */}
-                  {totalPages > 1 && (
-                    <div className="flex flex-col sm:flex-row items-center justify-between mt-8 pt-6 gap-4" style={{ borderTop: `1px solid ${MOCHA_THEME.colors.border}` }}>
-                      <p className="text-sm" style={{ color: MOCHA_THEME.colors.text, opacity: MOCHA_THEME.opacity.visible }}>
-                        Showing {startIndex + 1}-{Math.min(endIndex, artists.length)} of {artists.length} artists
-                      </p>
-
-                      <div className="flex items-center gap-2">
-                        <Button
-                          onClick={() => handlePageChange(currentPage - 1)}
-                          disabled={currentPage === 1}
-                          variant="outline"
-                          size="sm"
-                          className="px-4 py-2 rounded-xl font-semibold transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed"
-                          style={{
-                            borderColor: MOCHA_THEME.colors.border,
-                            backgroundColor: MOCHA_THEME.colors.background,
-                            color: MOCHA_THEME.colors.primary,
-                            border: `1px solid ${MOCHA_THEME.colors.border}`
-                          }}
-                        >
-                          Previous
-                        </Button>
-
-                        <div className="flex items-center gap-1">
-                          {Array.from({ length: Math.min(totalPages, 7) }, (_, i) => {
-                            let page: number;
-                            if (totalPages <= 7) {
-                              page = i + 1;
-                            } else if (currentPage <= 4) {
-                              page = i + 1;
-                            } else if (currentPage >= totalPages - 3) {
-                              page = totalPages - 6 + i;
-                            } else {
-                              page = currentPage - 3 + i;
-                            }
-
-                            return (
-                              <button
-                                key={page}
-                                onClick={() => handlePageChange(page)}
-                                className="w-10 h-10 rounded-xl font-semibold transition-all duration-300 text-sm"
-                                style={{
-                                  backgroundColor: page === currentPage ? MOCHA_THEME.colors.primary : MOCHA_THEME.colors.background,
-                                  color: page === currentPage ? MOCHA_THEME.colors.background : MOCHA_THEME.colors.primary,
-                                  border: `1px solid ${page === currentPage ? MOCHA_THEME.colors.primary : MOCHA_THEME.colors.border}`
-                                }}
-                              >
-                                {page}
-                              </button>
-                            );
-                          })}
-                        </div>
-
-                        <Button
-                          onClick={() => handlePageChange(currentPage + 1)}
-                          disabled={currentPage === totalPages}
-                          variant="outline"
-                          size="sm"
-                          className="px-4 py-2 rounded-xl font-semibold transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed"
-                          style={{
-                            borderColor: MOCHA_THEME.colors.border,
-                            backgroundColor: MOCHA_THEME.colors.background,
-                            color: MOCHA_THEME.colors.primary,
-                            border: `1px solid ${MOCHA_THEME.colors.border}`
-                          }}
-                        >
-                          Next
-                        </Button>
-                      </div>
-                    </div>
-                  )}
-                </>
-              )}
-            </>
+        <div className="backdrop-blur-lg rounded-2xl p-6 bg-background border border-border">
+          {currentView === "artists" && (
+            <ArtistsView
+              artists={artists}
+              paginatedArtists={paginatedArtists}
+              currentPage={currentPage}
+              itemsPerPage={itemsPerPage}
+              onArtistClick={handleArtistClick}
+              onPageChange={handlePageChange}
+            />
           )}
 
-          {currentView === 'albums' && (
-            <>
-              {albums.length === 0 ? (
-                <div className="text-center py-12">
-                  <Music className="h-12 w-12 mx-auto mb-4" style={{ color: MOCHA_THEME.colors.primary, opacity: MOCHA_THEME.opacity.medium }} />
-                  <p className="text-sm" style={{ color: MOCHA_THEME.colors.text, opacity: MOCHA_THEME.opacity.visible }}>No albums found for {selectedArtist}.</p>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                  {albums.map((albumTitle) => (
-                    <AlbumCard key={albumTitle} albumTitle={albumTitle} onClick={handleAlbumClick} />
-                  ))}
-                </div>
-              )}
-            </>
+          {currentView === "albums" && (
+            <AlbumsView
+              albums={albums}
+              selectedArtist={selectedArtist}
+              onAlbumClick={handleAlbumClick}
+            />
           )}
 
-          {currentView === 'tracks' && (
-            <>
-              {tracks.length === 0 ? (
-                <div className="text-center py-12">
-                  <Music className="h-12 w-12 mx-auto mb-4" style={{ color: MOCHA_THEME.colors.primary, opacity: MOCHA_THEME.opacity.medium }} />
-                  <p className="text-sm" style={{ color: MOCHA_THEME.colors.text, opacity: MOCHA_THEME.opacity.visible }}>No tracks found for {selectedAlbum}.</p>
-                </div>
-              ) : (
-                <div className="space-y-1">
-                  {tracks.map((track) => (
-                    <TrackItem
-                      key={track.id}
-                      track={track}
-                      onClick={handleTrackClick}
-                      onFindSimilar={handleFindSimilar}
-                    />
-                  ))}
-                </div>
-              )}
-            </>
+          {currentView === "tracks" && (
+            <TracksView
+              tracks={tracks}
+              selectedAlbum={selectedAlbum}
+              onTrackClick={handleTrackClick}
+              onFindSimilar={handleFindSimilar}
+            />
           )}
 
-          {currentView === 'similar' && (
-            <>
-              {similarTracks.length === 0 ? (
-                <div className="text-center py-12">
-                  <Music className="h-12 w-12 mx-auto mb-4" style={{ color: MOCHA_THEME.colors.primary, opacity: MOCHA_THEME.opacity.medium }} />
-                  <p className="text-sm" style={{ color: MOCHA_THEME.colors.text, opacity: MOCHA_THEME.opacity.visible }}>No similar tracks found.</p>
-                </div>
-              ) : (
-                <div className="grid grid-cols-3 gap-4">
-                  {similarTracks.map((similarTrack, index) => (
-                    <div
-                      key={similarTrack.track.id}
-                      style={{
-                        animation: `fadeIn 0.4s ease-out ${index * 0.05}s both`
-                      }}
-                    >
-                      <SimilarTrackCard
-                        similarTrack={similarTrack}
-                        onPlay={() => {
-                          const track = similarTrack.track;
-                          console.log('Playing track:', track.title || track.filename);
-                        }}
-                        onFindSimilar={handleFindSimilar}
-                        onViewArtist={handleViewArtist}
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
-            </>
+          {currentView === "similar" && (
+            <SimilarTracksView
+              similarTracks={similarTracks}
+              onPlay={handlePlayTrack}
+              onFindSimilar={handleFindSimilar}
+              onViewArtist={handleViewArtist}
+            />
           )}
         </div>
       </div>

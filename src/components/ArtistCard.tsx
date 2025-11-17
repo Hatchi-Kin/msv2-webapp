@@ -1,7 +1,6 @@
-import React from 'react';
-import { User } from 'lucide-react';
-import MediaCard from './MediaCard';
-import { MOCHA_THEME } from '@/constants/theme';
+import React from "react";
+import { User } from "lucide-react";
+import MediaCard from "./MediaCard";
 
 interface ArtistCardProps {
   artistName: string;
@@ -12,7 +11,7 @@ const ArtistCard: React.FC<ArtistCardProps> = ({ artistName, onClick }) => {
   return (
     <MediaCard
       title={artistName}
-      icon={<User className="h-6 w-6" style={{ color: MOCHA_THEME.colors.primary }} />}
+      icon={<User className="h-6 w-6 text-primary" />}
       onClick={() => onClick(artistName)}
     />
   );

@@ -1,7 +1,13 @@
-import React, { createContext, useState, useEffect, useContext, useCallback } from 'react';
-import { api, setUnauthorizedHandler } from '@/lib/api';
-import type { User, UserCreate, Token } from '@/types/api';
-import { useNavigate } from 'react-router-dom';
+import React, {
+  createContext,
+  useState,
+  useEffect,
+  useContext,
+  useCallback,
+} from "react";
+import { api, setUnauthorizedHandler } from "@/lib/api";
+import type { User, UserCreate, Token } from "@/types/api";
+import { useNavigate } from "react-router-dom";
 
 interface AuthContextType {
   user: User | null;
@@ -17,7 +23,9 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [user, setUser] = useState<User | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -25,12 +33,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const navigate = useNavigate();
 
   const storeAccessToken = (token: string) => {
-    localStorage.setItem('accessToken', token);
+    localStorage.setItem("accessToken", token);
     setAccessToken(token);
   };
 
   const clearAuth = useCallback(() => {
-    localStorage.removeItem('accessToken');
+    localStorage.removeItem("accessToken");
     setAccessToken(null);
     setUser(null);
     setError(null);
@@ -43,7 +51,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return fetchedUser;
     } catch (err) {
       console.error("Failed to fetch user:", err);
-      setError(err instanceof Error ? err.message : 'Failed to fetch user');
+      setError(err instanceof Error ? err.message : "Failed to fetch user");
       clearAuth(); // Clear auth if user fetch fails
       throw err; // Re-throw to propagate error
     }
@@ -58,45 +66,51 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       await fetchUser(tokenResponse.access_token);
     } catch (err) {
       console.error("Failed to refresh token:", err);
-      setError(err instanceof Error ? err.message : 'Failed to refresh token');
+      setError(err instanceof Error ? err.message : "Failed to refresh token");
       clearAuth();
-      navigate('/'); // Redirect to login on refresh failure
+      navigate("/"); // Redirect to login on refresh failure
     } finally {
       setLoading(false);
     }
   }, [fetchUser, navigate]);
 
-  const login = useCallback(async (email: string, password: string) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const tokenResponse: Token = await api.auth.login(email, password);
-      storeAccessToken(tokenResponse.access_token);
-      await fetchUser(tokenResponse.access_token);
-      navigate('/library'); // Redirect to library on successful login
-    } catch (err) {
-      console.error("Login failed:", err);
-      setError(err instanceof Error ? err.message : 'Login failed');
-      clearAuth();
-    } finally {
-      setLoading(false);
-    }
-  }, [fetchUser, navigate]);
+  const login = useCallback(
+    async (email: string, password: string) => {
+      setLoading(true);
+      setError(null);
+      try {
+        const tokenResponse: Token = await api.auth.login(email, password);
+        storeAccessToken(tokenResponse.access_token);
+        await fetchUser(tokenResponse.access_token);
+        navigate("/library"); // Redirect to library on successful login
+      } catch (err) {
+        console.error("Login failed:", err);
+        setError(err instanceof Error ? err.message : "Login failed");
+        clearAuth();
+      } finally {
+        setLoading(false);
+      }
+    },
+    [fetchUser, navigate]
+  );
 
-  const register = useCallback(async (userCreate: UserCreate) => {
-    setLoading(true);
-    setError(null);
-    try {
-      await api.auth.register(userCreate);
-      // Optionally log in the user after successful registration
-      await login(userCreate.email, userCreate.password);
-    } catch (err) {
-      console.error("Registration failed:", err);
-      setError(err instanceof Error ? err.message : 'Registration failed');
-    } finally {
-      setLoading(false);
-    }
-  }, [login]);
+  const register = useCallback(
+    async (userCreate: UserCreate) => {
+      setLoading(true);
+      setError(null);
+      try {
+        await api.auth.register(userCreate);
+        // Optionally log in the user after successful registration
+        await login(userCreate.email, userCreate.password);
+      } catch (err) {
+        console.error("Registration failed:", err);
+        setError(err instanceof Error ? err.message : "Registration failed");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [login]
+  );
 
   const logout = useCallback(async () => {
     setLoading(true);
@@ -111,25 +125,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Always clear auth and redirect, regardless of API call success
       clearAuth();
       setLoading(false);
-      navigate('/'); // Redirect to landing page on logout
+      navigate("/"); // Redirect to landing page on logout
     }
   }, [accessToken, navigate, clearAuth]);
 
   // Handle session expiration (401 errors from API)
   const handleSessionExpired = useCallback(() => {
     clearAuth();
-    navigate('/', { state: { sessionExpired: true } });
+    navigate("/", { state: { sessionExpired: true } });
   }, [clearAuth, navigate]);
 
   // Register global 401 handler
   useEffect(() => {
     setUnauthorizedHandler(handleSessionExpired);
-    return () => setUnauthorizedHandler(() => { });
+    return () => setUnauthorizedHandler(() => {});
   }, [handleSessionExpired]);
 
   useEffect(() => {
     const initAuth = async () => {
-      const storedAccessToken = localStorage.getItem('accessToken');
+      const storedAccessToken = localStorage.getItem("accessToken");
       if (storedAccessToken) {
         setAccessToken(storedAccessToken);
         try {
@@ -169,7 +183,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };

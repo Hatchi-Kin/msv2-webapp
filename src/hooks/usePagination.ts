@@ -1,12 +1,14 @@
-import { useState, useEffect, useMemo } from 'react';
-import { PAGINATION } from '@/constants/pagination';
+import { useState, useEffect, useMemo } from "react";
+import { PAGINATION } from "@/constants/pagination";
 
 /**
  * Custom hook for pagination logic
  */
 export const usePagination = <T>(items: T[]) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState<number>(PAGINATION.DESKTOP_ITEMS_PER_PAGE);
+  const [itemsPerPage, setItemsPerPage] = useState<number>(
+    PAGINATION.DESKTOP_ITEMS_PER_PAGE
+  );
 
   // Handle responsive items per page
   useEffect(() => {
@@ -19,8 +21,8 @@ export const usePagination = <T>(items: T[]) => {
     };
 
     handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const totalPages = Math.ceil(items.length / itemsPerPage);
@@ -33,7 +35,7 @@ export const usePagination = <T>(items: T[]) => {
 
   const goToPage = (page: number) => {
     setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const resetPage = () => setCurrentPage(1);

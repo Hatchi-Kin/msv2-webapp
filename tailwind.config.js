@@ -51,6 +51,10 @@ export default {
           foreground: "hsl(var(--card-foreground))",
         },
       },
+      backgroundImage: {
+        'mocha-gradient': 'linear-gradient(135deg, hsl(30, 30%, 82%) 0%, hsl(30, 23%, 70%) 100%)',
+        'mocha-primary': 'linear-gradient(135deg, hsl(25, 40%, 39%) 0%, hsl(30, 48%, 61%) 100%)',
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",

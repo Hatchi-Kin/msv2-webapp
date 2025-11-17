@@ -1,7 +1,6 @@
-import React from 'react';
-import { Sparkles } from 'lucide-react';
-import FloatingMusicNotes from './FloatingMusicNotes';
-import { MOCHA_THEME, getGradientBackground, getPrimaryGradient } from '@/constants/theme';
+import React from "react";
+import { Sparkles } from "lucide-react";
+import FloatingMusicNotes from "./FloatingMusicNotes";
 
 interface AuthPageLayoutProps {
   title: string;
@@ -19,47 +18,26 @@ const AuthPageLayout: React.FC<AuthPageLayoutProps> = ({
   footer,
 }) => {
   return (
-    <div
-      className="min-h-screen flex items-center justify-center p-5 relative overflow-hidden"
-      style={{ background: getGradientBackground() }}
-    >
+    <div className="min-h-screen flex items-center justify-center p-5 relative overflow-hidden bg-gradient-to-br from-[hsl(30,30%,82%)] to-[hsl(30,23%,70%)]">
       <FloatingMusicNotes />
 
-      <div
-        className="relative z-10 backdrop-blur-lg rounded-3xl shadow-2xl p-12 animate-slideUp max-w-md w-full mx-5 mobile-padding"
-        style={{ backgroundColor: MOCHA_THEME.colors.background }}
-      >
+      <div className="relative z-10 backdrop-blur-lg rounded-3xl shadow-2xl p-12 animate-slideUp max-w-md w-full mx-5 mobile-padding bg-background">
         {/* Logo Section */}
         <div className="text-center mb-10">
           <div className="text-6xl mb-4 animate-pulse">🎵</div>
-          <div
-            className="text-4xl font-bold mb-2 flex items-center justify-center gap-2"
-            style={{
-              background: getPrimaryGradient(),
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-            }}
-          >
+          <div className="text-4xl font-bold mb-2 flex items-center justify-center gap-2 bg-gradient-to-br from-primary to-secondary bg-clip-text text-transparent">
             MSV2
-            <Sparkles className="w-6 h-6" style={{ color: MOCHA_THEME.colors.primary }} />
+            <Sparkles className="w-6 h-6 text-primary" />
           </div>
-          <p className="text-sm leading-relaxed" style={{ color: MOCHA_THEME.colors.text }}>
+          <p className="text-sm leading-relaxed text-foreground">
             {description}
           </p>
         </div>
 
         {/* Title Section */}
         <div className="mb-8">
-          <h1 className="text-3xl mb-2 font-bold" style={{ color: MOCHA_THEME.colors.text }}>
-            {title}
-          </h1>
-          <p
-            className="text-sm"
-            style={{ color: MOCHA_THEME.colors.text, opacity: MOCHA_THEME.opacity.visible }}
-          >
-            {subtitle}
-          </p>
+          <h1 className="text-3xl mb-2 font-bold text-foreground">{title}</h1>
+          <p className="text-sm text-foreground opacity-70">{subtitle}</p>
         </div>
 
         {/* Form Content */}
@@ -69,16 +47,18 @@ const AuthPageLayout: React.FC<AuthPageLayoutProps> = ({
         {footer}
 
         {/* Bottom Footer */}
-        <div
-          className="text-center mt-8 pt-6"
-          style={{ borderTop: `1px solid ${MOCHA_THEME.colors.border}` }}
-        >
-          <p
-            className="text-xs"
-            style={{ color: MOCHA_THEME.colors.text, opacity: MOCHA_THEME.opacity.medium }}
+        <div className="text-center mt-8 pt-6 border-t border-border">
+          <a
+            href="https://github.com/Hatchi-Kin/msv2-webapp"
+            className="text-xs flex items-center justify-center gap-1.5 hover:text-blue-400 transition-all duration-200 hover:gap-2 text-foreground opacity-50"
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            Powered by modern web technologies
-          </p>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
+            </svg>
+            <span className="font-mono">Hatchi-Kin/msv2-webapp</span>
+          </a>
         </div>
       </div>
     </div>

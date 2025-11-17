@@ -1,7 +1,6 @@
-import React from 'react';
-import { Disc3 } from 'lucide-react';
-import MediaCard from './MediaCard';
-import { MOCHA_THEME } from '@/constants/theme';
+import React from "react";
+import { Disc3 } from "lucide-react";
+import MediaCard from "./MediaCard";
 
 interface AlbumCardProps {
   albumTitle: string;
@@ -12,7 +11,7 @@ const AlbumCard: React.FC<AlbumCardProps> = ({ albumTitle, onClick }) => {
   return (
     <MediaCard
       title={albumTitle}
-      icon={<Disc3 className="h-6 w-6" style={{ color: MOCHA_THEME.colors.secondary }} />}
+      icon={<Disc3 className="h-6 w-6 text-secondary" />}
       onClick={() => onClick(albumTitle)}
     />
   );
