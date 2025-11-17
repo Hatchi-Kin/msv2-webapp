@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { Mail, Lock } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import AuthPageLayout from '@/components/AuthPageLayout';
 import FormInput from '@/components/FormInput';
 import SubmitButton from '@/components/SubmitButton';
@@ -13,6 +13,10 @@ const LandingPage: React.FC = () => {
   const [password, setPassword] = useState('');
   const { login, loading, error } = useAuth();
   const { handleLinkMouseEnter, handleLinkMouseLeave } = useThemeHover();
+  const location = useLocation();
+
+  // Check if redirected due to session expiration
+  const sessionExpired = location.state?.sessionExpired;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,6 +71,23 @@ const LandingPage: React.FC = () => {
           icon={<Lock className="w-4 h-4" />}
           required
         />
+
+        {sessionExpired && (
+          <div
+            className="p-4 text-sm rounded-xl flex items-center gap-2"
+            style={{
+              color: MOCHA_THEME.colors.secondary,
+              backgroundColor: MOCHA_THEME.colors.border,
+              border: `1px solid ${MOCHA_THEME.colors.borderHover}`,
+            }}
+          >
+            <div
+              className="w-2 h-2 rounded-full"
+              style={{ backgroundColor: MOCHA_THEME.colors.secondary }}
+            ></div>
+            <span>Your session has expired. Please sign in again.</span>
+          </div>
+        )}
 
         {error && (
           <div

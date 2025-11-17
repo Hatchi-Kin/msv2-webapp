@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect, useContext, useCallback } from 'react';
-import { api } from '@/lib/api';
+import { api, setUnauthorizedHandler } from '@/lib/api';
 import type { User, UserCreate, Token } from '@/types/api';
 import { useNavigate } from 'react-router-dom';
 
@@ -29,11 +29,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setAccessToken(token);
   };
 
-  const clearAuth = () => {
+  const clearAuth = useCallback(() => {
     localStorage.removeItem('accessToken');
     setAccessToken(null);
     setUser(null);
-  };
+    setError(null);
+  }, []);
 
   const fetchUser = useCallback(async (token: string) => {
     try {
@@ -112,7 +113,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setLoading(false);
       navigate('/'); // Redirect to landing page on logout
     }
-  }, [accessToken, navigate]);
+  }, [accessToken, navigate, clearAuth]);
+
+  // Handle session expiration (401 errors from API)
+  const handleSessionExpired = useCallback(() => {
+    clearAuth();
+    navigate('/', { state: { sessionExpired: true } });
+  }, [clearAuth, navigate]);
+
+  // Register global 401 handler
+  useEffect(() => {
+    setUnauthorizedHandler(handleSessionExpired);
+    return () => setUnauthorizedHandler(() => { });
+  }, [handleSessionExpired]);
 
   useEffect(() => {
     const initAuth = async () => {
@@ -134,7 +147,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setLoading(false);
     };
     initAuth();
-  }, [fetchUser, refreshAccessToken]);
+  }, [fetchUser, refreshAccessToken, clearAuth]);
 
   const isAuthenticated = !!user && !!accessToken;
 

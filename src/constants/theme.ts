@@ -30,13 +30,10 @@ export const MOCHA_THEME = {
 } as const;
 
 /**
- * Helper to create gradient background
+ * Helper to create gradients
  */
-export const getGradientBackground = () => 
+export const getGradientBackground = () =>
   `linear-gradient(135deg, ${MOCHA_THEME.colors.gradient.start} 0%, ${MOCHA_THEME.colors.gradient.end} 100%)`;
 
-/**
- * Helper to create primary gradient (for text/buttons)
- */
-export const getPrimaryGradient = () => 
+export const getPrimaryGradient = () =>
   `linear-gradient(135deg, ${MOCHA_THEME.colors.primary} 0%, ${MOCHA_THEME.colors.secondary} 100%)`;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/context/AuthContext';
 import { Music, LogOut } from 'lucide-react';
@@ -11,6 +11,18 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const { isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
+
+
+  const handleLogoClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (isAuthenticated) {
+      // Navigate to library with state to reset view
+      navigate('/library', { state: { resetView: true } });
+    } else {
+      navigate('/');
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col" style={{ background: getGradientBackground() }}>
@@ -23,7 +35,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           }}
         >
           <div className="container flex h-16 items-center justify-between px-6">
-            <Link to="/library" className="flex items-center space-x-2 transition-all duration-300 hover:scale-105">
+            <a
+              href="/library"
+              onClick={handleLogoClick}
+              className="flex items-center space-x-2 transition-all duration-300 hover:scale-105 cursor-pointer"
+            >
               <Music className="h-6 w-6" style={{ color: MOCHA_THEME.colors.primary }} />
               <span
                 className="text-xl font-bold tracking-tight"
@@ -36,7 +52,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               >
                 MSV2
               </span>
-            </Link>
+            </a>
             <nav>
               <Button
                 onClick={logout}

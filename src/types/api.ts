@@ -29,6 +29,15 @@ export interface TrackListResponse {
   tracks: MegasetTrack[];
 }
 
+export interface SimilarTrack {
+  track: MegasetTrack;
+  similarity_score: number;
+}
+
+export interface SimilarTrackListResponse {
+  tracks: SimilarTrack[];
+}
+
 export interface User {
   id: number;
   email: string;

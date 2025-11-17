@@ -1,4 +1,4 @@
-import type { UserCreate, Token, ArtistListResponse, AlbumListResponse, TrackListResponse, MegasetTrack, User } from '@/types/api';
+import type { UserCreate, Token, ArtistListResponse, AlbumListResponse, TrackListResponse, MegasetTrack, User, SimilarTrackListResponse } from '@/types/api';
 
 // Check for runtime config first (Docker), then build-time env var, then default
 const API_BASE_URL = (window as any).ENV?.VITE_API_BASE_URL || import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
@@ -7,8 +7,20 @@ interface ApiError {
   detail: string;
 }
 
+// Global handler for 401 errors (session expired)
+let onUnauthorized: (() => void) | null = null;
+
+export const setUnauthorizedHandler = (handler: () => void) => {
+  onUnauthorized = handler;
+};
+
 async function handleResponse<T>(response: Response): Promise<T> {
   if (!response.ok) {
+    // Handle 401 Unauthorized (session expired)
+    if (response.status === 401 && onUnauthorized) {
+      onUnauthorized();
+    }
+    
     const errorData: ApiError = await response.json();
     throw new Error(errorData.detail || 'An unknown error occurred');
   }
@@ -142,6 +154,16 @@ export const api = {
 
     async getSongById(songId: number, accessToken: string, includeEmbeddings: boolean = false): Promise<MegasetTrack> {
       const response = await fetch(`${API_BASE_URL}/music/song/${songId}?include_embeddings=${includeEmbeddings}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+        },
+      });
+      return handleResponse(response);
+    },
+
+    async getSimilarTracks(trackId: number, accessToken: string): Promise<SimilarTrackListResponse> {
+      const response = await fetch(`${API_BASE_URL}/music/similar/${trackId}`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${accessToken}`,
