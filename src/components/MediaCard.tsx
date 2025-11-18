@@ -16,11 +16,11 @@ const MediaCard: React.FC<MediaCardProps> = ({ title, icon, onClick }) => {
       className="group cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1 rounded-2xl bg-background border border-border shadow-sm hover:shadow-md hover:border-muted-foreground"
       onClick={onClick}
     >
-      <CardContent className="p-4 space-y-3">
+      <CardContent className="p-4 space-y-3 flex flex-col min-h-[140px]">
         <div className="flex items-center justify-center w-12 h-12 rounded-full mx-auto transition-all duration-300 bg-muted">
           {icon}
         </div>
-        <div className="text-center">
+        <div className="text-center flex-1 flex items-center justify-center min-h-[40px]">
           <p className="font-medium text-sm leading-tight line-clamp-2 text-foreground">
             {title}
           </p>

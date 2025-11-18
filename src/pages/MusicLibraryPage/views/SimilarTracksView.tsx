@@ -5,14 +5,12 @@ import type { SimilarTrack } from "@/types/api";
 
 interface SimilarTracksViewProps {
   similarTracks: SimilarTrack[];
-  onPlay: (trackId: number) => void;
   onFindSimilar: (trackId: number) => void;
   onViewArtist: (artistName: string) => void;
 }
 
 const SimilarTracksView: React.FC<SimilarTracksViewProps> = ({
   similarTracks,
-  onPlay,
   onFindSimilar,
   onViewArtist,
 }) => {
@@ -38,7 +36,6 @@ const SimilarTracksView: React.FC<SimilarTracksViewProps> = ({
         >
           <SimilarTrackCard
             similarTrack={similarTrack}
-            onPlay={() => onPlay(similarTrack.track.id)}
             onFindSimilar={onFindSimilar}
             onViewArtist={onViewArtist}
           />

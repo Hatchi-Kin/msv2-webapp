@@ -19,6 +19,7 @@ export interface MegasetTrack {
 
 export interface ArtistListResponse {
   artists: string[];
+  total: number;
 }
 
 export interface AlbumListResponse {
@@ -55,4 +56,43 @@ export interface UserCreate {
   email: string;
   username?: string | null;
   password: string;
+}
+
+// Favorites
+export interface FavoritesListResponse {
+  tracks: MegasetTrack[];
+  total: number;
+}
+
+export interface CheckFavoriteResponse {
+  is_favorite: boolean;
+}
+
+// Playlists
+export interface PlaylistSummary {
+  id: number;
+  name: string;
+  track_count: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PlaylistsListResponse {
+  playlists: PlaylistSummary[];
+}
+
+export interface PlaylistDetail {
+  id: number;
+  name: string;
+  tracks: MegasetTrack[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CreatePlaylistRequest {
+  name: string;
+}
+
+export interface UpdatePlaylistRequest {
+  name: string;
 }

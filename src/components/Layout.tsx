@@ -2,7 +2,8 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
-import { Music, LogOut } from "lucide-react";
+import { Music, LogOut, Heart } from "lucide-react";
+import MusicPlayer from "@/components/player/MusicPlayer";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -37,7 +38,16 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 MSV2
               </span>
             </a>
-            <nav>
+            <nav className="flex items-center gap-2">
+              <Button
+                onClick={() => navigate("/my-library")}
+                variant="ghost"
+                size="sm"
+                className="flex items-center space-x-2 rounded-xl font-semibold transition-all duration-300 hover:scale-105 text-primary bg-transparent hover:bg-muted"
+              >
+                <Heart className="h-4 w-4" />
+                <span>My Library</span>
+              </Button>
               <Button
                 onClick={logout}
                 variant="ghost"
@@ -51,7 +61,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           </div>
         </header>
       )}
-      <main className="flex-1">{children}</main>
+      <main className="flex-1 pb-24">{children}</main>
+      {isAuthenticated && <MusicPlayer />}
     </div>
   );
 };

@@ -24,6 +24,7 @@ type View = "artists" | "albums" | "tracks" | "similar";
 const MusicLibraryPage: React.FC = () => {
   const [currentView, setCurrentView] = useState<View>("artists");
   const [artists, setArtists] = useState<string[]>([]);
+  const [totalArtists, setTotalArtists] = useState<number>(0);
   const [selectedArtist, setSelectedArtist] = useState<string | null>(null);
   const [albums, setAlbums] = useState<string[]>([]);
   const [selectedAlbum, setSelectedAlbum] = useState<string | null>(null);
@@ -38,6 +39,7 @@ const MusicLibraryPage: React.FC = () => {
 
   const [pageLoading, setPageLoading] = useState<boolean>(true);
   const [pageError, setPageError] = useState<string | null>(null);
+  const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -82,16 +84,25 @@ const MusicLibraryPage: React.FC = () => {
     }
   }, [isAuthenticated, authLoading, navigate]);
 
-  // Fetch Artists
+  // Fetch Artists (server-side pagination)
   useEffect(() => {
     if (isAuthenticated && accessToken && currentView === "artists") {
       const fetchArtists = async () => {
         try {
-          setPageLoading(true);
+          // Only show full page loading on initial load
+          if (artists.length === 0 && totalArtists === 0) {
+            setPageLoading(true);
+          } else {
+            setIsLoadingMore(true);
+          }
+          const offset = (currentPage - 1) * itemsPerPage;
           const response: ArtistListResponse = await api.music.getArtists(
-            accessToken
+            accessToken,
+            itemsPerPage,
+            offset
           );
           setArtists(response.artists);
+          setTotalArtists(response.total);
         } catch (err) {
           console.error("Failed to fetch artists:", err);
           setPageError(
@@ -99,11 +110,12 @@ const MusicLibraryPage: React.FC = () => {
           );
         } finally {
           setPageLoading(false);
+          setIsLoadingMore(false);
         }
       };
       fetchArtists();
     }
-  }, [isAuthenticated, accessToken, currentView]);
+  }, [isAuthenticated, accessToken, currentView, currentPage, itemsPerPage]);
 
   // Fetch Albums for selected artist
   useEffect(() => {
@@ -189,11 +201,6 @@ const MusicLibraryPage: React.FC = () => {
     // Future: Implement playback or recommendation logic here
   }, []);
 
-  const handlePlayTrack = useCallback((trackId: number) => {
-    console.log("Playing track:", trackId);
-    // Future: Implement playback functionality
-  }, []);
-
   const handleFindSimilar = useCallback(
     async (trackId: number) => {
       if (!accessToken) return;
@@ -263,11 +270,6 @@ const MusicLibraryPage: React.FC = () => {
     }
     setCurrentPage(1); // Reset to first page when going back
   }, [currentView]);
-
-  // Calculate pagination for artists
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const paginatedArtists = artists.slice(startIndex, endIndex);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -355,9 +357,10 @@ const MusicLibraryPage: React.FC = () => {
           {currentView === "artists" && (
             <ArtistsView
               artists={artists}
-              paginatedArtists={paginatedArtists}
+              totalArtists={totalArtists}
               currentPage={currentPage}
               itemsPerPage={itemsPerPage}
+              isLoadingMore={isLoadingMore}
               onArtistClick={handleArtistClick}
               onPageChange={handlePageChange}
             />
@@ -383,7 +386,6 @@ const MusicLibraryPage: React.FC = () => {
           {currentView === "similar" && (
             <SimilarTracksView
               similarTracks={similarTracks}
-              onPlay={handlePlayTrack}
               onFindSimilar={handleFindSimilar}
               onViewArtist={handleViewArtist}
             />

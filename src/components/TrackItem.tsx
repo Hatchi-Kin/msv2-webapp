@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import type { MegasetTrack } from "@/types/api";
 import { Play, Sparkles, Heart, ListPlus } from "lucide-react";
+import { usePlayer } from "@/context/PlayerContext";
+import { useLibrary } from "@/context/LibraryContext";
 
 interface TrackItemProps {
   track: MegasetTrack;
@@ -13,6 +15,56 @@ const TrackItem: React.FC<TrackItemProps> = ({
   onClick,
   onFindSimilar,
 }) => {
+  const { playTrack } = usePlayer();
+  const {
+    isFavorite,
+    addFavorite,
+    removeFavorite,
+    playlists,
+    addTrackToPlaylist,
+  } = useLibrary();
+  const [showPlaylistMenu, setShowPlaylistMenu] = useState(false);
+  const [isAddingToPlaylist, setIsAddingToPlaylist] = useState(false);
+  const closeTimeoutRef = React.useRef<number | null>(null);
+
+  const handleMouseLeave = () => {
+    closeTimeoutRef.current = window.setTimeout(() => {
+      setShowPlaylistMenu(false);
+    }, 300); // 300ms delay
+  };
+
+  const handleMouseEnter = () => {
+    if (closeTimeoutRef.current) {
+      window.clearTimeout(closeTimeoutRef.current);
+      closeTimeoutRef.current = null;
+    }
+  };
+
+  const handleToggleFavorite = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      if (isFavorite(track.id)) {
+        await removeFavorite(track.id);
+      } else {
+        await addFavorite(track.id);
+      }
+    } catch (error) {
+      console.error("Failed to toggle favorite:", error);
+    }
+  };
+
+  const handleAddToPlaylist = async (playlistId: number) => {
+    setIsAddingToPlaylist(true);
+    try {
+      await addTrackToPlaylist(playlistId, track.id);
+      setShowPlaylistMenu(false);
+    } catch (error) {
+      console.error("Failed to add to playlist:", error);
+    } finally {
+      setIsAddingToPlaylist(false);
+    }
+  };
+
   return (
     <div className="group flex items-center gap-4 p-3 rounded-xl cursor-pointer transition-all duration-300 bg-transparent border border-transparent hover:bg-muted hover:border-muted-foreground hover:translate-x-1">
       {/* Track Number */}
@@ -44,8 +96,7 @@ const TrackItem: React.FC<TrackItemProps> = ({
         <button
           onClick={(e) => {
             e.stopPropagation();
-            // TODO: Implement play functionality
-            console.log("Play track:", track.id);
+            playTrack(track);
           }}
           className="p-2 rounded-lg transition-all duration-300 bg-transparent text-primary opacity-50 hover:bg-primary/10 hover:scale-110 hover:opacity-100"
           title="Play track"
@@ -55,29 +106,74 @@ const TrackItem: React.FC<TrackItemProps> = ({
 
         {/* Add to Favorites Button */}
         <button
-          onClick={(e) => {
-            e.stopPropagation();
-            // TODO: Implement add to favorites functionality
-            console.log("Add to favorites:", track.id);
-          }}
-          className="p-2 rounded-lg transition-all duration-300 bg-transparent text-primary opacity-50 hover:bg-primary/10 hover:scale-110 hover:opacity-100"
-          title="Add to favorites"
+          onClick={handleToggleFavorite}
+          className={`p-2 rounded-lg transition-all duration-300 ${
+            isFavorite(track.id)
+              ? "bg-primary/20 text-primary opacity-100"
+              : "bg-transparent text-primary opacity-50 hover:bg-primary/10"
+          } hover:scale-110 hover:opacity-100`}
+          title={
+            isFavorite(track.id) ? "Remove from favorites" : "Add to favorites"
+          }
         >
-          <Heart className="h-5 w-5" />
+          <Heart
+            className={`h-5 w-5 ${isFavorite(track.id) ? "fill-current" : ""}`}
+          />
         </button>
 
         {/* Add to Playlist Button */}
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            // TODO: Implement add to playlist functionality
-            console.log("Add to playlist:", track.id);
-          }}
-          className="p-2 rounded-lg transition-all duration-300 bg-transparent text-primary opacity-50 hover:bg-primary/10 hover:scale-110 hover:opacity-100"
-          title="Add to playlist"
+        <div
+          className="relative"
+          onMouseLeave={handleMouseLeave}
+          onMouseEnter={handleMouseEnter}
         >
-          <ListPlus className="h-5 w-5" />
-        </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowPlaylistMenu(!showPlaylistMenu);
+            }}
+            className="p-2 rounded-lg transition-all duration-300 bg-transparent text-primary opacity-50 hover:bg-primary/10 hover:scale-110 hover:opacity-100"
+            title="Add to playlist"
+            disabled={isAddingToPlaylist}
+          >
+            <ListPlus className="h-5 w-5" />
+          </button>
+
+          {/* Playlist dropdown menu */}
+          {showPlaylistMenu && (
+            <div
+              className="absolute right-0 bottom-full mb-2 bg-background border-2 border-primary rounded-xl shadow-2xl z-[100] min-w-[240px]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="p-3 max-h-[240px] overflow-y-auto">
+                {playlists.length === 0 ? (
+                  <div className="px-4 py-3 text-base text-foreground font-medium">
+                    No playlists yet
+                  </div>
+                ) : (
+                  playlists.map((playlist) => (
+                    <button
+                      key={playlist.id}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleAddToPlaylist(playlist.id);
+                      }}
+                      disabled={
+                        isAddingToPlaylist || playlist.track_count >= 20
+                      }
+                      className="w-full text-left px-4 py-3 text-base rounded-lg hover:bg-primary hover:text-primary-foreground transition-colors disabled:opacity-50 disabled:cursor-not-allowed mb-1 last:mb-0"
+                    >
+                      <div className="font-semibold">{playlist.name}</div>
+                      <div className="text-sm opacity-80 font-medium">
+                        {playlist.track_count}/20 tracks
+                      </div>
+                    </button>
+                  ))
+                )}
+              </div>
+            </div>
+          )}
+        </div>
 
         {/* Find Similar Button */}
         {onFindSimilar && (
