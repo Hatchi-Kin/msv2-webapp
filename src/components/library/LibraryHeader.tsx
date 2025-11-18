@@ -18,13 +18,13 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({
   const navigate = useNavigate();
 
   return (
-    <div className="flex items-center justify-between p-6 rounded-2xl backdrop-blur-lg bg-background">
-      <div className="space-y-1">
-        <h1 className="text-3xl font-bold tracking-tight text-foreground">
+    <div className="flex items-center justify-between p-8 rounded-3xl glass-panel">
+      <div className="space-y-2">
+        <h1 className="text-4xl font-bold tracking-tight text-foreground font-heading">
           {title}
         </h1>
         {subtitle && (
-          <p className="text-sm text-foreground opacity-70">{subtitle}</p>
+          <p className="text-lg text-muted-foreground font-light">{subtitle}</p>
         )}
         {children}
       </div>

@@ -4,67 +4,67 @@
 
 @layer base {
   :root {
-    /* Mocha Theme Colors */
-    --background: 30 43% 95%;           /* #F6F2EE - Cream */
-    --foreground: 20 24% 20%;           /* #3B2F28 - Espresso dark */
+    /* Modern Mocha Theme Colors - Cleaner & Crisper */
+    --background: 30 20% 98%;           /* #FAF9F8 - Almost white cream */
+    --foreground: 20 10% 15%;           /* #2A2624 - Soft black */
     
-    --primary: 25 40% 39%;              /* #8B5E3C - Dark roast coffee */
-    --primary-foreground: 30 43% 95%;  /* Cream text on primary */
+    --primary: 25 30% 45%;              /* #956C50 - Muted coffee */
+    --primary-foreground: 0 0% 100%;    /* White text */
     
-    --secondary: 30 48% 61%;            /* #CE9A6A - Caramel latte */
-    --secondary-foreground: 20 24% 20%; /* Dark text on secondary */
+    --secondary: 30 20% 92%;            /* #EFECE9 - Very light foam */
+    --secondary-foreground: 20 10% 15%; /* Soft black */
     
-    --muted: 30 33% 90%;                /* #EDE5DF - Soft cream */
-    --muted-foreground: 20 24% 40%;     /* Slightly lighter text */
+    --muted: 30 10% 96%;                /* #F5F4F3 */
+    --muted-foreground: 20 5% 45%;      /* #767371 */
     
-    --accent: 30 48% 61%;               /* Same as secondary */
-    --accent-foreground: 20 24% 20%;
+    --accent: 30 30% 90%;               /* #EBE6E1 */
+    --accent-foreground: 25 30% 45%;    /* Primary color */
     
-    --border: 30 33% 90%;               /* #EDE5DF - Soft cream border */
-    --input: 30 33% 90%;                /* Same as border */
-    --ring: 25 40% 39%;                 /* Primary color for focus rings */
+    --border: 30 10% 90%;               /* #E6E4E3 */
+    --input: 30 10% 90%;
+    --ring: 25 30% 45%;
     
-    --card: 30 43% 95%;                 /* Same as background */
-    --card-foreground: 20 24% 20%;
+    --card: 0 0% 100%;
+    --card-foreground: 20 10% 15%;
     
-    --popover: 30 43% 95%;
-    --popover-foreground: 20 24% 20%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 10% 15%;
     
-    --destructive: 0 84% 60%;           /* Red for errors */
-    --destructive-foreground: 30 43% 95%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
     
-    --radius: 0.75rem;                  /* 12px - matches rounded-xl */
+    --radius: 1rem;                     /* 16px - Modern rounded corners */
   }
 
   .dark {
-    /* Dark mode with inverted Mocha theme */
-    --background: 20 24% 15%;           /* Very dark brown */
-    --foreground: 30 43% 95%;           /* Cream text */
+    /* Dark mode - Deep Espresso */
+    --background: 20 10% 10%;           /* #1C1A19 */
+    --foreground: 30 10% 95%;           /* #F2F1F0 */
     
-    --primary: 30 48% 61%;              /* Lighter in dark mode */
-    --primary-foreground: 20 24% 15%;
+    --primary: 30 20% 70%;              /* #BFB5AD */
+    --primary-foreground: 20 10% 10%;
     
-    --secondary: 25 40% 39%;            /* Darker in dark mode */
-    --secondary-foreground: 30 43% 95%;
+    --secondary: 20 10% 15%;
+    --secondary-foreground: 30 10% 95%;
     
-    --muted: 20 24% 25%;
-    --muted-foreground: 30 33% 70%;
+    --muted: 20 10% 15%;
+    --muted-foreground: 30 5% 60%;
     
-    --accent: 30 48% 61%;
-    --accent-foreground: 20 24% 15%;
+    --accent: 20 10% 15%;
+    --accent-foreground: 30 10% 95%;
     
-    --border: 20 24% 25%;
-    --input: 20 24% 25%;
-    --ring: 30 48% 61%;
+    --border: 20 10% 20%;
+    --input: 20 10% 20%;
+    --ring: 30 20% 70%;
     
-    --card: 20 24% 18%;
-    --card-foreground: 30 43% 95%;
+    --card: 20 10% 12%;
+    --card-foreground: 30 10% 95%;
     
-    --popover: 20 24% 18%;
-    --popover-foreground: 30 43% 95%;
+    --popover: 20 10% 12%;
+    --popover-foreground: 30 10% 95%;
     
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 30 43% 95%;
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 0 0% 98%;
   }
 }
 
@@ -74,16 +74,45 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans antialiased selection:bg-primary/20 selection:text-primary;
+  }
+
+
+}
+
+@layer components {
+  /* Premium Glass Effect */
+  .glass-panel {
+    @apply bg-white/40 dark:bg-black/40 backdrop-blur-xl border border-white/20 dark:border-white/5 shadow-xl;
+  }
+
+  .glass-card {
+    @apply bg-white/50 dark:bg-white/5 backdrop-blur-md border border-white/20 dark:border-white/5 shadow-sm transition-all duration-300 hover:bg-white/70 dark:hover:bg-white/10 hover:shadow-md hover:scale-[1.02];
+  }
+  
+  .mesh-gradient-bg {
+    background-color: hsl(var(--background));
+    background-image: 
+      radial-gradient(at 0% 0%, hsla(25, 40%, 85%, 0.4) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, hsla(30, 40%, 90%, 0.4) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, hsla(20, 30%, 85%, 0.4) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, hsla(35, 40%, 90%, 0.4) 0px, transparent 50%);
+  }
+
+  .dark .mesh-gradient-bg {
+    background-image: 
+      radial-gradient(at 0% 0%, hsla(25, 30%, 20%, 0.4) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, hsla(30, 30%, 25%, 0.4) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, hsla(20, 20%, 20%, 0.4) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, hsla(35, 30%, 25%, 0.4) 0px, transparent 50%);
   }
 }
 
 @keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(20px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);
@@ -92,80 +121,23 @@
 
 @keyframes float {
   0%, 100% {
-    transform: translateY(0px) scale(1);
+    transform: translateY(0px);
   }
   50% {
-    transform: translateY(-20px) scale(1.1);
+    transform: translateY(-10px);
   }
 }
 
 .animate-float {
-  animation: float 4s ease-in-out infinite;
-}
-
-/* Music note hover animations */
-.note-hover-0:hover {
-  transform: scale(1.4) rotate(20deg) !important;
-}
-
-.note-hover-1:hover {
-  transform: scale(1.5) rotate(-15deg) !important;
-}
-
-.note-hover-2:hover {
-  transform: scale(1.3) rotate(25deg) translateY(-10px) !important;
-}
-
-.note-hover-3:hover {
-  transform: scale(1.6) rotate(-20deg) !important;
-}
-
-.note-hover-4:hover {
-  transform: scale(1.4) rotate(15deg) translateX(5px) !important;
-}
-
-.note-hover-5:hover {
-  transform: scale(1.5) rotate(-25deg) translateY(-5px) !important;
-}
-
-.note-hover-6:hover {
-  transform: scale(1.3) rotate(30deg) !important;
-}
-
-.note-hover-7:hover {
-  transform: scale(1.5) rotate(-10deg) translateX(-5px) !important;
-}
-
-.note-hover-0:hover,
-.note-hover-1:hover,
-.note-hover-2:hover,
-.note-hover-3:hover,
-.note-hover-4:hover,
-.note-hover-5:hover,
-.note-hover-6:hover,
-.note-hover-7:hover {
-  opacity: 0.5 !important;
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px) scale(0.95);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+  animation: float 6s ease-in-out infinite;
 }
 
 .animate-slideUp {
-  animation: slideUp 0.6s ease-out;
+  animation: slideUp 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 @media (max-width: 480px) {
   .mobile-padding {
-    padding: 32px 24px !important;
+    padding: 24px 20px !important;
   }
 }
