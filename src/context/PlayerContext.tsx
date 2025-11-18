@@ -52,18 +52,22 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({
   // Initialize audio element
   useEffect(() => {
     const audio = new Audio();
-    audio.volume = volume;
     audioRef.current = audio;
 
     // Load volume from localStorage
     const savedVolume = localStorage.getItem("player-volume");
     if (savedVolume) {
       const vol = parseFloat(savedVolume);
-      audio.volume = vol;
+      const logarithmicVolume = vol * vol;
+      audio.volume = logarithmicVolume;
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setVolumeState(vol);
     } else {
-      audio.volume = UI_CONSTANTS.DEFAULT_VOLUME;
+      const defaultVol = UI_CONSTANTS.DEFAULT_VOLUME;
+      const logarithmicVolume = defaultVol * defaultVol;
+      audio.volume = logarithmicVolume;
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setVolumeState(defaultVol);
     }
 
     // Event listeners
@@ -178,12 +182,18 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({
     setCurrentTime(time);
   }, []);
 
-  const setVolume = (vol: number) => {
+  const setVolume = useCallback((vol: number) => {
     if (!audioRef.current) return;
-    audioRef.current.volume = vol;
-    setVolumeState(vol);
+    
+    // Convert linear slider to logarithmic volume (human hearing is logarithmic)
+    // Formula: volume = (e^(slider) - 1) / (e - 1)
+    // Simplified: volume = slider^2 for easier calculation
+    const logarithmicVolume = vol * vol;
+    
+    audioRef.current.volume = logarithmicVolume;
+    setVolumeState(vol); // Store linear value for slider
     localStorage.setItem("player-volume", vol.toString());
-  };
+  }, []);
 
   const playNext = useCallback(() => {
     if (queueIndex < queue.length - 1) {

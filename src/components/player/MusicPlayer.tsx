@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { usePlayer } from "@/context/PlayerContext";
 import { Button } from "@/components/ui/button";
+import { UI_CONSTANTS } from "@/constants/ui";
 
 const MusicPlayer: React.FC = () => {
   const {
@@ -43,7 +44,7 @@ const MusicPlayer: React.FC = () => {
   };
 
   const toggleMute = () => {
-    setVolume(volume > 0 ? 0 : 0.7);
+    setVolume(volume > 0 ? 0 : UI_CONSTANTS.DEFAULT_VOLUME);
   };
 
   // Temporarily always show for debugging
