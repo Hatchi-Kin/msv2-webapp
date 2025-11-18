@@ -41,7 +41,10 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({
   const { accessToken } = useAuth();
   const [currentTrack, setCurrentTrack] = useState<MegasetTrack | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [volume, setVolumeState] = useState(0.7);
+  const [volume, setVolumeState] = useState(() => {
+    const savedVolume = localStorage.getItem("player-volume");
+    return savedVolume ? parseFloat(savedVolume) : UI_CONSTANTS.DEFAULT_VOLUME;
+  });
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [queue, setQueue] = useState<MegasetTrack[]>([]);
@@ -54,21 +57,9 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({
     const audio = new Audio();
     audioRef.current = audio;
 
-    // Load volume from localStorage
-    const savedVolume = localStorage.getItem("player-volume");
-    if (savedVolume) {
-      const vol = parseFloat(savedVolume);
-      const logarithmicVolume = vol * vol;
-      audio.volume = logarithmicVolume;
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setVolumeState(vol);
-    } else {
-      const defaultVol = UI_CONSTANTS.DEFAULT_VOLUME;
-      const logarithmicVolume = defaultVol * defaultVol;
-      audio.volume = logarithmicVolume;
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setVolumeState(defaultVol);
-    }
+    // Set initial volume from state
+    const logarithmicVolume = volume * volume;
+    audio.volume = logarithmicVolume;
 
     // Event listeners
     const handleTimeUpdate = () => {
@@ -107,6 +98,7 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({
       audio.removeEventListener("error", handleError);
       audio.pause();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [queueIndex, queue.length]); // Removed 'volume' - it shouldn't recreate audio element
 
   const playTrack = useCallback(

@@ -13,7 +13,7 @@ interface MediaCardProps {
 const MediaCard: React.FC<MediaCardProps> = ({ title, icon, onClick }) => {
   return (
     <Card
-      className="group cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1 rounded-2xl bg-background border border-border shadow-sm hover:shadow-md hover:border-muted-foreground"
+      className="group cursor-pointer glass-card rounded-3xl"
       onClick={onClick}
     >
       <CardContent className="p-4 space-y-3 flex flex-col min-h-[140px]">
