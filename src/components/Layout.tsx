@@ -17,7 +17,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     e.preventDefault();
     if (isAuthenticated) {
       // Navigate to library with state to reset view
-      navigate("/library", { state: { resetView: true } });
+      navigate("/library");
     } else {
       navigate("/");
     }
