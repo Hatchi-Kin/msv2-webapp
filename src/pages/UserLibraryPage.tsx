@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useLibrary } from "@/context/LibraryContext";
 import { usePlayer } from "@/context/PlayerContext";
 import { useNavigate } from "react-router-dom";
 import { api } from "@/lib/api";
+import { getErrorMessage } from "@/lib/utils/errors";
 import type { MegasetTrack, PlaylistDetail } from "@/types/api";
 import { Heart, ListMusic, Trash2, Plus, X, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -39,14 +40,7 @@ const UserLibraryPage: React.FC = () => {
     }
   }, [isAuthenticated, authLoading, navigate]);
 
-  // Fetch favorites when view changes
-  useEffect(() => {
-    if (currentView === "favorites" && accessToken) {
-      fetchFavorites();
-    }
-  }, [currentView, accessToken]);
-
-  const fetchFavorites = async () => {
+  const fetchFavorites = useCallback(async () => {
     if (!accessToken) return;
 
     try {
@@ -56,11 +50,18 @@ const UserLibraryPage: React.FC = () => {
       setFavorites(response.tracks);
     } catch (err) {
       console.error("Failed to fetch favorites:", err);
-      setError(err instanceof Error ? err.message : "Failed to load favorites");
+      setError(getErrorMessage(err));
     } finally {
       setLoading(false);
     }
-  };
+  }, [accessToken]);
+
+  // Fetch favorites when view changes
+  useEffect(() => {
+    if (currentView === "favorites" && accessToken) {
+      fetchFavorites();
+    }
+  }, [currentView, accessToken, fetchFavorites]);
 
   const fetchPlaylistDetail = async (playlistId: number) => {
     if (!accessToken) return;
@@ -76,7 +77,7 @@ const UserLibraryPage: React.FC = () => {
       setCurrentView("playlist-detail");
     } catch (err) {
       console.error("Failed to fetch playlist:", err);
-      setError(err instanceof Error ? err.message : "Failed to load playlist");
+      setError(getErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -93,9 +94,7 @@ const UserLibraryPage: React.FC = () => {
       await refreshPlaylists();
     } catch (err) {
       console.error("Failed to create playlist:", err);
-      setError(
-        err instanceof Error ? err.message : "Failed to create playlist"
-      );
+      setError(getErrorMessage(err));
     } finally {
       setIsCreating(false);
     }
@@ -113,9 +112,7 @@ const UserLibraryPage: React.FC = () => {
       await refreshPlaylists();
     } catch (err) {
       console.error("Failed to delete playlist:", err);
-      setError(
-        err instanceof Error ? err.message : "Failed to delete playlist"
-      );
+      setError(getErrorMessage(err));
     }
   };
 

@@ -1,6 +1,7 @@
 import React from "react";
 import { Music } from "lucide-react";
 import SimilarTrackCard from "@/components/SimilarTrackCard";
+import EmptyState from "@/components/EmptyState";
 import type { SimilarTrack } from "@/types/api";
 
 interface SimilarTracksViewProps {
@@ -15,14 +16,7 @@ const SimilarTracksView: React.FC<SimilarTracksViewProps> = ({
   onViewArtist,
 }) => {
   if (similarTracks.length === 0) {
-    return (
-      <div className="text-center py-12">
-        <Music className="h-12 w-12 mx-auto mb-4 text-primary opacity-50" />
-        <p className="text-sm text-foreground opacity-70">
-          No similar tracks found.
-        </p>
-      </div>
-    );
+    return <EmptyState icon={Music} message="No similar tracks found." />;
   }
 
   return (

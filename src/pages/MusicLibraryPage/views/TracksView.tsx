@@ -1,6 +1,7 @@
 import React from "react";
 import { Music } from "lucide-react";
 import TrackItem from "@/components/TrackItem";
+import EmptyState from "@/components/EmptyState";
 import type { MegasetTrack } from "@/types/api";
 
 interface TracksViewProps {
@@ -17,14 +18,7 @@ const TracksView: React.FC<TracksViewProps> = ({
   onFindSimilar,
 }) => {
   if (tracks.length === 0) {
-    return (
-      <div className="text-center py-12">
-        <Music className="h-12 w-12 mx-auto mb-4 text-primary opacity-50" />
-        <p className="text-sm text-foreground opacity-70">
-          No tracks found for {selectedAlbum}.
-        </p>
-      </div>
-    );
+    return <EmptyState icon={Music} message={`No tracks found for ${selectedAlbum}.`} />;
   }
 
   return (

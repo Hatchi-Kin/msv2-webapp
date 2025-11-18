@@ -8,6 +8,7 @@ import React, {
 import { api, setUnauthorizedHandler } from "@/lib/api";
 import type { User, UserCreate, Token } from "@/types/api";
 import { useNavigate } from "react-router-dom";
+import { getErrorMessage } from "@/lib/utils/errors";
 
 interface AuthContextType {
   user: User | null;
@@ -44,18 +45,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     setError(null);
   }, []);
 
-  const fetchUser = useCallback(async (token: string) => {
-    try {
-      const fetchedUser = await api.auth.getMe(token);
-      setUser(fetchedUser);
-      return fetchedUser;
-    } catch (err) {
-      console.error("Failed to fetch user:", err);
-      setError(err instanceof Error ? err.message : "Failed to fetch user");
-      clearAuth(); // Clear auth if user fetch fails
-      throw err; // Re-throw to propagate error
-    }
-  }, []);
+  const fetchUser = useCallback(
+    async (token: string) => {
+      try {
+        const fetchedUser = await api.auth.getMe(token);
+        setUser(fetchedUser);
+        return fetchedUser;
+      } catch (err) {
+        console.error("Failed to fetch user:", err);
+        setError(getErrorMessage(err));
+        clearAuth(); // Clear auth if user fetch fails
+        throw err; // Re-throw to propagate error
+      }
+    },
+    [clearAuth]
+  );
 
   const refreshAccessToken = useCallback(async () => {
     setLoading(true);
@@ -66,13 +70,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       await fetchUser(tokenResponse.access_token);
     } catch (err) {
       console.error("Failed to refresh token:", err);
-      setError(err instanceof Error ? err.message : "Failed to refresh token");
+      setError(getErrorMessage(err));
       clearAuth();
       navigate("/"); // Redirect to login on refresh failure
     } finally {
       setLoading(false);
     }
-  }, [fetchUser, navigate]);
+  }, [fetchUser, navigate, clearAuth]);
 
   const login = useCallback(
     async (email: string, password: string) => {
@@ -85,13 +89,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         navigate("/library"); // Redirect to library on successful login
       } catch (err) {
         console.error("Login failed:", err);
-        setError(err instanceof Error ? err.message : "Login failed");
+        setError(getErrorMessage(err));
         clearAuth();
       } finally {
         setLoading(false);
       }
     },
-    [fetchUser, navigate]
+    [fetchUser, navigate, clearAuth]
   );
 
   const register = useCallback(
@@ -104,7 +108,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         await login(userCreate.email, userCreate.password);
       } catch (err) {
         console.error("Registration failed:", err);
-        setError(err instanceof Error ? err.message : "Registration failed");
+        setError(getErrorMessage(err));
       } finally {
         setLoading(false);
       }
@@ -148,7 +152,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         setAccessToken(storedAccessToken);
         try {
           await fetchUser(storedAccessToken);
-        } catch (err) {
+        } catch {
           // If fetching user with stored access token fails, try refreshing
           await refreshAccessToken();
         }
@@ -180,6 +184,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {

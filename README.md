@@ -2,10 +2,15 @@
 
 A beautiful, modern music library web application with a coffee-inspired "Mocha Beats" theme. Built with React, TypeScript, and Tailwind CSS.
 
+
+
 ## 🎵 Features
 
 - **User Authentication** - Secure JWT-based login/register with refresh tokens
-- **Music Library Browser** - Browse artists, albums, and tracks
+- **Music Library Browser** - Browse artists, albums, and tracks with intuitive navigation
+- **Smart Recommendations** - Find similar tracks based on audio features
+- **Personal Library** - Save favorite tracks and create custom playlists (max 20 tracks each)
+- **Music Player** - Built-in audio player with playback controls
 - **Responsive Pagination** - 25 items on desktop, 15 on mobile
 - **Interactive UI** - Floating music notes with hover effects
 - **Modern Design** - Glassmorphism effects with warm coffee-themed colors
@@ -26,6 +31,9 @@ A beautiful, modern music library web application with a coffee-inspired "Mocha 
 src/
 ├── components/          # Reusable UI components
 │   ├── ui/             # shadcn/ui base components (Button, Input, Card)
+│   ├── player/         # Music player components
+│   ├── FavoriteButton.tsx    # Reusable favorite toggle button
+│   ├── PlaylistDropdown.tsx  # Reusable playlist selector
 │   ├── AuthPageLayout.tsx    # Shared layout for login/register
 │   ├── FormInput.tsx         # Form input with icon and label
 │   ├── SubmitButton.tsx      # Submit button with loading state
@@ -33,29 +41,48 @@ src/
 │   ├── ArtistCard.tsx        # Artist display card
 │   ├── AlbumCard.tsx         # Album display card
 │   ├── TrackItem.tsx         # Track list item
+│   ├── SimilarTrackCard.tsx  # Similar track recommendation card
 │   ├── FloatingMusicNotes.tsx # Animated background notes
 │   ├── LoadingSpinner.tsx    # Loading state component
 │   ├── ErrorMessage.tsx      # Error display component
+│   ├── ErrorBoundary.tsx     # Error boundary for crash handling
 │   └── Layout.tsx            # Main app layout with header
 │
 ├── pages/              # Page components
 │   ├── LandingPage.tsx       # Login page
 │   ├── RegisterPage.tsx      # Registration page
-│   └── MusicLibraryPage.tsx  # Main music browser
+│   ├── MusicLibraryPage.tsx  # Main music browser
+│   └── MusicLibraryPage/
+│       └── views/            # Sub-views for library page
+│           ├── ArtistsView.tsx
+│           ├── AlbumsView.tsx
+│           ├── TracksView.tsx
+│           └── SimilarTracksView.tsx
 │
 ├── context/            # React Context providers
-│   └── AuthContext.tsx       # Authentication state management
+│   ├── AuthContext.tsx       # Authentication state management
+│   ├── LibraryContext.tsx    # Favorites & playlists state
+│   └── PlayerContext.tsx     # Music player state
 │
 ├── hooks/              # Custom React hooks
-│   ├── useThemeHover.ts      # Consistent hover effects
-│   └── usePagination.ts      # Pagination logic
+│   ├── useFavoriteToggle.ts  # Favorite button logic
+│   ├── usePlaylistDropdown.ts # Playlist dropdown logic
+│   └── useDebounce.ts        # Debounce utility hook
 │
 ├── constants/          # App-wide constants
 │   ├── theme.ts              # Mocha Beats color palette
-│   └── pagination.ts         # Pagination configuration
+│   ├── similarity.ts         # Similarity score colors
+│   └── ui.ts                 # UI constants (sizes, defaults)
 │
 ├── lib/                # Utilities and API client
-│   ├── api.ts                # Backend API client
+│   ├── api/                  # API client modules
+│   │   ├── index.ts          # Main API export
+│   │   ├── client.ts         # HTTP client setup
+│   │   ├── auth.ts           # Authentication endpoints
+│   │   ├── music.ts          # Music browsing endpoints
+│   │   ├── favorites.ts      # Favorites endpoints
+│   │   └── playlists.ts      # Playlists endpoints
+│   ├── config.ts             # App configuration
 │   └── utils.ts              # Helper functions
 │
 ├── types/              # TypeScript type definitions
@@ -63,7 +90,8 @@ src/
 │
 ├── App.tsx             # Root component with routing
 ├── main.tsx            # App entry point
-└── index.css           # Global styles and animations
+├── index.css           # Global styles and animations
+└── DEVELOPER_GUIDE.md  # Comprehensive guide for new developers
 ```
 
 ## 🎨 Theme System
@@ -342,24 +370,55 @@ npm run test
 - **Solution**: Check that CSS animations are defined in `index.css`
 - Verify browser supports CSS animations
 
-## 📝 Code Quality
+## 📝 Code Quality & Architecture
 
 The codebase follows these principles:
 
-- **DRY** - Don't Repeat Yourself
-- **SOLID** - Single responsibility, Open/closed, etc.
-- **Type Safety** - Full TypeScript coverage
-- **Consistent Styling** - Centralized theme system
-- **Reusable Components** - Modular, composable UI
-- **Clean Code** - Readable, maintainable, well-documented
+### Design Principles
+
+- **DRY (Don't Repeat Yourself)** - Shared logic extracted into custom hooks and reusable components
+- **Single Responsibility** - Each component/hook has one clear purpose
+- **Composition Over Inheritance** - Build complex UIs from simple, composable components
+- **Type Safety** - Full TypeScript coverage with strict mode enabled
+- **Separation of Concerns** - Clear boundaries between UI, logic, and data
+
+### Recent Refactoring (Beginner-Friendly)
+
+We've recently refactored the codebase to make it more accessible for new React developers:
+
+1. **Extracted Reusable Components**
+   - `FavoriteButton` - Handles favorite toggling (2 variants: icon, full)
+   - `PlaylistDropdown` - Manages playlist selection with proper UX
+   - Reduced code duplication by ~200 lines
+
+2. **Created Custom Hooks**
+   - `useFavoriteToggle` - Encapsulates favorite logic
+   - `usePlaylistDropdown` - Manages dropdown state and interactions
+   - Makes components cleaner and logic reusable
+
+3. **Centralized Constants**
+   - `UI_CONSTANTS` - All UI values in one place (sizes, defaults, thresholds)
+   - `SIMILARITY_COLORS` - Consistent color mapping for similarity scores
+   - Easy to maintain and update
+
+4. **Organized API Client**
+   - Split into logical modules (auth, music, favorites, playlists)
+   - Clear separation of concerns
+   - Easy to extend with new endpoints
+
+### Code Organization Benefits
+
+- **Easy to Learn** - Clear structure and naming conventions
+- **Easy to Maintain** - Change logic in one place, affects everywhere
+- **Easy to Test** - Isolated components and hooks
+- **Easy to Extend** - Add new features without touching existing code
 
 ## 🤝 Contributing
 
-1. Follow the existing code style
-2. Use theme constants for all colors
-3. Create reusable components when possible
-4. Add TypeScript types for all props
-5. Test on both mobile and desktop
+1. Follow existing code patterns
+2. Use centralized constants
+3. Keep components small and focused
+4. Test on mobile and desktop
 
 ## 📄 License
 

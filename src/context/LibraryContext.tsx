@@ -212,6 +212,7 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useLibrary = () => {
   const context = useContext(LibraryContext);
   if (context === undefined) {

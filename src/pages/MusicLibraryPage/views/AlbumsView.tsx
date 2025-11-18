@@ -1,6 +1,7 @@
 import React from "react";
 import { Music } from "lucide-react";
 import AlbumCard from "@/components/AlbumCard";
+import EmptyState from "@/components/EmptyState";
 
 interface AlbumsViewProps {
   albums: string[];
@@ -14,14 +15,7 @@ const AlbumsView: React.FC<AlbumsViewProps> = ({
   onAlbumClick,
 }) => {
   if (albums.length === 0) {
-    return (
-      <div className="text-center py-12">
-        <Music className="h-12 w-12 mx-auto mb-4 text-primary opacity-50" />
-        <p className="text-sm text-foreground opacity-70">
-          No albums found for {selectedArtist}.
-        </p>
-      </div>
-    );
+    return <EmptyState icon={Music} message={`No albums found for ${selectedArtist}.`} />;
   }
 
   return (

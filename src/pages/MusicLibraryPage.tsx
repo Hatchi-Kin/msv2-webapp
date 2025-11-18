@@ -9,6 +9,7 @@ import type {
   SimilarTrackListResponse,
 } from "@/types/api";
 import { useAuth } from "@/context/AuthContext";
+import { getErrorMessage } from "@/lib/utils/errors";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import FloatingMusicNotes from "@/components/FloatingMusicNotes";
@@ -34,16 +35,14 @@ const MusicLibraryPage: React.FC = () => {
   const [similarTracks, setSimilarTracks] = useState<SimilarTrack[]>([]);
   const [currentSimilarTrack, setCurrentSimilarTrack] =
     useState<MegasetTrack | null>(null);
-  // Track the first track in the recommendation chain (future: "Back to Origin" feature)
-  // const [originTrack, setOriginTrack] = useState<MegasetTrack | null>(null);
 
-  const [pageLoading, setPageLoading] = useState<boolean>(true);
+  const [pageLoading, setPageLoading] = useState(true);
   const [pageError, setPageError] = useState<string | null>(null);
-  const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   // Pagination state
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [itemsPerPage, setItemsPerPage] = useState<number>(25);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(25);
 
   const { accessToken, isAuthenticated, loading: authLoading } = useAuth();
   const navigate = useNavigate();
@@ -59,7 +58,6 @@ const MusicLibraryPage: React.FC = () => {
       setTracks([]);
       setSimilarTracks([]);
       setCurrentSimilarTrack(null);
-      // setOriginTrack(null);
       setCurrentPage(1);
       // Clear the state so it doesn't reset again on re-render
       navigate(location.pathname, { replace: true, state: {} });
@@ -105,9 +103,7 @@ const MusicLibraryPage: React.FC = () => {
           setTotalArtists(response.total);
         } catch (err) {
           console.error("Failed to fetch artists:", err);
-          setPageError(
-            err instanceof Error ? err.message : "An unknown error occurred"
-          );
+          setPageError(getErrorMessage(err));
         } finally {
           setPageLoading(false);
           setIsLoadingMore(false);
@@ -115,6 +111,8 @@ const MusicLibraryPage: React.FC = () => {
       };
       fetchArtists();
     }
+    // artists.length and totalArtists intentionally not in deps - only refetch on page/view change
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated, accessToken, currentView, currentPage, itemsPerPage]);
 
   // Fetch Albums for selected artist
@@ -135,9 +133,7 @@ const MusicLibraryPage: React.FC = () => {
           setAlbums(response.albums);
         } catch (err) {
           console.error(`Failed to fetch albums for ${selectedArtist}:`, err);
-          setPageError(
-            err instanceof Error ? err.message : "An unknown error occurred"
-          );
+          setPageError(getErrorMessage(err));
         } finally {
           setPageLoading(false);
         }
@@ -168,9 +164,7 @@ const MusicLibraryPage: React.FC = () => {
             `Failed to fetch tracks for ${selectedAlbum} by ${selectedArtist}:`,
             err
           );
-          setPageError(
-            err instanceof Error ? err.message : "An unknown error occurred"
-          );
+          setPageError(getErrorMessage(err));
         } finally {
           setPageLoading(false);
         }
@@ -196,8 +190,7 @@ const MusicLibraryPage: React.FC = () => {
     setCurrentView("tracks");
   }, []);
 
-  const handleTrackClick = useCallback((track: MegasetTrack) => {
-    console.log("Track clicked:", track.title || track.filename);
+  const handleTrackClick = useCallback(() => {
     // Future: Implement playback or recommendation logic here
   }, []);
 
@@ -214,10 +207,7 @@ const MusicLibraryPage: React.FC = () => {
           tracks.find((t) => t.id === trackId) ||
           similarTracks.find((st) => st.track.id === trackId)?.track;
 
-        if (!track) {
-          console.error("Track not found");
-          return;
-        }
+        if (!track) return;
 
         // // If this is the first similar tracks request, save as origin
         // if (currentView !== 'similar') {
@@ -232,21 +222,18 @@ const MusicLibraryPage: React.FC = () => {
         setCurrentView("similar");
       } catch (err) {
         console.error("Failed to fetch similar tracks:", err);
-        setPageError(
-          err instanceof Error ? err.message : "An unknown error occurred"
-        );
+        setPageError(getErrorMessage(err));
       } finally {
         setPageLoading(false);
       }
     },
-    [accessToken, tracks, similarTracks, currentView]
+    [accessToken, tracks, similarTracks]
   );
 
   const handleViewArtist = useCallback((artistName: string) => {
     // Clear similar tracks state and navigate to artist's albums
     setSimilarTracks([]);
     setCurrentSimilarTrack(null);
-    // setOriginTrack(null);
     setSelectedArtist(artistName);
     setCurrentView("albums");
     setCurrentPage(1);
@@ -258,7 +245,6 @@ const MusicLibraryPage: React.FC = () => {
       setCurrentView("tracks");
       setSimilarTracks([]);
       setCurrentSimilarTrack(null);
-      // setOriginTrack(null);
     } else if (currentView === "tracks") {
       setCurrentView("albums");
       setSelectedAlbum(null);

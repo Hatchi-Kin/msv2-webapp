@@ -4,10 +4,12 @@ import React, {
   useState,
   useRef,
   useEffect,
+  useCallback,
 } from "react";
 import type { MegasetTrack } from "@/types/api";
 import config from "@/lib/config";
 import { useAuth } from "@/context/AuthContext";
+import { UI_CONSTANTS } from "@/constants/ui";
 
 interface PlayerState {
   currentTrack: MegasetTrack | null;
@@ -58,7 +60,10 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({
     if (savedVolume) {
       const vol = parseFloat(savedVolume);
       audio.volume = vol;
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setVolumeState(vol);
+    } else {
+      audio.volume = UI_CONSTANTS.DEFAULT_VOLUME;
     }
 
     // Event listeners
@@ -73,13 +78,15 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({
     const handleEnded = () => {
       // Auto-play next track if in queue
       if (queueIndex < queue.length - 1) {
-        playNext();
+        const nextIndex = queueIndex + 1;
+        setQueueIndex(nextIndex);
+        // Will trigger playback via separate effect
       } else {
         setIsPlaying(false);
       }
     };
 
-    const handleError = (e: ErrorEvent) => {
+    const handleError = (e: Event) => {
       console.error("Audio playback error:", e);
       setIsPlaying(false);
     };
@@ -87,81 +94,70 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({
     audio.addEventListener("timeupdate", handleTimeUpdate);
     audio.addEventListener("durationchange", handleDurationChange);
     audio.addEventListener("ended", handleEnded);
-    audio.addEventListener("error", handleError as any);
+    audio.addEventListener("error", handleError);
 
     return () => {
       audio.removeEventListener("timeupdate", handleTimeUpdate);
       audio.removeEventListener("durationchange", handleDurationChange);
       audio.removeEventListener("ended", handleEnded);
-      audio.removeEventListener("error", handleError as any);
+      audio.removeEventListener("error", handleError);
       audio.pause();
     };
-  }, []);
+  }, [queueIndex, queue.length, volume]);
 
-  const playTrack = (track: MegasetTrack) => {
-    if (!audioRef.current) return;
+  const playTrack = useCallback(
+    (track: MegasetTrack) => {
+      if (!audioRef.current) return;
 
-    const audio = audioRef.current;
+      const audio = audioRef.current;
 
-    if (!accessToken) {
-      console.error("No access token found - user not authenticated");
-      return;
-    }
+      if (!accessToken) {
+        console.error("No access token found - user not authenticated");
+        return;
+      }
 
-    console.log(
-      "Playing track:",
-      track.title || track.filename,
-      "ID:",
-      track.id
-    );
+      // Set new track
+      setCurrentTrack(track);
+      setCurrentTime(0);
 
-    // Set new track
-    setCurrentTrack(track);
-    setCurrentTime(0);
+      // Update audio source with auth header via fetch
+      // Note: We need to use fetch to add auth header, then create blob URL
+      const streamUrl = `${config.apiUrl}/stream/audio`;
 
-    // Update audio source with auth header via fetch
-    // Note: We need to use fetch to add auth header, then create blob URL
-    const streamUrl = `${config.apiUrl}/stream/audio`;
-
-    fetch(streamUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-      body: JSON.stringify({ track_id: track.id }),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          console.error(
-            "Stream response not OK:",
-            response.status,
-            response.statusText
-          );
-          throw new Error(`Failed to stream audio: ${response.status}`);
-        }
-        return response.blob();
+      fetch(streamUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ track_id: track.id }),
       })
-      .then((blob) => {
-        console.log(
-          "Audio blob received, size:",
-          blob.size,
-          "type:",
-          blob.type
-        );
-        const blobUrl = URL.createObjectURL(blob);
-        audio.src = blobUrl;
-        return audio.play();
-      })
-      .then(() => {
-        console.log("Audio playback started");
-        setIsPlaying(true);
-      })
-      .catch((error) => {
-        console.error("Error streaming audio:", error);
-        setIsPlaying(false);
-      });
-  };
+        .then((response) => {
+          if (!response.ok) {
+            console.error(
+              "Stream response not OK:",
+              response.status,
+              response.statusText
+            );
+            throw new Error(`Failed to stream audio: ${response.status}`);
+          }
+          return response.blob();
+        })
+        .then((blob) => {
+          const blobUrl = URL.createObjectURL(blob);
+          audio.src = blobUrl;
+          return audio.play();
+        })
+        .then(() => {
+          setIsPlaying(true);
+        })
+        .catch((error) => {
+          console.error("Error streaming audio:", error);
+          setIsPlaying(false);
+        });
+    },
+    [accessToken]
+  );
 
   const togglePlayPause = () => {
     if (!audioRef.current || !currentTrack) return;
@@ -176,11 +172,11 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  const seekTo = (time: number) => {
+  const seekTo = useCallback((time: number) => {
     if (!audioRef.current) return;
     audioRef.current.currentTime = time;
     setCurrentTime(time);
-  };
+  }, []);
 
   const setVolume = (vol: number) => {
     if (!audioRef.current) return;
@@ -189,24 +185,24 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({
     localStorage.setItem("player-volume", vol.toString());
   };
 
-  const playNext = () => {
+  const playNext = useCallback(() => {
     if (queueIndex < queue.length - 1) {
       const nextIndex = queueIndex + 1;
       setQueueIndex(nextIndex);
       playTrack(queue[nextIndex]);
     }
-  };
+  }, [queueIndex, queue, playTrack]);
 
-  const playPrevious = () => {
+  const playPrevious = useCallback(() => {
     if (queueIndex > 0) {
       const prevIndex = queueIndex - 1;
       setQueueIndex(prevIndex);
       playTrack(queue[prevIndex]);
-    } else if (currentTime > 3) {
-      // If more than 3 seconds in, restart current track
+    } else if (currentTime > UI_CONSTANTS.TRACK_RESTART_THRESHOLD) {
+      // If more than threshold seconds in, restart current track
       seekTo(0);
     }
-  };
+  }, [queueIndex, queue, playTrack, currentTime, seekTo]);
 
   const addToQueue = (track: MegasetTrack) => {
     setQueue((prev) => [...prev, track]);
@@ -251,6 +247,7 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const usePlayer = () => {
   const context = useContext(PlayerContext);
   if (context === undefined) {

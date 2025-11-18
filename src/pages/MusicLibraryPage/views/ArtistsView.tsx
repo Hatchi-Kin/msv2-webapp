@@ -2,6 +2,7 @@ import React from "react";
 import { Music } from "lucide-react";
 import ArtistCard from "@/components/ArtistCard";
 import Pagination from "@/components/Pagination";
+import EmptyState from "@/components/EmptyState";
 
 interface ArtistsViewProps {
   artists: string[];
@@ -25,14 +26,7 @@ const ArtistsView: React.FC<ArtistsViewProps> = ({
   const totalPages = Math.ceil(totalArtists / itemsPerPage);
 
   if (artists.length === 0) {
-    return (
-      <div className="text-center py-12">
-        <Music className="h-12 w-12 mx-auto mb-4 text-primary opacity-50" />
-        <p className="text-sm text-foreground opacity-70">
-          No artists found in your library.
-        </p>
-      </div>
-    );
+    return <EmptyState icon={Music} message="No artists found in your library." />;
   }
 
   return (
