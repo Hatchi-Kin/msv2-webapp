@@ -22,28 +22,26 @@ const LibraryArtistsPage: React.FC = () => {
     navigate(`/library/artists/${encodeURIComponent(artistName)}`);
   };
 
-  if (loading && artists.length === 0) {
-    return <LoadingSpinner message="Loading artists..." />;
-  }
-
-  if (error) {
-    return <ErrorMessage title="Error loading artists" message={error} />;
-  }
-
   return (
     <div className="space-y-6">
       <LibraryHeader title="Your Music Library" subtitle="Browse by artist" />
       
-      <div className="backdrop-blur-lg rounded-2xl p-6 bg-background border border-border">
-        <ArtistsView
-          artists={artists}
-          totalArtists={totalArtists}
-          currentPage={currentPage}
-          itemsPerPage={itemsPerPage}
-          isLoadingMore={loading} // Show loading overlay if loading more
-          onArtistClick={handleArtistClick}
-          onPageChange={setPage}
-        />
+      <div className="glass-panel p-6 rounded-3xl min-h-[500px]">
+        {loading && artists.length === 0 ? (
+          <LoadingSpinner message="Loading artists..." />
+        ) : error ? (
+          <ErrorMessage title="Error loading artists" message={error} />
+        ) : (
+          <ArtistsView
+            artists={artists}
+            totalArtists={totalArtists}
+            currentPage={currentPage}
+            itemsPerPage={itemsPerPage}
+            isLoadingMore={loading}
+            onArtistClick={handleArtistClick}
+            onPageChange={setPage}
+          />
+        )}
       </div>
     </div>
   );

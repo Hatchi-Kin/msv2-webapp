@@ -231,7 +231,7 @@ const UserLibraryPage: React.FC = () => {
                 </div>
               ) : (
                 favorites.map((track) => (
-                  <TrackItem key={track.id} track={track} onClick={() => {}} />
+                  <TrackItem key={track.id} track={track} />
                 ))
               )}
             </div>
@@ -343,7 +343,7 @@ const UserLibraryPage: React.FC = () => {
                 </div>
               ) : (
                 selectedPlaylist.tracks.map((track) => (
-                  <TrackItem key={track.id} track={track} onClick={() => {}} />
+                  <TrackItem key={track.id} track={track} />
                 ))
               )}
             </div>

@@ -1,15 +1,11 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Outlet } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 import { Music, LogOut, Heart } from "lucide-react";
 import MusicPlayer from "@/components/player/MusicPlayer";
 
-interface LayoutProps {
-  children: React.ReactNode;
-}
-
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+const Layout: React.FC = () => {
   const { isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -61,7 +57,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           </div>
         </header>
       )}
-      <main className="flex-1 pb-24">{children}</main>
+      <main className="flex-1 pb-24"><Outlet /></main>
       {isAuthenticated && <MusicPlayer />}
     </div>
   );

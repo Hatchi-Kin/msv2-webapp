@@ -22,14 +22,6 @@ const LibraryAlbumsPage: React.FC = () => {
     navigate(`/library/albums/${encodeURIComponent(albumTitle)}`);
   };
 
-  if (loading) {
-    return <LoadingSpinner message={`Loading albums for ${decodedArtistName}...`} />;
-  }
-
-  if (error) {
-    return <ErrorMessage title="Error loading albums" message={error} />;
-  }
-
   return (
     <div className="space-y-6">
       <LibraryHeader 
@@ -38,12 +30,18 @@ const LibraryAlbumsPage: React.FC = () => {
         showBack
       />
       
-      <div className="backdrop-blur-lg rounded-2xl p-6 bg-background border border-border">
-        <AlbumsView
-          albums={albums}
-          selectedArtist={decodedArtistName}
-          onAlbumClick={handleAlbumClick}
-        />
+      <div className="glass-panel p-6 rounded-3xl min-h-[500px]">
+        {loading ? (
+          <LoadingSpinner message={`Loading albums for ${decodedArtistName}...`} />
+        ) : error ? (
+          <ErrorMessage title="Error loading albums" message={error} />
+        ) : (
+          <AlbumsView
+            albums={albums}
+            selectedArtist={decodedArtistName}
+            onAlbumClick={handleAlbumClick}
+          />
+        )}
       </div>
     </div>
   );
