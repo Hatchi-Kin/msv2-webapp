@@ -22,14 +22,6 @@ const LibrarySimilarPage: React.FC = () => {
     navigate(`/library/artists/${encodeURIComponent(artistName)}`);
   };
 
-  if (loading) {
-    return <LoadingSpinner message="Finding similar tracks..." />;
-  }
-
-  if (error) {
-    return <ErrorMessage title="Error finding similar tracks" message={error} />;
-  }
-
   return (
     <div className="space-y-6">
       <LibraryHeader 
@@ -48,12 +40,18 @@ const LibrarySimilarPage: React.FC = () => {
         )}
       </LibraryHeader>
       
-      <div className="backdrop-blur-lg rounded-2xl p-6 bg-background border border-border">
-        <SimilarTracksView
-          similarTracks={similarTracks}
-          onFindSimilar={handleFindSimilar}
-          onViewArtist={handleViewArtist}
-        />
+      <div className="glass-panel p-6 rounded-3xl min-h-[500px]">
+        {loading ? (
+          <LoadingSpinner message="Finding similar tracks..." />
+        ) : error ? (
+          <ErrorMessage title="Error finding similar tracks" message={error} />
+        ) : (
+          <SimilarTracksView
+            similarTracks={similarTracks}
+            onFindSimilar={handleFindSimilar}
+            onViewArtist={handleViewArtist}
+          />
+        )}
       </div>
     </div>
   );

@@ -37,13 +37,14 @@ function App() {
       <LibraryProvider>
         {/* Provide player state (current track, play/pause) to all components */}
         <PlayerProvider>
-          {/* Wrap all pages with common layout (header, footer) */}
-          <Layout>
-            {/* Define which component to show for each URL */}
-            <Routes>
-              <Route path="/" element={<LandingPage />} />
-              <Route path="/register" element={<RegisterPage />} />
-              
+          {/* Define which component to show for each URL */}
+          <Routes>
+            {/* Public routes - no layout */}
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            
+            {/* Authenticated routes - with layout */}
+            <Route element={<Layout />}>
               {/* Library Routes */}
               <Route element={<LibraryLayout />}>
                 <Route path="/library" element={<LibraryArtistsPage />} />
@@ -53,8 +54,8 @@ function App() {
               </Route>
               
               <Route path="/my-library" element={<UserLibraryPage />} />
-            </Routes>
-          </Layout>
+            </Route>
+          </Routes>
         </PlayerProvider>
       </LibraryProvider>
     </ErrorBoundary>

@@ -7,14 +7,12 @@ import type { MegasetTrack } from "@/types/api";
 interface TracksViewProps {
   tracks: MegasetTrack[];
   selectedAlbum: string | null;
-  onTrackClick: (track: MegasetTrack) => void;
   onFindSimilar: (trackId: number) => void;
 }
 
 const TracksView: React.FC<TracksViewProps> = ({
   tracks,
   selectedAlbum,
-  onTrackClick,
   onFindSimilar,
 }) => {
   if (tracks.length === 0) {
@@ -27,7 +25,6 @@ const TracksView: React.FC<TracksViewProps> = ({
         <TrackItem
           key={track.id}
           track={track}
-          onClick={onTrackClick}
           onFindSimilar={onFindSimilar}
         />
       ))}

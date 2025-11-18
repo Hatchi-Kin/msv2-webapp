@@ -6,13 +6,11 @@ import { useLibrary } from "@/context/LibraryContext";
 
 interface TrackItemProps {
   track: MegasetTrack;
-  onClick: (track: MegasetTrack) => void;
   onFindSimilar?: (trackId: number) => void;
 }
 
 const TrackItem: React.FC<TrackItemProps> = ({
   track,
-  onClick,
   onFindSimilar,
 }) => {
   const { playTrack } = usePlayer();
@@ -25,6 +23,7 @@ const TrackItem: React.FC<TrackItemProps> = ({
   } = useLibrary();
   const [showPlaylistMenu, setShowPlaylistMenu] = useState(false);
   const [isAddingToPlaylist, setIsAddingToPlaylist] = useState(false);
+  const [isPlayLoading, setIsPlayLoading] = useState(false);
   const closeTimeoutRef = React.useRef<number | null>(null);
 
   const handleMouseLeave = () => {
@@ -38,6 +37,19 @@ const TrackItem: React.FC<TrackItemProps> = ({
       window.clearTimeout(closeTimeoutRef.current);
       closeTimeoutRef.current = null;
     }
+  };
+
+  const handlePlayClick = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isPlayLoading) return;
+
+    setIsPlayLoading(true);
+    playTrack(track);
+    
+    // Simple debounce/cooldown
+    setTimeout(() => {
+      setIsPlayLoading(false);
+    }, 1000);
   };
 
   const handleToggleFavorite = async (e: React.MouseEvent) => {
@@ -66,7 +78,7 @@ const TrackItem: React.FC<TrackItemProps> = ({
   };
 
   return (
-    <div className="group flex items-center gap-4 p-3 rounded-xl cursor-pointer transition-all duration-300 bg-transparent border border-transparent hover:bg-muted hover:border-muted-foreground hover:translate-x-1">
+    <div className="group flex items-center gap-4 p-3 rounded-xl transition-all duration-300 bg-transparent border border-transparent hover:bg-muted hover:border-muted-foreground hover:translate-x-1">
       {/* Track Number */}
       <div className="flex-shrink-0 w-8 text-center">
         {track.tracknumber ? (
@@ -78,8 +90,8 @@ const TrackItem: React.FC<TrackItemProps> = ({
         )}
       </div>
 
-      {/* Track Info - clickable area */}
-      <div className="flex-1 min-w-0" onClick={() => onClick(track)}>
+      {/* Track Info - NOT clickable anymore */}
+      <div className="flex-1 min-w-0">
         <p className="text-sm font-medium truncate text-foreground">
           {track.title || track.filename}
         </p>
@@ -94,11 +106,9 @@ const TrackItem: React.FC<TrackItemProps> = ({
       <div className="flex items-center gap-1 flex-shrink-0">
         {/* Play Button */}
         <button
-          onClick={(e) => {
-            e.stopPropagation();
-            playTrack(track);
-          }}
-          className="p-2 rounded-lg transition-all duration-300 bg-transparent text-primary opacity-50 hover:bg-primary/10 hover:scale-110 hover:opacity-100"
+          onClick={handlePlayClick}
+          disabled={isPlayLoading}
+          className={`p-2 rounded-lg transition-all duration-300 bg-transparent text-primary opacity-50 hover:bg-primary/10 hover:scale-110 hover:opacity-100 ${isPlayLoading ? 'opacity-30 cursor-wait' : ''}`}
           title="Play track"
         >
           <Play className="h-5 w-5" />
