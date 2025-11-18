@@ -107,7 +107,7 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({
       audio.removeEventListener("error", handleError);
       audio.pause();
     };
-  }, [queueIndex, queue.length, volume]);
+  }, [queueIndex, queue.length]); // Removed 'volume' - it shouldn't recreate audio element
 
   const playTrack = useCallback(
     (track: MegasetTrack) => {
