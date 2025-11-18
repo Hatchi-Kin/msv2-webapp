@@ -18,8 +18,12 @@
 import { Routes, Route } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
 import RegisterPage from "./pages/RegisterPage";
-import MusicLibraryPage from "./pages/MusicLibraryPage";
 import UserLibraryPage from "./pages/UserLibraryPage";
+import LibraryArtistsPage from "./pages/library/LibraryArtistsPage";
+import LibraryAlbumsPage from "./pages/library/LibraryAlbumsPage";
+import LibraryTracksPage from "./pages/library/LibraryTracksPage";
+import LibrarySimilarPage from "./pages/library/LibrarySimilarPage";
+import LibraryLayout from "./components/library/LibraryLayout";
 import Layout from "@/components/Layout";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { PlayerProvider } from "@/context/PlayerContext";
@@ -39,7 +43,15 @@ function App() {
             <Routes>
               <Route path="/" element={<LandingPage />} />
               <Route path="/register" element={<RegisterPage />} />
-              <Route path="/library" element={<MusicLibraryPage />} />
+              
+              {/* Library Routes */}
+              <Route element={<LibraryLayout />}>
+                <Route path="/library" element={<LibraryArtistsPage />} />
+                <Route path="/library/artists/:artistName" element={<LibraryAlbumsPage />} />
+                <Route path="/library/albums/:albumName" element={<LibraryTracksPage />} />
+                <Route path="/library/similar/:trackId" element={<LibrarySimilarPage />} />
+              </Route>
+              
               <Route path="/my-library" element={<UserLibraryPage />} />
             </Routes>
           </Layout>
