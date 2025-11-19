@@ -22,6 +22,7 @@ import UserLibraryPage from "./pages/UserLibraryPage";
 import LibraryArtistsPage from "./pages/library/LibraryArtistsPage";
 import LibraryAlbumsPage from "./pages/library/LibraryAlbumsPage";
 import LibraryTracksPage from "./pages/library/LibraryTracksPage";
+import VisualizationPage from "./pages/VisualizationPage";
 import LibrarySimilarPage from "./pages/library/LibrarySimilarPage";
 import LibraryLayout from "./components/library/LibraryLayout";
 import Layout from "@/components/Layout";
@@ -48,6 +49,8 @@ function App() {
               {/* Library Routes */}
               <Route element={<LibraryLayout />}>
                 <Route path="/library" element={<LibraryArtistsPage />} />
+                <Route path="library/tracks" element={<LibraryTracksPage />} />
+                <Route path="visualize" element={<VisualizationPage />} />
                 <Route path="/library/artists/:artistName" element={<LibraryAlbumsPage />} />
                 <Route path="/library/albums/:albumName" element={<LibraryTracksPage />} />
                 <Route path="/library/similar/:trackId" element={<LibrarySimilarPage />} />

@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate, Outlet } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
-import { Music, LogOut, Heart } from "lucide-react";
+import { Music, LogOut, Heart, Box } from "lucide-react";
 import MusicPlayer from "@/components/player/MusicPlayer";
 
 const Layout: React.FC = () => {
@@ -35,6 +35,15 @@ const Layout: React.FC = () => {
               </span>
             </a>
             <nav className="flex items-center gap-2">
+              <Button
+                onClick={() => navigate("/visualize")}
+                variant="ghost"
+                size="sm"
+                className="flex items-center space-x-2 rounded-xl font-semibold transition-all duration-300 hover:scale-105 text-primary bg-transparent hover:bg-muted"
+              >
+                <Box className="h-4 w-4" />
+                <span>Visualize</span>
+              </Button>
               <Button
                 onClick={() => navigate("/my-library")}
                 variant="ghost"

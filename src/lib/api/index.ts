@@ -10,12 +10,14 @@ export { authApi as auth } from "./auth";
 export { musicApi as music } from "./music";
 export { favoritesApi as favorites } from "./favorites";
 export { playlistsApi as playlists } from "./playlists";
+export { visualizationApi as visualization } from "./visualization";
 
 // Re-export for convenience
 import { authApi } from "./auth";
 import { musicApi } from "./music";
 import { favoritesApi } from "./favorites";
 import { playlistsApi } from "./playlists";
+import { visualizationApi } from "./visualization";
 
 export const api = {
   auth: authApi,
@@ -24,4 +26,5 @@ export const api = {
     ...favoritesApi,
     ...playlistsApi,
   },
+  visualization: visualizationApi,
 };
