@@ -93,10 +93,11 @@ npm run dev
 ```
 
 ### Environment Variables
-
+For nip io
 ```env
 VITE_API_BASE_URL=http://localhost:8000
 ```
+There is also a domain name
 
 ## 📝 Code Quality & Philosophy
 
