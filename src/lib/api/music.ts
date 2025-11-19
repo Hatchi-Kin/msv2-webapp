@@ -47,9 +47,7 @@ export const musicApi = {
     includeEmbeddings: boolean = false
   ): Promise<TrackListResponse> {
     const response = await fetch(
-      `${API_BASE_URL}/music/tracks/${encodeURIComponent(
-        albumFolder
-      )}?include_embeddings=${includeEmbeddings}`,
+      `${API_BASE_URL}/music/tracks/${encodeURIComponent(albumFolder)}?include_embeddings=${includeEmbeddings}`,
       {
         method: "GET",
         headers: {
@@ -67,11 +65,7 @@ export const musicApi = {
     includeEmbeddings: boolean = false
   ): Promise<TrackListResponse> {
     const response = await fetch(
-      `${API_BASE_URL}/music/tracks/${encodeURIComponent(
-        artistName
-      )}/${encodeURIComponent(
-        albumName
-      )}?include_embeddings=${includeEmbeddings}`,
+      `${API_BASE_URL}/music/tracks/${encodeURIComponent(artistName)}/${encodeURIComponent(albumName)}?include_embeddings=${includeEmbeddings}`,
       {
         method: "GET",
         headers: {
@@ -83,7 +77,7 @@ export const musicApi = {
   },
 
   async getSongCount(accessToken: string): Promise<number> {
-    const response = await fetch(`${API_BASE_URL}/music/song_count`, {
+    const response = await fetch(`${API_BASE_URL}/music/track_count`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -97,7 +91,7 @@ export const musicApi = {
     includeEmbeddings: boolean = false
   ): Promise<MegasetTrack> {
     const response = await fetch(
-      `${API_BASE_URL}/music/random_song?include_embeddings=${includeEmbeddings}`,
+      `${API_BASE_URL}/music/random_track?include_embeddings=${includeEmbeddings}`,
       {
         method: "GET",
         headers: {
@@ -114,7 +108,7 @@ export const musicApi = {
     includeEmbeddings: boolean = false
   ): Promise<MegasetTrack> {
     const response = await fetch(
-      `${API_BASE_URL}/music/song/${songId}?include_embeddings=${includeEmbeddings}`,
+      `${API_BASE_URL}/music/track/${songId}?include_embeddings=${includeEmbeddings}`,
       {
         method: "GET",
         headers: {
