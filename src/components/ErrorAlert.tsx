@@ -16,7 +16,7 @@ const ErrorAlert: React.FC<ErrorAlertProps> = ({
 }) => {
   const variantStyles = {
     error: "text-primary bg-muted border-muted-foreground",
-    warning: "text-secondary bg-muted border-muted-foreground",
+    warning: "text-orange-600 bg-orange-50 border-orange-200 dark:text-orange-400 dark:bg-orange-950 dark:border-orange-800",
     info: "text-foreground bg-muted border-border",
   };
 
