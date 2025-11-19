@@ -109,7 +109,7 @@ const SimilarTrackCard: React.FC<SimilarTrackCardProps> = ({
         )}
 
         {track.album && (
-          <p className="text-xs truncate text-secondary opacity-70">
+          <p className="text-xs truncate text-foreground opacity-60">
             {track.album}
           </p>
         )}
@@ -223,7 +223,7 @@ const SimilarTrackCard: React.FC<SimilarTrackCardProps> = ({
                 e.stopPropagation();
                 onViewArtist(track.artist_folder!);
               }}
-              className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-300 bg-muted text-secondary border border-muted-foreground hover:bg-secondary hover:text-primary-foreground hover:-translate-y-0.5 hover:shadow-md"
+              className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-300 bg-muted text-foreground border border-muted-foreground hover:bg-primary hover:text-primary-foreground hover:-translate-y-0.5 hover:shadow-md"
             >
               <User className="w-3 h-3" />
               View Artist

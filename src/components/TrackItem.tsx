@@ -82,7 +82,7 @@ const TrackItem: React.FC<TrackItemProps> = ({
       {/* Track Number */}
       <div className="flex-shrink-0 w-8 text-center">
         {track.tracknumber ? (
-          <span className="text-sm font-medium text-secondary">
+          <span className="text-sm font-medium text-foreground opacity-60">
             {track.tracknumber}
           </span>
         ) : (
