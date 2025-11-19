@@ -129,12 +129,12 @@ const Points: React.FC<PointsProps> = ({ points, onSelectPoint, selectedPointId,
     colorAttr.needsUpdate = true;
   }, [points, selectedPointId, hoveredIndex, originalColors]);
 
-  const handlePointerMove = (e: THREE.Intersection[]) => {
+  const handlePointerMove = (e: { intersections: THREE.Intersection[] }) => {
     // Get the closest intersection by distance
     let closestIndex: number | null = null;
     
-    if (Array.isArray(e) && e.length > 0) {
-      const sortedIntersections = [...e].sort((a, b) => a.distance - b.distance);
+    if (e.intersections && e.intersections.length > 0) {
+      const sortedIntersections = [...e.intersections].sort((a, b) => a.distance - b.distance);
       closestIndex = sortedIntersections[0].index ?? null;
     }
     
@@ -152,11 +152,11 @@ const Points: React.FC<PointsProps> = ({ points, onSelectPoint, selectedPointId,
     setHoveredIndex(null);
   };
 
-  const handleClick = (e: THREE.Intersection[]) => {
+  const handleClick = (e: { intersections: THREE.Intersection[] }) => {
     // Get all intersections and find the closest one by distance
-    if (Array.isArray(e) && e.length > 0) {
+    if (e.intersections && e.intersections.length > 0) {
       // Sort by distance to camera (closest first)
-      const sortedIntersections = [...e].sort((a, b) => a.distance - b.distance);
+      const sortedIntersections = [...e.intersections].sort((a, b) => a.distance - b.distance);
       const closest = sortedIntersections[0];
       
       if (closest.index !== undefined) {
