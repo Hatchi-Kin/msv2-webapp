@@ -23,14 +23,14 @@ const LibraryAlbumsPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pt-6">
       <LibraryHeader 
         title={`Albums by ${decodedArtistName}`} 
         subtitle="Browse albums"
         showBack
       />
       
-      <div className="glass-panel p-6 rounded-3xl min-h-[500px]">
+      <div className="glass-panel p-6 rounded-3xl min-h-[650px]">
         {loading ? (
           <LoadingSpinner message={`Loading albums for ${decodedArtistName}...`} />
         ) : error ? (

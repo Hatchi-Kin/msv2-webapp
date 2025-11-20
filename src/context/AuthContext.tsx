@@ -5,10 +5,18 @@ import React, {
   useContext,
   useCallback,
 } from "react";
-import { api, setUnauthorizedHandler } from "@/lib/api";
+import { api } from "@/lib/api";
+import { setRefreshTokenHandler, setLogoutHandler } from "@/lib/api/client";
 import type { User, UserCreate, Token } from "@/types/api";
 import { useNavigate } from "react-router-dom";
 import { getErrorMessage } from "@/lib/utils/errors";
+
+// Import usePlayer - we'll use it via a ref to avoid circular dependency
+let stopMusicCallback: (() => void) | null = null;
+
+export const setStopMusicCallback = (callback: () => void) => {
+  stopMusicCallback = callback;
+};
 
 interface AuthContextType {
   user: User | null;
@@ -43,6 +51,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     setAccessToken(null);
     setUser(null);
     setError(null);
+    
+    // Stop music when clearing auth
+    if (stopMusicCallback) {
+      stopMusicCallback();
+    }
   }, []);
 
   const fetchUser = useCallback(
@@ -133,17 +146,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, [accessToken, navigate, clearAuth]);
 
-  // Handle session expiration (401 errors from API)
-  const handleSessionExpired = useCallback(() => {
+  // Handler for token refresh that returns the new token
+  const handleRefreshToken = useCallback(async (): Promise<string> => {
+    console.log("Refreshing access token...");
+    const tokenResponse: Token = await api.auth.refresh();
+    storeAccessToken(tokenResponse.access_token);
+    // Fetch user data with new token
+    await fetchUser(tokenResponse.access_token);
+    return tokenResponse.access_token;
+  }, [fetchUser]);
+
+  // Handler for final logout when refresh fails
+  const handleLogout = useCallback(() => {
+    console.log("Session expired, logging out...");
     clearAuth();
     navigate("/", { state: { sessionExpired: true } });
   }, [clearAuth, navigate]);
 
-  // Register global 401 handler
+  // Register global handlers
   useEffect(() => {
-    setUnauthorizedHandler(handleSessionExpired);
-    return () => setUnauthorizedHandler(() => {});
-  }, [handleSessionExpired]);
+    setRefreshTokenHandler(handleRefreshToken);
+    setLogoutHandler(handleLogout);
+    return () => {
+      setRefreshTokenHandler(async () => "");
+      setLogoutHandler(() => {});
+    };
+  }, [handleRefreshToken, handleLogout]);
 
   useEffect(() => {
     const initAuth = async () => {

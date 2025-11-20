@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import type { MegasetTrack } from "@/types/api";
 import config from "@/lib/config";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth, setStopMusicCallback } from "@/context/AuthContext";
 import { UI_CONSTANTS } from "@/constants/ui";
 
 interface PlayerState {
@@ -19,6 +19,7 @@ interface PlayerState {
   duration: number;
   queue: MegasetTrack[];
   queueIndex: number;
+  isRepeat: boolean;
 }
 
 interface PlayerContextType extends PlayerState {
@@ -31,6 +32,8 @@ interface PlayerContextType extends PlayerState {
   addToQueue: (track: MegasetTrack) => void;
   clearQueue: () => void;
   playQueue: (tracks: MegasetTrack[], startIndex?: number) => void;
+  toggleRepeat: () => void;
+  stopMusic: () => void;
 }
 
 const PlayerContext = createContext<PlayerContextType | undefined>(undefined);
@@ -49,6 +52,7 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({
   const [duration, setDuration] = useState(0);
   const [queue, setQueue] = useState<MegasetTrack[]>([]);
   const [queueIndex, setQueueIndex] = useState(0);
+  const [isRepeat, setIsRepeat] = useState(false);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -71,6 +75,13 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({
     };
 
     const handleEnded = () => {
+      // If repeat is on, restart current track
+      if (isRepeat) {
+        audio.currentTime = 0;
+        audio.play();
+        return;
+      }
+      
       // Auto-play next track if in queue
       if (queueIndex < queue.length - 1) {
         const nextIndex = queueIndex + 1;
@@ -99,7 +110,7 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({
       audio.pause();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [queueIndex, queue.length]); // Removed 'volume' - it shouldn't recreate audio element
+  }, [queueIndex, queue.length, isRepeat]); // Added isRepeat
 
   const playTrack = useCallback(
     (track: MegasetTrack) => {
@@ -223,6 +234,25 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({
     playTrack(tracks[startIndex]);
   };
 
+  const toggleRepeat = useCallback(() => {
+    setIsRepeat((prev) => !prev);
+  }, []);
+
+  const stopMusic = useCallback(() => {
+    if (!audioRef.current) return;
+    audioRef.current.pause();
+    audioRef.current.src = "";
+    setIsPlaying(false);
+    setCurrentTrack(null);
+    setCurrentTime(0);
+    setDuration(0);
+  }, []);
+
+  // Register stopMusic callback with AuthContext
+  useEffect(() => {
+    setStopMusicCallback(stopMusic);
+  }, [stopMusic]);
+
   return (
     <PlayerContext.Provider
       value={{
@@ -233,6 +263,7 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({
         duration,
         queue,
         queueIndex,
+        isRepeat,
         playTrack,
         togglePlayPause,
         seekTo,
@@ -242,6 +273,8 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({
         addToQueue,
         clearQueue,
         playQueue,
+        toggleRepeat,
+        stopMusic,
       }}
     >
       {children}

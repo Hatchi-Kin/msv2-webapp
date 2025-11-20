@@ -78,7 +78,7 @@ const TrackItem: React.FC<TrackItemProps> = ({
   };
 
   return (
-    <div className="group flex items-center gap-4 p-3 rounded-xl transition-all duration-300 bg-transparent border border-transparent hover:bg-muted hover:border-muted-foreground hover:translate-x-1">
+    <div className="group flex items-center gap-4 p-3 rounded-xl transition-all duration-300 bg-transparent border border-transparent hover:bg-white/30 dark:hover:bg-white/5 hover:border-primary/20 hover:translate-x-1">
       {/* Track Number */}
       <div className="flex-shrink-0 w-8 text-center">
         {track.tracknumber ? (

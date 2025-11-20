@@ -78,7 +78,7 @@ const SimilarTrackCard: React.FC<SimilarTrackCardProps> = ({
     <div className="group relative rounded-2xl overflow-hidden transition-all duration-300 cursor-pointer bg-background border border-border hover:border-muted-foreground hover:-translate-y-1 hover:shadow-lg">
       {/* Similarity Badge */}
       <div
-        className="absolute top-3 right-3 px-2 py-1 rounded-lg text-xs font-bold z-10"
+        className="absolute top-2 right-2 px-2 py-0.5 rounded-md text-xs font-bold z-10"
         style={{
           backgroundColor: badgeColor.bg,
           color: badgeColor.text,
@@ -87,18 +87,16 @@ const SimilarTrackCard: React.FC<SimilarTrackCardProps> = ({
         {similarityPercent}%
       </div>
 
-      {/* Album Art Placeholder */}
-      <div className="w-full aspect-square flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-muted to-muted-foreground">
-        <div className="text-6xl font-bold transition-transform duration-300 group-hover:scale-110 text-primary opacity-40">
+      {/* Album Art Placeholder - Compact */}
+      <div className="w-full aspect-[4/3] flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-muted to-muted-foreground">
+        <div className="text-4xl font-bold transition-transform duration-300 group-hover:scale-110 text-primary opacity-40">
           🎵
         </div>
-        {/* Decorative corner accent */}
-        <div className="absolute top-0 right-0 w-16 h-16 opacity-20 bg-gradient-radial from-primary to-transparent" />
       </div>
 
       {/* Track Info */}
-      <div className="p-4 space-y-2">
-        <h3 className="font-semibold text-sm line-clamp-2 min-h-[2.5rem] text-foreground">
+      <div className="p-3 space-y-1.5">
+        <h3 className="font-semibold text-sm line-clamp-1 text-foreground">
           {track.title || track.filename}
         </h3>
 
@@ -109,112 +107,101 @@ const SimilarTrackCard: React.FC<SimilarTrackCardProps> = ({
         )}
 
         {track.album && (
-          <p className="text-xs truncate text-foreground opacity-60">
+          <p className="text-xs truncate text-foreground opacity-50">
             {track.album}
           </p>
         )}
 
-        {track.year && (
-          <p className="text-xs text-foreground opacity-50">{track.year}</p>
-        )}
+        {/* Action Buttons - Compact icon-only row */}
+        <div className="flex gap-1.5 pt-2">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              playTrack(track);
+            }}
+            className="p-2 rounded-lg transition-all duration-300 bg-primary text-primary-foreground hover:scale-110 hover:shadow-md"
+            title="Play"
+          >
+            <Play className="w-3.5 h-3.5 fill-current" />
+          </button>
 
-        {/* Action Buttons */}
-        <div className="flex flex-col gap-2 pt-2">
-          <div className="flex gap-2">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onFindSimilar(track.id);
+            }}
+            className="p-2 rounded-lg transition-all duration-300 bg-muted text-primary border border-muted-foreground hover:bg-primary hover:text-primary-foreground hover:scale-110"
+            title="Find Similar"
+          >
+            <Sparkles className="w-3.5 h-3.5" />
+          </button>
+
+          <button
+            onClick={handleToggleFavorite}
+            className={`p-2 rounded-lg transition-all duration-300 ${
+              isFavorite(track.id)
+                ? "bg-primary text-primary-foreground"
+                : "bg-muted text-primary border border-muted-foreground hover:bg-primary hover:text-primary-foreground"
+            } hover:scale-110`}
+            title={isFavorite(track.id) ? "Remove from favorites" : "Add to favorites"}
+          >
+            <Heart
+              className={`w-3.5 h-3.5 ${
+                isFavorite(track.id) ? "fill-current" : ""
+              }`}
+            />
+          </button>
+
+          <div
+            className="relative"
+            onMouseLeave={handleMouseLeave}
+            onMouseEnter={handleMouseEnter}
+          >
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                playTrack(track);
+                setShowPlaylistMenu(!showPlaylistMenu);
               }}
-              className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-300 shadow-sm bg-primary text-primary-foreground hover:-translate-y-0.5 hover:shadow-lg"
+              disabled={isAddingToPlaylist}
+              className="p-2 rounded-lg transition-all duration-300 bg-muted text-primary border border-muted-foreground hover:bg-primary hover:text-primary-foreground hover:scale-110 disabled:opacity-50"
+              title="Add to Playlist"
             >
-              <Play className="w-3 h-3 fill-current" />
-              Play
+              <ListPlus className="w-3.5 h-3.5" />
             </button>
 
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onFindSimilar(track.id);
-              }}
-              className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-300 bg-muted text-primary border border-muted-foreground hover:bg-primary hover:text-primary-foreground hover:-translate-y-0.5 hover:shadow-md"
-            >
-              <Sparkles className="w-3 h-3" />
-              Similar
-            </button>
-          </div>
-
-          <div className="flex gap-2">
-            {/* Favorite button */}
-            <button
-              onClick={handleToggleFavorite}
-              className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-300 ${
-                isFavorite(track.id)
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-muted text-primary border border-muted-foreground hover:bg-primary hover:text-primary-foreground"
-              } hover:-translate-y-0.5 hover:shadow-md`}
-            >
-              <Heart
-                className={`w-3 h-3 ${
-                  isFavorite(track.id) ? "fill-current" : ""
-                }`}
-              />
-              {isFavorite(track.id) ? "Favorited" : "Favorite"}
-            </button>
-
-            {/* Add to playlist button */}
-            <div
-              className="flex-1 relative"
-              onMouseLeave={handleMouseLeave}
-              onMouseEnter={handleMouseEnter}
-            >
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setShowPlaylistMenu(!showPlaylistMenu);
-                }}
-                disabled={isAddingToPlaylist}
-                className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-300 bg-muted text-primary border border-muted-foreground hover:bg-primary hover:text-primary-foreground hover:-translate-y-0.5 hover:shadow-md disabled:opacity-50"
+            {showPlaylistMenu && (
+              <div
+                className="absolute left-0 bottom-full mb-2 bg-background border-2 border-primary rounded-xl shadow-2xl z-[100] min-w-[200px]"
+                onClick={(e) => e.stopPropagation()}
               >
-                <ListPlus className="w-3 h-3" />
-                Playlist
-              </button>
-
-              {/* Playlist dropdown */}
-              {showPlaylistMenu && (
-                <div
-                  className="absolute left-0 bottom-full mb-2 bg-background border-2 border-primary rounded-xl shadow-2xl z-[100] min-w-[216px]"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <div className="p-3 max-h-[180px] overflow-y-auto">
-                    {playlists.length === 0 ? (
-                      <div className="px-3 py-2 text-sm text-foreground font-medium">
-                        No playlists
-                      </div>
-                    ) : (
-                      playlists.map((playlist) => (
-                        <button
-                          key={playlist.id}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleAddToPlaylist(playlist.id);
-                          }}
-                          disabled={
-                            isAddingToPlaylist || playlist.track_count >= 20
-                          }
-                          className="w-full text-left px-3 py-2 text-sm rounded-lg hover:bg-primary hover:text-primary-foreground transition-colors disabled:opacity-50 mb-1 last:mb-0"
-                        >
-                          <div className="font-semibold">{playlist.name}</div>
-                          <div className="text-xs opacity-80 font-medium">
-                            {playlist.track_count}/20
-                          </div>
-                        </button>
-                      ))
-                    )}
-                  </div>
+                <div className="p-2 max-h-[180px] overflow-y-auto">
+                  {playlists.length === 0 ? (
+                    <div className="px-3 py-2 text-xs text-foreground">
+                      No playlists
+                    </div>
+                  ) : (
+                    playlists.map((playlist) => (
+                      <button
+                        key={playlist.id}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleAddToPlaylist(playlist.id);
+                        }}
+                        disabled={
+                          isAddingToPlaylist || playlist.track_count >= 20
+                        }
+                        className="w-full text-left px-2 py-1.5 text-xs rounded-lg hover:bg-primary hover:text-primary-foreground transition-colors disabled:opacity-50 mb-1 last:mb-0"
+                      >
+                        <div className="font-semibold">{playlist.name}</div>
+                        <div className="text-xs opacity-80">
+                          {playlist.track_count}/20
+                        </div>
+                      </button>
+                    ))
+                  )}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
 
           {track.artist_folder && (
@@ -223,10 +210,10 @@ const SimilarTrackCard: React.FC<SimilarTrackCardProps> = ({
                 e.stopPropagation();
                 onViewArtist(track.artist_folder!);
               }}
-              className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-300 bg-muted text-foreground border border-muted-foreground hover:bg-primary hover:text-primary-foreground hover:-translate-y-0.5 hover:shadow-md"
+              className="p-2 rounded-lg transition-all duration-300 bg-muted text-foreground border border-muted-foreground hover:bg-primary hover:text-primary-foreground hover:scale-110 ml-auto"
+              title="View Artist"
             >
-              <User className="w-3 h-3" />
-              View Artist
+              <User className="w-3.5 h-3.5" />
             </button>
           )}
         </div>

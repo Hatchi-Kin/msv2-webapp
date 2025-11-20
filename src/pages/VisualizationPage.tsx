@@ -102,7 +102,7 @@ const VisualizationPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex h-[80vh] w-full items-center justify-center bg-background/50 backdrop-blur-sm rounded-xl border border-border">
+      <div className="flex h-[80vh] w-full items-center justify-center bg-background/50 backdrop-blur-sm rounded-3xl border border-border mt-6">
         <LoadingSpinner />
       </div>
     );
@@ -110,12 +110,12 @@ const VisualizationPage: React.FC = () => {
 
   if (error) {
     return (
-      <div className="flex h-[80vh] w-full flex-col items-center justify-center bg-background/50 backdrop-blur-sm gap-4 text-center rounded-xl border border-border">
+      <div className="flex h-[80vh] w-full flex-col items-center justify-center bg-background/50 backdrop-blur-sm gap-4 text-center rounded-3xl border border-border mt-6">
         <div className="text-destructive font-bold text-xl">Error Loading Visualization</div>
         <div className="text-muted-foreground">{error}</div>
         <button 
           onClick={() => window.location.reload()}
-          className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
+          className="px-4 py-2 bg-primary text-primary-foreground rounded-xl hover:bg-primary/90"
         >
           Retry
         </button>
@@ -124,7 +124,7 @@ const VisualizationPage: React.FC = () => {
   }
 
   return (
-    <div className="relative w-full h-[80vh] overflow-hidden rounded-xl border border-border shadow-2xl bg-background/30 backdrop-blur-xl">
+    <div className="relative w-full h-[80vh] overflow-hidden rounded-3xl border border-border shadow-2xl bg-background/30 backdrop-blur-xl mt-6">
       <Scene 
         points={points} 
         onSelectPoint={handleSelectPoint}

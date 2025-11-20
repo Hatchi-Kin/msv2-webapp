@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useLibrary } from "@/context/LibraryContext";
 import { usePlayer } from "@/context/PlayerContext";
@@ -10,14 +10,18 @@ import { Heart, ListMusic, Trash2, Plus, X, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import TrackItem from "@/components/TrackItem";
 import LoadingSpinner from "@/components/LoadingSpinner";
-import FloatingMusicNotes from "@/components/FloatingMusicNotes";
+import LibraryHeader from "@/components/library/LibraryHeader";
 
 type View = "favorites" | "playlists" | "playlist-detail";
 
 const UserLibraryPage: React.FC = () => {
   const { accessToken, isAuthenticated, loading: authLoading } = useAuth();
-  const { playlists, refreshPlaylists, createPlaylist, deletePlaylist } =
-    useLibrary();
+  const { 
+    playlists, 
+    refreshPlaylists, 
+    createPlaylist, 
+    deletePlaylist 
+  } = useLibrary();
   const { playQueue } = usePlayer();
   const navigate = useNavigate();
 
@@ -25,8 +29,9 @@ const UserLibraryPage: React.FC = () => {
   const [favorites, setFavorites] = useState<MegasetTrack[]>([]);
   const [selectedPlaylist, setSelectedPlaylist] =
     useState<PlaylistDetail | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loadingData, setLoadingData] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const hasFetchedFavorites = useRef(false);
 
   // New playlist creation
   const [showCreatePlaylist, setShowCreatePlaylist] = useState(false);
@@ -44,21 +49,22 @@ const UserLibraryPage: React.FC = () => {
     if (!accessToken) return;
 
     try {
-      setLoading(true);
+      setLoadingData(true);
       setError(null);
       const response = await api.music.getFavorites(accessToken);
       setFavorites(response.tracks);
+      hasFetchedFavorites.current = true;
     } catch (err) {
       console.error("Failed to fetch favorites:", err);
       setError(getErrorMessage(err));
     } finally {
-      setLoading(false);
+      setLoadingData(false);
     }
   }, [accessToken]);
 
-  // Fetch favorites when view changes
+  // Fetch favorites only once
   useEffect(() => {
-    if (currentView === "favorites" && accessToken) {
+    if (currentView === "favorites" && accessToken && !hasFetchedFavorites.current) {
       fetchFavorites();
     }
   }, [currentView, accessToken, fetchFavorites]);
@@ -67,7 +73,7 @@ const UserLibraryPage: React.FC = () => {
     if (!accessToken) return;
 
     try {
-      setLoading(true);
+      setLoadingData(true);
       setError(null);
       const response = await api.music.getPlaylistDetail(
         playlistId,
@@ -79,7 +85,7 @@ const UserLibraryPage: React.FC = () => {
       console.error("Failed to fetch playlist:", err);
       setError(getErrorMessage(err));
     } finally {
-      setLoading(false);
+      setLoadingData(false);
     }
   };
 
@@ -116,41 +122,87 @@ const UserLibraryPage: React.FC = () => {
     }
   };
 
-  const handleBack = () => {
-    if (currentView === "playlist-detail") {
-      setCurrentView("playlists");
-      setSelectedPlaylist(null);
-    }
-  };
 
-  if (authLoading || loading) {
+
+  if (authLoading) {
     return <LoadingSpinner message="Loading your library..." />;
   }
 
-  return (
-    <div className="min-h-screen relative bg-gradient-to-br from-[hsl(30,30%,82%)] to-[hsl(30,23%,70%)]">
-      <FloatingMusicNotes />
-      <div className="container max-w-6xl mx-auto p-6 space-y-6 relative z-10">
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 rounded-2xl backdrop-blur-lg bg-background">
-          <div className="space-y-1">
-            <h1 className="text-3xl font-bold tracking-tight text-foreground">
-              {currentView === "favorites" && "Your Favorites"}
-              {currentView === "playlists" && "Your Playlists"}
-              {currentView === "playlist-detail" && selectedPlaylist?.name}
-            </h1>
-            <p className="text-sm text-foreground opacity-70">
-              {currentView === "favorites" &&
-                `${favorites.length}/20 favorites`}
-              {currentView === "playlists" && `${playlists.length} playlists`}
-              {currentView === "playlist-detail" &&
-                selectedPlaylist &&
-                `${selectedPlaylist.tracks.length}/20 tracks`}
-            </p>
-          </div>
+  // Get current title and subtitle
+  const getHeaderInfo = () => {
+    if (currentView === "favorites") {
+      return {
+        title: "Your Favorites",
+        subtitle: `${favorites.length}/20 favorites`,
+      };
+    } else if (currentView === "playlists") {
+      return {
+        title: "Your Playlists",
+        subtitle: `${playlists.length} playlists`,
+      };
+    } else if (currentView === "playlist-detail" && selectedPlaylist) {
+      return {
+        title: selectedPlaylist.name,
+        subtitle: `${selectedPlaylist.tracks.length}/20 tracks`,
+      };
+    }
+    return { title: "", subtitle: "" };
+  };
 
-          <div className="flex gap-2">
-            {currentView === "favorites" && favorites.length > 0 && (
+  const { title, subtitle } = getHeaderInfo();
+
+  return (
+    <>
+      <div className="space-y-6 pt-6">
+        {/* Header */}
+        <LibraryHeader
+          title={title}
+          subtitle={subtitle}
+          showBack={currentView === "playlist-detail"}
+          onBack={() => {
+            setSelectedPlaylist(null);
+            setCurrentView("playlists");
+          }}
+        />
+
+        {/* Error Message */}
+        {error && (
+          <div className="p-4 rounded-3xl bg-red-500/10 border border-red-500/20 text-red-600">
+            {error}
+          </div>
+        )}
+
+        {/* Content */}
+        <div className="glass-panel rounded-3xl p-6 min-h-[650px]">
+          {/* View Tabs - Inside content card */}
+          {currentView !== "playlist-detail" && (
+            <div className="flex gap-2 rounded-3xl bg-white/30 dark:bg-black/20 border border-white/20 dark:border-white/5 mb-6">
+              <button
+                onClick={() => setCurrentView("favorites")}
+                className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-semibold text-base transition-all duration-300 ${currentView === "favorites"
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "bg-transparent text-foreground hover:bg-white/50 dark:hover:bg-white/10"
+                  }`}
+              >
+                <Heart className="h-5 w-5" />
+                Favorites
+              </button>
+              <button
+                onClick={() => setCurrentView("playlists")}
+                className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-semibold text-base transition-all duration-300 ${currentView === "playlists"
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "bg-transparent text-foreground hover:bg-white/50 dark:hover:bg-white/10"
+                  }`}
+              >
+                <ListMusic className="h-5 w-5" />
+                Playlists
+              </button>
+            </div>
+          )}
+
+          {/* Play All Button - Inside content card */}
+          {currentView === "favorites" && favorites.length > 0 && (
+            <div className="mb-6">
               <Button
                 onClick={() => playQueue(favorites)}
                 className="flex items-center space-x-2 rounded-xl font-semibold"
@@ -158,10 +210,12 @@ const UserLibraryPage: React.FC = () => {
                 <Play className="h-4 w-4" />
                 <span>Play All</span>
               </Button>
-            )}
-            {currentView === "playlist-detail" &&
-              selectedPlaylist &&
-              selectedPlaylist.tracks.length > 0 && (
+            </div>
+          )}
+          {currentView === "playlist-detail" &&
+            selectedPlaylist &&
+            selectedPlaylist.tracks.length > 0 && (
+              <div className="mb-6">
                 <Button
                   onClick={() => playQueue(selectedPlaylist.tracks)}
                   className="flex items-center space-x-2 rounded-xl font-semibold"
@@ -169,70 +223,47 @@ const UserLibraryPage: React.FC = () => {
                   <Play className="h-4 w-4" />
                   <span>Play All</span>
                 </Button>
-              )}
-            {currentView === "playlist-detail" && (
-              <Button
-                onClick={handleBack}
-                variant="outline"
-                className="flex items-center space-x-2 border-2 rounded-xl font-semibold"
-              >
-                <span>← Back</span>
-              </Button>
+              </div>
             )}
-          </div>
-        </div>
-
-        {/* View Tabs */}
-        {currentView !== "playlist-detail" && (
-          <div className="flex gap-2 p-2 rounded-2xl backdrop-blur-lg bg-background">
-            <button
-              onClick={() => setCurrentView("favorites")}
-              className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-semibold transition-all ${
-                currentView === "favorites"
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-transparent text-foreground hover:bg-muted"
-              }`}
-            >
-              <Heart className="h-5 w-5" />
-              Favorites
-            </button>
-            <button
-              onClick={() => setCurrentView("playlists")}
-              className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-semibold transition-all ${
-                currentView === "playlists"
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-transparent text-foreground hover:bg-muted"
-              }`}
-            >
-              <ListMusic className="h-5 w-5" />
-              Playlists
-            </button>
-          </div>
-        )}
-
-        {/* Error Message */}
-        {error && (
-          <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-600">
-            {error}
-          </div>
-        )}
-
-        {/* Content */}
-        <div className="backdrop-blur-lg rounded-2xl p-6 bg-background border border-border">
           {/* Favorites View */}
           {currentView === "favorites" && (
-            <div className="space-y-2">
-              {favorites.length === 0 ? (
+            <div>
+              {loadingData && !hasFetchedFavorites.current ? (
+                <LoadingSpinner message="Loading favorites..." />
+              ) : favorites.length === 0 ? (
                 <div className="text-center py-12">
                   <Heart className="h-12 w-12 mx-auto mb-4 text-primary opacity-50" />
-                  <p className="text-sm text-foreground opacity-70">
+                  <p className="text-sm text-muted-foreground">
                     No favorites yet. Start adding tracks!
                   </p>
                 </div>
               ) : (
-                favorites.map((track) => (
-                  <TrackItem key={track.id} track={track} />
-                ))
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                  {favorites.map((track) => (
+                    <div
+                      key={track.id}
+                      className="group cursor-pointer glass-card rounded-3xl hover:border-primary/30"
+                      onClick={() => {
+                        // Play the track when clicked
+                        playQueue([track]);
+                      }}
+                    >
+                      <div className="p-4 space-y-3 flex flex-col min-h-[140px]">
+                        <div className="flex items-center justify-center w-12 h-12 rounded-full mx-auto transition-all duration-300 bg-white/50 dark:bg-white/5">
+                          <Heart className="h-6 w-6 text-primary" fill="currentColor" />
+                        </div>
+                        <div className="text-center flex-1 flex flex-col items-center justify-center min-h-[40px]">
+                          <p className="font-medium text-sm leading-tight line-clamp-2 text-foreground">
+                            {track.title || track.filename}
+                          </p>
+                          <p className="text-xs text-muted-foreground mt-1 line-clamp-1">
+                            {track.artist || "Unknown Artist"}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               )}
             </div>
           )}
@@ -289,7 +320,7 @@ const UserLibraryPage: React.FC = () => {
               {playlists.length === 0 ? (
                 <div className="text-center py-12">
                   <ListMusic className="h-12 w-12 mx-auto mb-4 text-primary opacity-50" />
-                  <p className="text-sm text-foreground opacity-70">
+                  <p className="text-sm text-muted-foreground">
                     No playlists yet. Create one to get started!
                   </p>
                 </div>
@@ -298,7 +329,7 @@ const UserLibraryPage: React.FC = () => {
                   {playlists.map((playlist) => (
                     <div
                       key={playlist.id}
-                      className="p-4 rounded-xl border border-border bg-muted hover:border-primary transition-all cursor-pointer group"
+                      className="p-4 rounded-3xl glass-card hover:border-primary/30 cursor-pointer group"
                       onClick={() => fetchPlaylistDetail(playlist.id)}
                     >
                       <div className="flex items-start justify-between mb-2">
@@ -306,7 +337,7 @@ const UserLibraryPage: React.FC = () => {
                           <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">
                             {playlist.name}
                           </h3>
-                          <p className="text-sm text-foreground opacity-60">
+                          <p className="text-sm text-muted-foreground">
                             {playlist.track_count}/20 tracks
                           </p>
                         </div>
@@ -320,7 +351,7 @@ const UserLibraryPage: React.FC = () => {
                           <Trash2 className="h-4 w-4" />
                         </button>
                       </div>
-                      <p className="text-xs text-foreground opacity-50">
+                      <p className="text-xs text-muted-foreground">
                         Updated{" "}
                         {new Date(playlist.updated_at).toLocaleDateString()}
                       </p>
@@ -337,7 +368,7 @@ const UserLibraryPage: React.FC = () => {
               {selectedPlaylist.tracks.length === 0 ? (
                 <div className="text-center py-12">
                   <ListMusic className="h-12 w-12 mx-auto mb-4 text-primary opacity-50" />
-                  <p className="text-sm text-foreground opacity-70">
+                  <p className="text-sm text-muted-foreground">
                     No tracks in this playlist yet.
                   </p>
                 </div>
@@ -350,7 +381,7 @@ const UserLibraryPage: React.FC = () => {
           )}
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -23,24 +23,18 @@ const LibrarySimilarPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pt-6">
       <LibraryHeader 
         title="Similar Tracks" 
-        subtitle={originTrack ? `Similar to: ${originTrack.title || originTrack.filename}` : "Recommendations"}
+        subtitle={
+          originTrack 
+            ? `${originTrack.title || originTrack.filename}${originTrack.artist ? ` • ${originTrack.artist}` : ''}`
+            : "Recommendations"
+        }
         showBack
-      >
-        {originTrack && originTrack.artist && (
-           <div className="flex items-center gap-2 mt-2">
-             <div className="px-3 py-1 rounded-lg bg-muted border border-muted-foreground">
-               <p className="text-sm text-foreground">
-                 <span className="opacity-70">by {originTrack.artist}</span>
-               </p>
-             </div>
-           </div>
-        )}
-      </LibraryHeader>
+      />
       
-      <div className="glass-panel p-6 rounded-3xl min-h-[500px]">
+      <div className="glass-panel p-6 rounded-3xl min-h-[650px]">
         {loading ? (
           <LoadingSpinner message="Finding similar tracks..." />
         ) : error ? (

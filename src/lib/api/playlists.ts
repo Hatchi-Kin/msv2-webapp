@@ -1,4 +1,4 @@
-import { API_BASE_URL, handleResponse } from "./client";
+import { API_BASE_URL, fetchWithAuth } from "./client";
 import type {
   PlaylistSummary,
   PlaylistsListResponse,
@@ -10,7 +10,7 @@ export const playlistsApi = {
     name: string,
     accessToken: string
   ): Promise<PlaylistSummary> {
-    const response = await fetch(`${API_BASE_URL}/music/playlists`, {
+    return fetchWithAuth(`${API_BASE_URL}/music/playlists`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -18,24 +18,22 @@ export const playlistsApi = {
       },
       body: JSON.stringify({ name }),
     });
-    return handleResponse(response);
   },
 
   async getPlaylists(accessToken: string): Promise<PlaylistsListResponse> {
-    const response = await fetch(`${API_BASE_URL}/music/playlists`, {
+    return fetchWithAuth(`${API_BASE_URL}/music/playlists`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
     });
-    return handleResponse(response);
   },
 
   async getPlaylistDetail(
     playlistId: number,
     accessToken: string
   ): Promise<PlaylistDetail> {
-    const response = await fetch(
+    return fetchWithAuth(
       `${API_BASE_URL}/music/playlists/${playlistId}`,
       {
         method: "GET",
@@ -44,7 +42,6 @@ export const playlistsApi = {
         },
       }
     );
-    return handleResponse(response);
   },
 
   async updatePlaylist(
@@ -52,7 +49,7 @@ export const playlistsApi = {
     name: string,
     accessToken: string
   ): Promise<{ status: string; message: string }> {
-    const response = await fetch(
+    return fetchWithAuth(
       `${API_BASE_URL}/music/playlists/${playlistId}`,
       {
         method: "PUT",
@@ -63,14 +60,13 @@ export const playlistsApi = {
         body: JSON.stringify({ name }),
       }
     );
-    return handleResponse(response);
   },
 
   async deletePlaylist(
     playlistId: number,
     accessToken: string
   ): Promise<{ status: string; message: string }> {
-    const response = await fetch(
+    return fetchWithAuth(
       `${API_BASE_URL}/music/playlists/${playlistId}`,
       {
         method: "DELETE",
@@ -79,7 +75,6 @@ export const playlistsApi = {
         },
       }
     );
-    return handleResponse(response);
   },
 
   async addTrackToPlaylist(
@@ -87,7 +82,7 @@ export const playlistsApi = {
     trackId: number,
     accessToken: string
   ): Promise<{ status: string; message: string }> {
-    const response = await fetch(
+    return fetchWithAuth(
       `${API_BASE_URL}/music/playlists/${playlistId}/tracks/${trackId}`,
       {
         method: "POST",
@@ -96,7 +91,6 @@ export const playlistsApi = {
         },
       }
     );
-    return handleResponse(response);
   },
 
   async removeTrackFromPlaylist(
@@ -104,7 +98,7 @@ export const playlistsApi = {
     trackId: number,
     accessToken: string
   ): Promise<{ status: string; message: string }> {
-    const response = await fetch(
+    return fetchWithAuth(
       `${API_BASE_URL}/music/playlists/${playlistId}/tracks/${trackId}`,
       {
         method: "DELETE",
@@ -113,6 +107,5 @@ export const playlistsApi = {
         },
       }
     );
-    return handleResponse(response);
   },
 };

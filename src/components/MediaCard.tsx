@@ -17,7 +17,7 @@ const MediaCard: React.FC<MediaCardProps> = ({ title, icon, onClick }) => {
       onClick={onClick}
     >
       <CardContent className="p-4 space-y-3 flex flex-col min-h-[140px]">
-        <div className="flex items-center justify-center w-12 h-12 rounded-full mx-auto transition-all duration-300 bg-muted">
+        <div className="flex items-center justify-center w-12 h-12 rounded-full mx-auto transition-all duration-300 bg-white/50 dark:bg-white/5">
           {icon}
         </div>
         <div className="text-center flex-1 flex items-center justify-center min-h-[40px]">

@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useArtists } from "@/hooks/useArtists";
 import LibraryHeader from "@/components/library/LibraryHeader";
 import ArtistsView from "@/components/library/views/ArtistsView";
@@ -8,6 +8,9 @@ import ErrorMessage from "@/components/ErrorMessage";
 
 const LibraryArtistsPage: React.FC = () => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  
+  const pageFromUrl = parseInt(searchParams.get("page") || "1", 10);
   const {
     artists,
     totalArtists,
@@ -16,17 +19,22 @@ const LibraryArtistsPage: React.FC = () => {
     currentPage,
     itemsPerPage,
     setPage,
-  } = useArtists();
+  } = useArtists(pageFromUrl);
 
   const handleArtistClick = (artistName: string) => {
     navigate(`/library/artists/${encodeURIComponent(artistName)}`);
   };
 
+  const handlePageChange = (page: number) => {
+    setPage(page);
+    setSearchParams({ page: page.toString() });
+  };
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pt-6">
       <LibraryHeader title="Your Music Library" subtitle="Browse by artist" />
       
-      <div className="glass-panel p-6 rounded-3xl min-h-[500px]">
+      <div className="glass-panel p-6 rounded-3xl min-h-[650px]">
         {loading && artists.length === 0 ? (
           <LoadingSpinner message="Loading artists..." />
         ) : error ? (
@@ -39,7 +47,7 @@ const LibraryArtistsPage: React.FC = () => {
             itemsPerPage={itemsPerPage}
             isLoadingMore={loading}
             onArtistClick={handleArtistClick}
-            onPageChange={setPage}
+            onPageChange={handlePageChange}
           />
         )}
       </div>

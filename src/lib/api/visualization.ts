@@ -1,4 +1,4 @@
-import { API_BASE_URL, handleResponse } from './client';
+import { API_BASE_URL, fetchWithAuth } from './client';
 
 export interface VisualizationPoint {
   id: number;
@@ -40,7 +40,7 @@ export interface TrackNeighbors {
 
 export const visualizationApi = {
   getPoints: async (accessToken: string, limit = 5000, offset = 0) => {
-    const response = await fetch(
+    return fetchWithAuth<{ points: VisualizationPoint[]; total: number }>(
       `${API_BASE_URL}/coordinates/points?limit=${limit}&offset=${offset}`,
       {
         method: 'GET',
@@ -49,21 +49,19 @@ export const visualizationApi = {
         },
       }
     );
-    return handleResponse<{ points: VisualizationPoint[]; total: number }>(response);
   },
 
   getStats: async (accessToken: string) => {
-    const response = await fetch(`${API_BASE_URL}/coordinates/stats`, {
+    return fetchWithAuth<VisualizationStats>(`${API_BASE_URL}/coordinates/stats`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
     });
-    return handleResponse<VisualizationStats>(response);
   },
 
   search: async (accessToken: string, query: string, limit = 50) => {
-    const response = await fetch(
+    return fetchWithAuth<VisualizationPoint[]>(
       `${API_BASE_URL}/coordinates/search?q=${encodeURIComponent(query)}&limit=${limit}`,
       {
         method: 'GET',
@@ -72,21 +70,19 @@ export const visualizationApi = {
         },
       }
     );
-    return handleResponse<VisualizationPoint[]>(response);
   },
 
   getCluster: async (accessToken: string, clusterId: number) => {
-    const response = await fetch(`${API_BASE_URL}/coordinates/cluster/${clusterId}`, {
+    return fetchWithAuth<ClusterDetails>(`${API_BASE_URL}/coordinates/cluster/${clusterId}`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
     });
-    return handleResponse<ClusterDetails>(response);
   },
 
   getNeighbors: async (accessToken: string, trackId: number, limit = 20) => {
-    const response = await fetch(
+    return fetchWithAuth<TrackNeighbors>(
       `${API_BASE_URL}/coordinates/track/${trackId}/neighbors?limit=${limit}`,
       {
         method: 'GET',
@@ -95,6 +91,5 @@ export const visualizationApi = {
         },
       }
     );
-    return handleResponse<TrackNeighbors>(response);
   }
 };

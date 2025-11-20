@@ -5,7 +5,7 @@
  * All endpoints are grouped by domain (auth, music, favorites, playlists).
  */
 
-export { setUnauthorizedHandler } from "./client";
+export { setRefreshTokenHandler, setLogoutHandler } from "./client";
 export { authApi as auth } from "./auth";
 export { musicApi as music } from "./music";
 export { favoritesApi as favorites } from "./favorites";
