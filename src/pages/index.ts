@@ -1,0 +1,8 @@
+export { default as LandingPage } from '@/features/auth/LandingPage';
+export { default as RegisterPage } from '@/features/auth/RegisterPage';
+export { default as LibraryPage } from "@/features/library/LibraryPage";
+export { default as LibraryArtistsPage } from '@/features/library/LibraryArtistsPage';
+export { default as LibraryAlbumsPage } from '@/features/library/LibraryAlbumsPage';
+export { default as LibraryTracksPage } from '@/features/library/LibraryTracksPage';
+export { default as LibrarySimilarPage } from '@/features/library/LibrarySimilarPage';
+export { default as VisualizePage } from '@/features/visualization/VisualizePage';
