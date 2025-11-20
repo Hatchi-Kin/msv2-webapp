@@ -23,6 +23,7 @@ export const authApi = {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
+      credentials: "include", // Required to receive refresh token cookie
       body: formBody.toString(),
     });
     return handleResponse(response);
