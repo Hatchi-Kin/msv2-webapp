@@ -10,13 +10,7 @@ import { setRefreshTokenHandler, setLogoutHandler } from "@/lib/api/client";
 import type { User, UserCreate, Token } from "@/types/api";
 import { useNavigate } from "react-router-dom";
 import { getErrorMessage } from "@/lib/utils/errors";
-
-// Import usePlayer - we'll use it via a ref to avoid circular dependency
-let stopMusicCallback: (() => void) | null = null;
-
-export const setStopMusicCallback = (callback: () => void) => {
-  stopMusicCallback = callback;
-};
+import { getStopMusicCallback } from "./authCallbacks";
 
 interface AuthContextType {
   user: User | null;
@@ -51,10 +45,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     setAccessToken(null);
     setUser(null);
     setError(null);
-    
+
     // Stop music when clearing auth
-    if (stopMusicCallback) {
-      stopMusicCallback();
+    const stopMusic = getStopMusicCallback();
+    if (stopMusic) {
+      stopMusic();
     }
   }, []);
 
