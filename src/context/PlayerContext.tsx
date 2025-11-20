@@ -8,7 +8,8 @@ import React, {
 } from "react";
 import type { MegasetTrack } from "@/types/api";
 import config from "@/lib/config";
-import { useAuth, setStopMusicCallback } from "@/context/AuthContext";
+import { useAuth } from "@/context/AuthContext";
+import { setStopMusicCallback } from "@/context/authCallbacks";
 import { UI_CONSTANTS } from "@/constants/ui";
 
 interface PlayerState {
@@ -81,7 +82,7 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({
         audio.play();
         return;
       }
-      
+
       // Auto-play next track if in queue
       if (queueIndex < queue.length - 1) {
         const nextIndex = queueIndex + 1;
@@ -187,12 +188,12 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const setVolume = useCallback((vol: number) => {
     if (!audioRef.current) return;
-    
+
     // Convert linear slider to logarithmic volume (human hearing is logarithmic)
     // Formula: volume = (e^(slider) - 1) / (e - 1)
     // Simplified: volume = slider^2 for easier calculation
     const logarithmicVolume = vol * vol;
-    
+
     audioRef.current.volume = logarithmicVolume;
     setVolumeState(vol); // Store linear value for slider
     localStorage.setItem("player-volume", vol.toString());

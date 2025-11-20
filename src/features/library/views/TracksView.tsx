@@ -16,17 +16,18 @@ const TracksView: React.FC<TracksViewProps> = ({
   onFindSimilar,
 }) => {
   if (tracks.length === 0) {
-    return <EmptyState icon={Music} message={`No tracks found for ${selectedAlbum}.`} />;
+    return (
+      <EmptyState
+        icon={Music}
+        message={`No tracks found for ${selectedAlbum}.`}
+      />
+    );
   }
 
   return (
     <div className="space-y-1">
       {tracks.map((track) => (
-        <TrackItem
-          key={track.id}
-          track={track}
-          onFindSimilar={onFindSimilar}
-        />
+        <TrackItem key={track.id} track={track} onFindSimilar={onFindSimilar} />
       ))}
     </div>
   );

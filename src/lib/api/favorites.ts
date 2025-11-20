@@ -39,14 +39,11 @@ export const favoritesApi = {
     trackId: number,
     accessToken: string
   ): Promise<CheckFavoriteResponse> {
-    return fetchWithAuth(
-      `${API_BASE_URL}/music/favorites/check/${trackId}`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
+    return fetchWithAuth(`${API_BASE_URL}/music/favorites/check/${trackId}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
   },
 };

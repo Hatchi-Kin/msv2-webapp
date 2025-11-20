@@ -1,11 +1,11 @@
-import React from 'react';
-import { Play, Sparkles, X } from 'lucide-react';
-import { usePlayer } from '@/context/PlayerContext';
+import React from "react";
+import { Play, Sparkles, X } from "lucide-react";
+import { usePlayer } from "@/context/PlayerContext";
 import { Button } from "@/components/ui/button";
 import { PlaylistDropdown } from "@/features/library/PlaylistDropdown";
 import { FavoriteButton } from "@/features/library/FavoriteButton";
-import type { VisualizationPoint } from '@/lib/api/visualization';
-import type { MegasetTrack } from '@/types/api';
+import type { VisualizationPoint } from "@/lib/api/visualization";
+import type { MegasetTrack } from "@/types/api";
 
 interface TrackCardProps {
   point: VisualizationPoint;
@@ -13,7 +13,11 @@ interface TrackCardProps {
   onFindSimilar: (trackId: number) => void;
 }
 
-const TrackCard: React.FC<TrackCardProps> = ({ point, onClose, onFindSimilar }) => {
+const TrackCard: React.FC<TrackCardProps> = ({
+  point,
+  onClose,
+  onFindSimilar,
+}) => {
   const { playTrack } = usePlayer();
 
   const handlePlay = () => {
@@ -25,21 +29,19 @@ const TrackCard: React.FC<TrackCardProps> = ({ point, onClose, onFindSimilar }) 
       album: point.album,
       genre: point.genre,
       year: point.year,
-      filename: '',
-      filepath: '',
-      relative_path: '',
+      filename: "",
+      filepath: "",
+      relative_path: "",
       filesize: 0,
-      created_at: '',
+      created_at: "",
       tracknumber: null,
     };
     playTrack(track);
   };
 
-
-
   return (
     <div className="absolute top-4 right-4 w-80 bg-background/90 backdrop-blur-md border border-primary/20 rounded-xl shadow-2xl p-4 z-50 animate-in slide-in-from-right-10 fade-in duration-300">
-      <button 
+      <button
         onClick={onClose}
         className="absolute top-2 right-2 p-1 text-muted-foreground hover:text-foreground transition-colors"
       >
@@ -47,7 +49,10 @@ const TrackCard: React.FC<TrackCardProps> = ({ point, onClose, onFindSimilar }) 
       </button>
 
       <div className="mt-2">
-        <h3 className="text-lg font-bold text-primary truncate" title={point.title}>
+        <h3
+          className="text-lg font-bold text-primary truncate"
+          title={point.title}
+        >
           {point.title}
         </h3>
         <p className="text-sm font-medium text-foreground/80 truncate">
@@ -62,18 +67,12 @@ const TrackCard: React.FC<TrackCardProps> = ({ point, onClose, onFindSimilar }) 
       </div>
 
       <div className="mt-4 flex items-center justify-between gap-2">
-        <Button
-          onClick={handlePlay}
-          className="flex-1 gap-2"
-        >
+        <Button onClick={handlePlay} className="flex-1 gap-2">
           <Play size={18} className="fill-current" />
           Play
         </Button>
 
-        <FavoriteButton
-          trackId={point.id}
-          variant="icon"
-        />
+        <FavoriteButton trackId={point.id} variant="icon" />
 
         <Button
           variant="outline"
@@ -83,14 +82,17 @@ const TrackCard: React.FC<TrackCardProps> = ({ point, onClose, onFindSimilar }) 
         >
           <Sparkles size={20} />
         </Button>
-        
+
         <PlaylistDropdown trackId={point.id} variant="button" />
       </div>
-      
+
       <div className="mt-3 pt-3 border-t border-border/50 text-xs text-muted-foreground flex justify-between">
         <span>Cluster: {point.cluster}</span>
         <span className="flex items-center gap-1">
-          <span className="w-2 h-2 rounded-full" style={{ backgroundColor: point.cluster_color }}></span>
+          <span
+            className="w-2 h-2 rounded-full"
+            style={{ backgroundColor: point.cluster_color }}
+          ></span>
           Color
         </span>
       </div>

@@ -11,7 +11,9 @@ interface UseSimilarTracksResult {
   error: string | null;
 }
 
-export const useSimilarTracks = (trackId: number | undefined): UseSimilarTracksResult => {
+export const useSimilarTracks = (
+  trackId: number | undefined
+): UseSimilarTracksResult => {
   const [similarTracks, setSimilarTracks] = useState<SimilarTrack[]>([]);
   const [originTrack, setOriginTrack] = useState<MegasetTrack | null>(null);
   const [loading, setLoading] = useState(true);
@@ -29,7 +31,7 @@ export const useSimilarTracks = (trackId: number | undefined): UseSimilarTracksR
       try {
         setLoading(true);
         setError(null);
-        
+
         // First get the track details for the origin track
         // We try to fetch it directly since we might have navigated here directly
         const track = await api.music.getSongById(trackId, accessToken);

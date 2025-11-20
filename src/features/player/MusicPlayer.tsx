@@ -51,23 +51,18 @@ const MusicPlayer: React.FC = () => {
     setVolume(volume > 0 ? 0 : UI_CONSTANTS.DEFAULT_VOLUME);
   };
 
-  // Temporarily always show for debugging
-  // if (!currentTrack) {
-  //   return null;
-  // }
-
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-lg border-t border-border shadow-lg z-50">
       {/* Mobile Progress Bar (Top Edge) */}
-      <div 
+      <div
         className="md:hidden w-full h-1 bg-muted cursor-pointer group relative"
         onClick={handleProgressClick}
       >
-        <div 
-          className="h-full bg-primary transition-all duration-100" 
-          style={{ width: `${progress}%` }} 
+        <div
+          className="h-full bg-primary transition-all duration-100"
+          style={{ width: `${progress}%` }}
         />
       </div>
 
@@ -75,7 +70,7 @@ const MusicPlayer: React.FC = () => {
         <div className="flex md:grid md:grid-cols-[1fr_auto_1fr] items-center justify-between gap-2 md:gap-4">
           {/* Left: Track Info */}
           <div className="flex-1 min-w-0 mr-2 md:mr-0">
-            <p className="text-sm font-medium text-foreground truncate">
+            <p className="text-sm font-medium text-tertiary-foreground truncate">
               {currentTrack?.title ||
                 currentTrack?.filename ||
                 "No track loaded"}

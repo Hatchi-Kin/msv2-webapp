@@ -9,9 +9,9 @@ import ErrorMessage from "@/components/ui/ErrorMessage";
 const LibrarySimilarPage: React.FC = () => {
   const { trackId } = useParams<{ trackId: string }>();
   const navigate = useNavigate();
-  
+
   const id = trackId ? parseInt(trackId, 10) : undefined;
-  
+
   const { similarTracks, originTrack, loading, error } = useSimilarTracks(id);
 
   const handleFindSimilar = (newTrackId: number) => {
@@ -24,16 +24,18 @@ const LibrarySimilarPage: React.FC = () => {
 
   return (
     <div className="space-y-6 pt-6">
-      <LibraryHeader 
-        title="Similar Tracks" 
+      <LibraryHeader
+        title="Similar Tracks"
         subtitle={
-          originTrack 
-            ? `${originTrack.title || originTrack.filename}${originTrack.artist ? ` • ${originTrack.artist}` : ''}`
+          originTrack
+            ? `${originTrack.title || originTrack.filename}${
+                originTrack.artist ? ` • ${originTrack.artist}` : ""
+              }`
             : "Recommendations"
         }
         showBack
       />
-      
+
       <div className="glass-panel p-6 rounded-3xl min-h-[650px]">
         {loading ? (
           <LoadingSpinner message="Finding similar tracks..." />

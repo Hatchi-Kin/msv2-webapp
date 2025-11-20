@@ -1,7 +1,7 @@
-import React, { useMemo, useRef, useEffect, useState } from 'react';
-import * as THREE from 'three';
-import type { VisualizationPoint } from '@/lib/api/visualization';
-import { POINT_SIZES, POINT_ALPHAS, POINT_COLORS } from './constants';
+import React, { useMemo, useRef, useEffect, useState } from "react";
+import * as THREE from "three";
+import type { VisualizationPoint } from "@/lib/api/visualization";
+import { POINT_SIZES, POINT_ALPHAS, POINT_COLORS } from "./constants";
 
 interface PointsProps {
   points: VisualizationPoint[];
@@ -15,11 +15,12 @@ const SELECTED_COLOR = new THREE.Color(POINT_COLORS.SELECTED);
 const HOVER_COLOR = new THREE.Color(POINT_COLORS.HOVER);
 
 // Create material once and reuse
-const createDotMaterial = () => new THREE.ShaderMaterial({
-  uniforms: {
-    scale: { value: 1.0 },
-  },
-  vertexShader: `
+const createDotMaterial = () =>
+  new THREE.ShaderMaterial({
+    uniforms: {
+      scale: { value: 1.0 },
+    },
+    vertexShader: `
     attribute float size;
     attribute float alpha;
     varying vec3 vColor;
@@ -32,7 +33,7 @@ const createDotMaterial = () => new THREE.ShaderMaterial({
       gl_Position = projectionMatrix * mvPosition;
     }
   `,
-  fragmentShader: `
+    fragmentShader: `
     varying vec3 vColor;
     varying float vAlpha;
     void main() {
@@ -48,19 +49,24 @@ const createDotMaterial = () => new THREE.ShaderMaterial({
       }
     }
   `,
-  vertexColors: true,
-  transparent: true,
-  depthWrite: true,
-  depthTest: true,
-});
+    vertexColors: true,
+    transparent: true,
+    depthWrite: true,
+    depthTest: true,
+  });
 
 // Create material once outside component to avoid recreation
 const dotMaterial = createDotMaterial();
 
-const Points: React.FC<PointsProps> = ({ points, onSelectPoint, selectedPointId, spreadFactor }) => {
+const Points: React.FC<PointsProps> = ({
+  points,
+  onSelectPoint,
+  selectedPointId,
+  spreadFactor,
+}) => {
   const meshRef = useRef<THREE.Points>(null);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  
+
   // Create geometry attributes - memoized to avoid recreation on every render
   const { positions, colors, sizes, alphas, originalColors } = useMemo(() => {
     const positions = new Float32Array(points.length * 3);
@@ -68,51 +74,56 @@ const Points: React.FC<PointsProps> = ({ points, onSelectPoint, selectedPointId,
     const originalColors = new Float32Array(points.length * 3);
     const sizes = new Float32Array(points.length);
     const alphas = new Float32Array(points.length);
-    
+
     const colorObj = new THREE.Color();
-    
+
     points.forEach((point, i) => {
       const i3 = i * 3;
       positions[i3] = point.x * spreadFactor;
       positions[i3 + 1] = point.y * spreadFactor;
       positions[i3 + 2] = point.z * spreadFactor;
-      
+
       colorObj.set(point.cluster_color);
       colors[i3] = originalColors[i3] = colorObj.r;
       colors[i3 + 1] = originalColors[i3 + 1] = colorObj.g;
       colors[i3 + 2] = originalColors[i3 + 2] = colorObj.b;
-      
+
       sizes[i] = POINT_SIZES.BASE;
       alphas[i] = POINT_ALPHAS.BASE;
     });
-    
+
     return { positions, colors, sizes, alphas, originalColors };
   }, [points, spreadFactor]);
 
   // Update visual attributes based on selection and hover
   useEffect(() => {
     if (!meshRef.current) return;
-    
+
     const geometry = meshRef.current.geometry;
-    const sizeAttr = geometry.getAttribute('size') as THREE.BufferAttribute;
-    const alphaAttr = geometry.getAttribute('alpha') as THREE.BufferAttribute;
-    const colorAttr = geometry.getAttribute('color') as THREE.BufferAttribute;
-    
+    const sizeAttr = geometry.getAttribute("size") as THREE.BufferAttribute;
+    const alphaAttr = geometry.getAttribute("alpha") as THREE.BufferAttribute;
+    const colorAttr = geometry.getAttribute("color") as THREE.BufferAttribute;
+
     // Find selected point index
-    const selectedIndex = selectedPointId 
-      ? points.findIndex(p => p.id === selectedPointId)
+    const selectedIndex = selectedPointId
+      ? points.findIndex((p) => p.id === selectedPointId)
       : -1;
-    
+
     // Update all points
     for (let i = 0; i < points.length; i++) {
       const isSelected = i === selectedIndex;
       const isHovered = i === hoveredIndex;
       const i3 = i * 3;
-      
+
       if (isSelected) {
         sizeAttr.setX(i, POINT_SIZES.SELECTED);
         alphaAttr.setX(i, POINT_ALPHAS.SELECTED);
-        colorAttr.setXYZ(i, SELECTED_COLOR.r, SELECTED_COLOR.g, SELECTED_COLOR.b);
+        colorAttr.setXYZ(
+          i,
+          SELECTED_COLOR.r,
+          SELECTED_COLOR.g,
+          SELECTED_COLOR.b
+        );
       } else if (isHovered) {
         sizeAttr.setX(i, POINT_SIZES.HOVER);
         alphaAttr.setX(i, POINT_ALPHAS.HOVER);
@@ -120,10 +131,15 @@ const Points: React.FC<PointsProps> = ({ points, onSelectPoint, selectedPointId,
       } else {
         sizeAttr.setX(i, POINT_SIZES.BASE);
         alphaAttr.setX(i, POINT_ALPHAS.BASE);
-        colorAttr.setXYZ(i, originalColors[i3], originalColors[i3 + 1], originalColors[i3 + 2]);
+        colorAttr.setXYZ(
+          i,
+          originalColors[i3],
+          originalColors[i3 + 1],
+          originalColors[i3 + 2]
+        );
       }
     }
-    
+
     sizeAttr.needsUpdate = true;
     alphaAttr.needsUpdate = true;
     colorAttr.needsUpdate = true;
@@ -132,23 +148,25 @@ const Points: React.FC<PointsProps> = ({ points, onSelectPoint, selectedPointId,
   const handlePointerMove = (e: { intersections: THREE.Intersection[] }) => {
     // Get the closest intersection by distance
     let closestIndex: number | null = null;
-    
+
     if (e.intersections && e.intersections.length > 0) {
-      const sortedIntersections = [...e.intersections].sort((a, b) => a.distance - b.distance);
+      const sortedIntersections = [...e.intersections].sort(
+        (a, b) => a.distance - b.distance
+      );
       closestIndex = sortedIntersections[0].index ?? null;
     }
-    
+
     if (closestIndex !== null) {
-      document.body.style.cursor = 'pointer';
+      document.body.style.cursor = "pointer";
       setHoveredIndex(closestIndex);
     } else {
-      document.body.style.cursor = 'auto';
+      document.body.style.cursor = "auto";
       setHoveredIndex(null);
     }
   };
 
   const handlePointerOut = () => {
-    document.body.style.cursor = 'auto';
+    document.body.style.cursor = "auto";
     setHoveredIndex(null);
   };
 
@@ -156,22 +174,24 @@ const Points: React.FC<PointsProps> = ({ points, onSelectPoint, selectedPointId,
     // Get all intersections and find the closest one by distance
     if (e.intersections && e.intersections.length > 0) {
       // Sort by distance to camera (closest first)
-      const sortedIntersections = [...e.intersections].sort((a, b) => a.distance - b.distance);
+      const sortedIntersections = [...e.intersections].sort(
+        (a, b) => a.distance - b.distance
+      );
       const closest = sortedIntersections[0];
-      
+
       if (closest.index !== undefined) {
         const point = points[closest.index];
         onSelectPoint(point);
         return;
       }
     }
-    
+
     onSelectPoint(null);
   };
 
   return (
-    <points 
-      ref={meshRef} 
+    <points
+      ref={meshRef}
       onClick={handleClick}
       onPointerMove={handlePointerMove}
       onPointerOut={handlePointerOut}

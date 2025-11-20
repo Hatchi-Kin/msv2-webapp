@@ -15,7 +15,12 @@ const AlbumsView: React.FC<AlbumsViewProps> = ({
   onAlbumClick,
 }) => {
   if (albums.length === 0) {
-    return <EmptyState icon={Music} message={`No albums found for ${selectedArtist}.`} />;
+    return (
+      <EmptyState
+        icon={Music}
+        message={`No albums found for ${selectedArtist}.`}
+      />
+    );
   }
 
   return (

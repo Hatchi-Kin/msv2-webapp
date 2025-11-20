@@ -11,7 +11,7 @@ interface FavoriteButtonProps {
 
 /**
  * Reusable favorite toggle button
- * 
+ *
  * Displays a heart icon that toggles between filled (favorited)
  * and outline (not favorited) states.
  */

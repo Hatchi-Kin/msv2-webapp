@@ -9,9 +9,9 @@ import ErrorMessage from "@/components/ui/ErrorMessage";
 const LibraryTracksPage: React.FC = () => {
   const { albumName } = useParams<{ albumName: string }>();
   const navigate = useNavigate();
-  
+
   const decodedAlbumName = albumName ? decodeURIComponent(albumName) : "";
-  
+
   const { tracks, loading, error } = useTracks(decodedAlbumName);
 
   const handleFindSimilar = (trackId: number) => {
@@ -20,15 +20,17 @@ const LibraryTracksPage: React.FC = () => {
 
   return (
     <div className="space-y-6 pt-6">
-      <LibraryHeader 
-        title={`Tracks in ${decodedAlbumName}`} 
+      <LibraryHeader
+        title={`Tracks in ${decodedAlbumName}`}
         subtitle="All tracks in this album"
         showBack
       />
-      
+
       <div className="glass-panel p-6 rounded-3xl min-h-[650px]">
         {loading ? (
-          <LoadingSpinner message={`Loading tracks for ${decodedAlbumName}...`} />
+          <LoadingSpinner
+            message={`Loading tracks for ${decodedAlbumName}...`}
+          />
         ) : error ? (
           <ErrorMessage title="Error loading tracks" message={error} />
         ) : (

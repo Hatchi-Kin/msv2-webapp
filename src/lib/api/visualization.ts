@@ -1,4 +1,4 @@
-import { API_BASE_URL, fetchWithAuth } from './client';
+import { API_BASE_URL, fetchWithAuth } from "./client";
 
 export interface VisualizationPoint {
   id: number;
@@ -43,7 +43,7 @@ export const visualizationApi = {
     return fetchWithAuth<{ points: VisualizationPoint[]; total: number }>(
       `${API_BASE_URL}/coordinates/points?limit=${limit}&offset=${offset}`,
       {
-        method: 'GET',
+        method: "GET",
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -52,19 +52,24 @@ export const visualizationApi = {
   },
 
   getStats: async (accessToken: string) => {
-    return fetchWithAuth<VisualizationStats>(`${API_BASE_URL}/coordinates/stats`, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+    return fetchWithAuth<VisualizationStats>(
+      `${API_BASE_URL}/coordinates/stats`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
   },
 
   search: async (accessToken: string, query: string, limit = 50) => {
     return fetchWithAuth<VisualizationPoint[]>(
-      `${API_BASE_URL}/coordinates/search?q=${encodeURIComponent(query)}&limit=${limit}`,
+      `${API_BASE_URL}/coordinates/search?q=${encodeURIComponent(
+        query
+      )}&limit=${limit}`,
       {
-        method: 'GET',
+        method: "GET",
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -73,23 +78,26 @@ export const visualizationApi = {
   },
 
   getCluster: async (accessToken: string, clusterId: number) => {
-    return fetchWithAuth<ClusterDetails>(`${API_BASE_URL}/coordinates/cluster/${clusterId}`, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+    return fetchWithAuth<ClusterDetails>(
+      `${API_BASE_URL}/coordinates/cluster/${clusterId}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
   },
 
   getNeighbors: async (accessToken: string, trackId: number, limit = 20) => {
     return fetchWithAuth<TrackNeighbors>(
       `${API_BASE_URL}/coordinates/track/${trackId}/neighbors?limit=${limit}`,
       {
-        method: 'GET',
+        method: "GET",
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       }
     );
-  }
+  },
 };

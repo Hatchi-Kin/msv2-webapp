@@ -17,12 +17,8 @@ type View = "favorites" | "playlists" | "playlist-detail";
 
 const LibraryPage: React.FC = () => {
   const { accessToken, isAuthenticated, loading: authLoading } = useAuth();
-  const { 
-    playlists, 
-    refreshPlaylists, 
-    createPlaylist, 
-    deletePlaylist 
-  } = useLibrary();
+  const { playlists, refreshPlaylists, createPlaylist, deletePlaylist } =
+    useLibrary();
   const { playQueue } = usePlayer();
   const navigate = useNavigate();
 
@@ -65,7 +61,11 @@ const LibraryPage: React.FC = () => {
 
   // Fetch favorites only once
   useEffect(() => {
-    if (currentView === "favorites" && accessToken && !hasFetchedFavorites.current) {
+    if (
+      currentView === "favorites" &&
+      accessToken &&
+      !hasFetchedFavorites.current
+    ) {
       fetchFavorites();
     }
   }, [currentView, accessToken, fetchFavorites]);
@@ -122,8 +122,6 @@ const LibraryPage: React.FC = () => {
       setError(getErrorMessage(err));
     }
   };
-
-
 
   if (authLoading) {
     return <LoadingSpinner message="Loading your library..." />;

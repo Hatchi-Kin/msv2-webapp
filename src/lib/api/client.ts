@@ -44,7 +44,7 @@ export async function fetchWithAuth<T>(
   // If 401 and we have a refresh handler and haven't retried yet
   if (response.status === 401 && refreshTokenFn && retryCount === 0) {
     console.log("Got 401, attempting token refresh...");
-    
+
     try {
       // If already refreshing, wait for that refresh to complete
       if (isRefreshing && refreshPromise) {
@@ -56,39 +56,31 @@ export async function fetchWithAuth<T>(
         refreshPromise = refreshTokenFn();
         const newToken = await refreshPromise;
         console.log("Token refreshed successfully");
-        
+
         // Update the Authorization header with new token
         const headers = new Headers(options.headers);
         headers.set("Authorization", `Bearer ${newToken}`);
-        
+
         isRefreshing = false;
         refreshPromise = null;
-        
+
         // Retry the original request with new token
-        return fetchWithAuth<T>(
-          url,
-          { ...options, headers },
-          retryCount + 1
-        );
+        return fetchWithAuth<T>(url, { ...options, headers }, retryCount + 1);
       }
-      
+
       // After waiting for refresh, retry with updated token from storage
       const headers = new Headers(options.headers);
       const newToken = localStorage.getItem("accessToken");
       if (newToken) {
         headers.set("Authorization", `Bearer ${newToken}`);
       }
-      
-      return fetchWithAuth<T>(
-        url,
-        { ...options, headers },
-        retryCount + 1
-      );
+
+      return fetchWithAuth<T>(url, { ...options, headers }, retryCount + 1);
     } catch (error) {
       console.error("Token refresh failed:", error);
       isRefreshing = false;
       refreshPromise = null;
-      
+
       // Refresh failed, logout user
       if (onLogout) {
         onLogout();

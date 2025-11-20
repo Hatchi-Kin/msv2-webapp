@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { RotateCcw, Heart, Settings2, X } from 'lucide-react';
-import type { VisualizationPoint } from '@/lib/api/visualization';
-import { SPREAD_RANGE } from './constants';
+import React, { useState } from "react";
+import { RotateCcw, Heart, Settings2, X } from "lucide-react";
+import type { VisualizationPoint } from "@/lib/api/visualization";
+import { SPREAD_RANGE } from "./constants";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
@@ -31,7 +31,7 @@ const Controls: React.FC<ControlsProps> = ({
   favoritePoints,
   onSelectPoint,
   spreadFactor,
-  setSpreadFactor
+  setSpreadFactor,
 }) => {
   const [isOpen, setIsOpen] = useState(true);
 
@@ -51,9 +51,10 @@ const Controls: React.FC<ControlsProps> = ({
       {isOpen && (
         <div className="bg-background/80 backdrop-blur-sm border border-border rounded-lg p-2 shadow-lg flex flex-col gap-2 w-64 animate-in slide-in-from-left-5 fade-in duration-200">
           <div className="text-xs font-mono text-muted-foreground px-1">
-            {totalPoints.toLocaleString()} / {maxAvailablePoints.toLocaleString()} tracks
+            {totalPoints.toLocaleString()} /{" "}
+            {maxAvailablePoints.toLocaleString()} tracks
           </div>
-          
+
           <div className="flex gap-2">
             <Button
               variant="ghost"
@@ -63,7 +64,7 @@ const Controls: React.FC<ControlsProps> = ({
             >
               <RotateCcw size={20} />
             </Button>
-            
+
             <Button
               variant={showFavorites ? "default" : "ghost"}
               size="icon"
@@ -114,7 +115,7 @@ const Controls: React.FC<ControlsProps> = ({
               Favorites ({favoritePoints.length})
             </h3>
           </div>
-          
+
           <div className="p-1">
             {favoritePoints.length === 0 ? (
               <div className="p-4 text-center text-xs text-muted-foreground">
@@ -122,7 +123,7 @@ const Controls: React.FC<ControlsProps> = ({
               </div>
             ) : (
               <div className="flex flex-col gap-1">
-                {favoritePoints.map(point => (
+                {favoritePoints.map((point) => (
                   <button
                     key={point.id}
                     onClick={() => {
@@ -131,10 +132,10 @@ const Controls: React.FC<ControlsProps> = ({
                     className="text-left px-3 py-2 rounded-md hover:bg-accent hover:text-accent-foreground text-xs transition-colors group w-full"
                   >
                     <div className="font-medium truncate group-hover:text-primary transition-colors">
-                      {point.title || 'Unknown Title'}
+                      {point.title || "Unknown Title"}
                     </div>
                     <div className="text-muted-foreground truncate text-[10px]">
-                      {point.artist || 'Unknown Artist'}
+                      {point.artist || "Unknown Artist"}
                     </div>
                   </button>
                 ))}

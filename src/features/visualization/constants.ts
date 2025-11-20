@@ -12,8 +12,8 @@ export const POINT_ALPHAS = {
 } as const;
 
 export const POINT_COLORS = {
-  SELECTED: '#4a3728', // Mocha brown
-  HOVER: '#ffffff',    // White
+  SELECTED: "#4a3728", // Mocha brown
+  HOVER: "#ffffff", // White
 } as const;
 
 // Raycaster configuration

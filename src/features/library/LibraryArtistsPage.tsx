@@ -9,7 +9,7 @@ import ErrorMessage from "@/components/ui/ErrorMessage";
 const LibraryArtistsPage: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  
+
   const pageFromUrl = parseInt(searchParams.get("page") || "1", 10);
   const {
     artists,
@@ -33,7 +33,7 @@ const LibraryArtistsPage: React.FC = () => {
   return (
     <div className="space-y-6 pt-6">
       <LibraryHeader title="Your Music Library" subtitle="Browse by artist" />
-      
+
       <div className="glass-panel p-6 rounded-3xl min-h-[650px]">
         {loading && artists.length === 0 ? (
           <LoadingSpinner message="Loading artists..." />

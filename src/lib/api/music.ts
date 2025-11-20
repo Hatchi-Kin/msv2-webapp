@@ -45,7 +45,9 @@ export const musicApi = {
     includeEmbeddings: boolean = false
   ): Promise<TrackListResponse> {
     return fetchWithAuth<TrackListResponse>(
-      `${API_BASE_URL}/music/tracks/${encodeURIComponent(albumFolder)}?include_embeddings=${includeEmbeddings}`,
+      `${API_BASE_URL}/music/tracks/${encodeURIComponent(
+        albumFolder
+      )}?include_embeddings=${includeEmbeddings}`,
       {
         method: "GET",
         headers: {
@@ -62,7 +64,11 @@ export const musicApi = {
     includeEmbeddings: boolean = false
   ): Promise<TrackListResponse> {
     return fetchWithAuth<TrackListResponse>(
-      `${API_BASE_URL}/music/tracks/${encodeURIComponent(artistName)}/${encodeURIComponent(albumName)}?include_embeddings=${includeEmbeddings}`,
+      `${API_BASE_URL}/music/tracks/${encodeURIComponent(
+        artistName
+      )}/${encodeURIComponent(
+        albumName
+      )}?include_embeddings=${includeEmbeddings}`,
       {
         method: "GET",
         headers: {

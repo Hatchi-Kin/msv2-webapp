@@ -29,14 +29,16 @@ const AuthPageLayout: React.FC<AuthPageLayoutProps> = ({
             MSV2
             <Sparkles className="w-6 h-6 text-primary" />
           </div>
-          <p className="text-sm leading-relaxed text-foreground">
+          <p className="text-sm leading-relaxed text-tertiary-foreground">
             {description}
           </p>
         </div>
 
         {/* Title Section */}
         <div className="mb-8">
-          <h1 className="text-3xl mb-2 font-bold text-foreground">{title}</h1>
+          <h1 className="text-3xl mb-2 font-bold text-tertiary-foreground">
+            {title}
+          </h1>
           <p className="text-sm text-foreground opacity-70">{subtitle}</p>
         </div>
 

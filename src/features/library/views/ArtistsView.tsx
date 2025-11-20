@@ -26,7 +26,9 @@ const ArtistsView: React.FC<ArtistsViewProps> = ({
   const totalPages = Math.ceil(totalArtists / itemsPerPage);
 
   if (artists.length === 0) {
-    return <EmptyState icon={Music} message="No artists found in your library." />;
+    return (
+      <EmptyState icon={Music} message="No artists found in your library." />
+    );
   }
 
   return (

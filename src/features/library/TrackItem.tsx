@@ -12,10 +12,7 @@ interface TrackItemProps {
   onFindSimilar?: (trackId: number) => void;
 }
 
-const TrackItem: React.FC<TrackItemProps> = ({
-  track,
-  onFindSimilar,
-}) => {
+const TrackItem: React.FC<TrackItemProps> = ({ track, onFindSimilar }) => {
   const { playTrack } = usePlayer();
   const [isPlayLoading, setIsPlayLoading] = useState(false);
 
@@ -25,7 +22,7 @@ const TrackItem: React.FC<TrackItemProps> = ({
 
     setIsPlayLoading(true);
     playTrack(track);
-    
+
     // Simple debounce/cooldown
     setTimeout(() => {
       setIsPlayLoading(false);

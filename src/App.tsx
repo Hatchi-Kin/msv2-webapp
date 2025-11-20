@@ -45,7 +45,7 @@ function App() {
             {/* Public routes - no layout */}
             <Route path="/" element={<LandingPage />} />
             <Route path="/register" element={<RegisterPage />} />
-            
+
             {/* Authenticated routes - with layout */}
             <Route element={<MainLayout />}>
               {/* Library Routes */}
@@ -53,11 +53,20 @@ function App() {
                 <Route path="/library" element={<LibraryArtistsPage />} />
                 <Route path="library/tracks" element={<LibraryTracksPage />} />
                 <Route path="visualize" element={<VisualizePage />} />
-                <Route path="/library/artists/:artistName" element={<LibraryAlbumsPage />} />
-                <Route path="/library/albums/:albumName" element={<LibraryTracksPage />} />
-                <Route path="/library/similar/:trackId" element={<LibrarySimilarPage />} />
+                <Route
+                  path="/library/artists/:artistName"
+                  element={<LibraryAlbumsPage />}
+                />
+                <Route
+                  path="/library/albums/:albumName"
+                  element={<LibraryTracksPage />}
+                />
+                <Route
+                  path="/library/similar/:trackId"
+                  element={<LibrarySimilarPage />}
+                />
               </Route>
-              
+
               <Route path="/my-library" element={<LibraryPage />} />
             </Route>
           </Routes>

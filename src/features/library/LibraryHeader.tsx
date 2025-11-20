@@ -30,17 +30,13 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({
   return (
     <div className="flex items-start justify-between p-4 md:p-6 rounded-3xl glass-panel">
       <div className="flex-1 space-y-2">
-        <h1 className="text-3xl font-bold tracking-tight text-foreground">
+        <h1 className="text-3xl font-bold tracking-tight text-tertiary-foreground">
           {title}
         </h1>
         {subtitle && (
           <p className="text-sm text-muted-foreground">{subtitle}</p>
         )}
-        {children && (
-          <div className="pt-2">
-            {children}
-          </div>
-        )}
+        {children && <div className="pt-2">{children}</div>}
       </div>
 
       {showBack && (

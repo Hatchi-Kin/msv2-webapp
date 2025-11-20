@@ -1,12 +1,9 @@
-import animate from "tailwindcss-animate"
+import animate from "tailwindcss-animate";
 
 /** @type {import('tailwindcss').Config} */
 export default {
   darkMode: ["class"],
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     container: {
       center: true,
@@ -34,6 +31,9 @@ export default {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
         },
+        tertiary: {
+          foreground: "hsl(var(--tertiary-foreground))",
+        },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
@@ -56,8 +56,10 @@ export default {
         },
       },
       backgroundImage: {
-        'mocha-gradient': 'linear-gradient(135deg, hsl(30, 30%, 82%) 0%, hsl(30, 23%, 70%) 100%)',
-        'mocha-primary': 'linear-gradient(135deg, hsl(25, 40%, 39%) 0%, hsl(30, 48%, 61%) 100%)',
+        "mocha-gradient":
+          "linear-gradient(135deg, hsl(30, 30%, 82%) 0%, hsl(30, 23%, 70%) 100%)",
+        "mocha-primary":
+          "linear-gradient(135deg, hsl(25, 40%, 39%) 0%, hsl(30, 48%, 61%) 100%)",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -81,4 +83,4 @@ export default {
     },
   },
   plugins: [animate],
-}
+};
