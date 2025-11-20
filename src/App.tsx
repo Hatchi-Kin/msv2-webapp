@@ -16,17 +16,19 @@
  */
 
 import { Routes, Route } from "react-router-dom";
-import LandingPage from "./pages/LandingPage";
-import RegisterPage from "./pages/RegisterPage";
-import UserLibraryPage from "./pages/UserLibraryPage";
-import LibraryArtistsPage from "./pages/library/LibraryArtistsPage";
-import LibraryAlbumsPage from "./pages/library/LibraryAlbumsPage";
-import LibraryTracksPage from "./pages/library/LibraryTracksPage";
-import VisualizationPage from "./pages/VisualizationPage";
-import LibrarySimilarPage from "./pages/library/LibrarySimilarPage";
-import LibraryLayout from "./components/library/LibraryLayout";
-import Layout from "@/components/Layout";
-import ErrorBoundary from "@/components/ErrorBoundary";
+import {
+  LandingPage,
+  RegisterPage,
+  LibraryPage,
+  LibraryArtistsPage,
+  LibraryAlbumsPage,
+  LibraryTracksPage,
+  LibrarySimilarPage,
+  VisualizePage,
+} from "@/pages";
+import LibraryLayout from "@/features/library/LibraryLayout";
+import MainLayout from "@/components/layout/MainLayout";
+import ErrorBoundary from "@/components/layout/ErrorBoundary";
 import { PlayerProvider } from "@/context/PlayerContext";
 import { LibraryProvider } from "@/context/LibraryContext";
 
@@ -45,18 +47,18 @@ function App() {
             <Route path="/register" element={<RegisterPage />} />
             
             {/* Authenticated routes - with layout */}
-            <Route element={<Layout />}>
+            <Route element={<MainLayout />}>
               {/* Library Routes */}
               <Route element={<LibraryLayout />}>
                 <Route path="/library" element={<LibraryArtistsPage />} />
                 <Route path="library/tracks" element={<LibraryTracksPage />} />
-                <Route path="visualize" element={<VisualizationPage />} />
+                <Route path="visualize" element={<VisualizePage />} />
                 <Route path="/library/artists/:artistName" element={<LibraryAlbumsPage />} />
                 <Route path="/library/albums/:albumName" element={<LibraryTracksPage />} />
                 <Route path="/library/similar/:trackId" element={<LibrarySimilarPage />} />
               </Route>
               
-              <Route path="/my-library" element={<UserLibraryPage />} />
+              <Route path="/my-library" element={<LibraryPage />} />
             </Route>
           </Routes>
         </PlayerProvider>

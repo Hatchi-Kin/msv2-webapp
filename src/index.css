@@ -82,7 +82,7 @@
 
 /* Premium Glass Effect - v5.0 BALANCED */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.6) !important;
+  background: rgba(255, 255, 255, 0.80) !important;
   backdrop-filter: blur(30px) saturate(150%) !important;
   -webkit-backdrop-filter: blur(30px) saturate(150%) !important;
   border: 1px solid rgba(255, 255, 255, 0.3) !important;
@@ -165,10 +165,4 @@
 
 .animate-slideUp {
   animation: slideUp 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-@media (max-width: 480px) {
-  .mobile-padding {
-    padding: 24px 20px !important;
-  }
 }
