@@ -146,10 +146,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     console.log("Refreshing access token...");
     const tokenResponse: Token = await api.auth.refresh();
     storeAccessToken(tokenResponse.access_token);
-    // Fetch user data with new token
-    await fetchUser(tokenResponse.access_token);
+    // Don't fetch user here - it can cause cascading failures
+    // User will be fetched on next authenticated request
     return tokenResponse.access_token;
-  }, [fetchUser]);
+  }, []);
 
   // Handler for final logout when refresh fails
   const handleLogout = useCallback(() => {
