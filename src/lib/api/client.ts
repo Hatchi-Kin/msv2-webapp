@@ -65,6 +65,8 @@ export async function fetchWithAuth<T>(
         refreshPromise = null;
 
         // Retry the original request with new token
+        console.log(`[fetchWithAuth] Retrying request to ${url}`);
+        console.log(`[fetchWithAuth] Retry headers:`, Object.fromEntries(headers.entries()));
         return fetchWithAuth<T>(url, { ...options, headers }, retryCount + 1);
       }
 
@@ -75,6 +77,8 @@ export async function fetchWithAuth<T>(
         headers.set("Authorization", `Bearer ${newToken}`);
       }
 
+      console.log(`[fetchWithAuth] Retrying request (after wait) to ${url}`);
+      console.log(`[fetchWithAuth] Retry headers (after wait):`, Object.fromEntries(headers.entries()));
       return fetchWithAuth<T>(url, { ...options, headers }, retryCount + 1);
     } catch (error) {
       console.error("Token refresh failed:", error);
