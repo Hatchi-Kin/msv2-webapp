@@ -17,8 +17,13 @@ type View = "favorites" | "playlists" | "playlist-detail";
 
 const LibraryPage: React.FC = () => {
   const { accessToken, isAuthenticated, loading: authLoading } = useAuth();
-  const { playlists, refreshPlaylists, createPlaylist, deletePlaylist } =
-    useLibrary();
+  const {
+    playlists,
+    refreshPlaylists,
+    createPlaylist,
+    deletePlaylist,
+    removeTrackFromPlaylist,
+  } = useLibrary();
   const { playQueue } = usePlayer();
   const navigate = useNavigate();
 
@@ -119,6 +124,27 @@ const LibraryPage: React.FC = () => {
       await refreshPlaylists();
     } catch (err) {
       console.error("Failed to delete playlist:", err);
+      setError(getErrorMessage(err));
+    }
+  };
+
+  const handleRemoveTrack = async (trackId: number) => {
+    if (!selectedPlaylist) return;
+    if (!confirm("Remove this track from the playlist?")) return;
+
+    try {
+      await removeTrackFromPlaylist(selectedPlaylist.id, trackId);
+      // Update local state to remove the track immediately
+      setSelectedPlaylist((prev) =>
+        prev
+          ? {
+              ...prev,
+              tracks: prev.tracks.filter((t) => t.id !== trackId),
+            }
+          : null
+      );
+    } catch (err) {
+      console.error("Failed to remove track:", err);
       setError(getErrorMessage(err));
     }
   };
@@ -356,7 +382,11 @@ const LibraryPage: React.FC = () => {
                 </div>
               ) : (
                 selectedPlaylist.tracks.map((track) => (
-                  <TrackItem key={track.id} track={track} />
+                  <TrackItem
+                    key={track.id}
+                    track={track}
+                    onRemove={() => handleRemoveTrack(track.id)}
+                  />
                 ))
               )}
             </div>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import type { MegasetTrack } from "@/types/api";
-import { Play, Sparkles } from "lucide-react";
+import { Play, Sparkles, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PlaylistDropdown } from "./PlaylistDropdown";
 import { FavoriteButton } from "./FavoriteButton";
@@ -10,9 +10,10 @@ import { cn } from "@/lib/utils";
 interface TrackItemProps {
   track: MegasetTrack;
   onFindSimilar?: (trackId: number) => void;
+  onRemove?: () => void;
 }
 
-const TrackItem: React.FC<TrackItemProps> = ({ track, onFindSimilar }) => {
+const TrackItem: React.FC<TrackItemProps> = ({ track, onFindSimilar, onRemove }) => {
   const { playTrack } = usePlayer();
   const [isPlayLoading, setIsPlayLoading] = useState(false);
 
@@ -94,6 +95,22 @@ const TrackItem: React.FC<TrackItemProps> = ({ track, onFindSimilar }) => {
             title="Find similar tracks"
           >
             <Sparkles className="h-4 w-4 md:h-5 md:w-5" />
+          </Button>
+        )}
+
+        {/* Remove from Playlist Button */}
+        {onRemove && (
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={(e) => {
+              e.stopPropagation();
+              onRemove();
+            }}
+            className="h-8 w-8 md:h-10 md:w-10 hover:scale-110 hover:bg-destructive/10 text-destructive hover:text-destructive"
+            title="Remove from playlist"
+          >
+            <Trash2 className="h-4 w-4 md:h-5 md:w-5" />
           </Button>
         )}
       </div>
