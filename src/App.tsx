@@ -16,6 +16,7 @@
  */
 
 import { Routes, Route } from "react-router-dom";
+import { lazy, Suspense } from "react";
 import {
   LandingPage,
   RegisterPage,
@@ -24,13 +25,20 @@ import {
   LibraryAlbumsPage,
   LibraryTracksPage,
   LibrarySimilarPage,
-  VisualizePage,
 } from "@/pages";
 import LibraryLayout from "@/features/library/LibraryLayout";
 import MainLayout from "@/components/layout/MainLayout";
 import ErrorBoundary from "@/components/layout/ErrorBoundary";
 import { PlayerProvider } from "@/context/PlayerContext";
 import { LibraryProvider } from "@/context/LibraryContext";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
+
+// Lazy load VisualizePage to prevent Three.js from loading on every page
+const VisualizePage = lazy(() =>
+  import("@/features/visualization/VisualizePage").then((module) => ({
+    default: module.default,
+  }))
+);
 
 function App() {
   return (
@@ -52,7 +60,14 @@ function App() {
               <Route element={<LibraryLayout />}>
                 <Route path="/library" element={<LibraryArtistsPage />} />
                 <Route path="library/tracks" element={<LibraryTracksPage />} />
-                <Route path="visualize" element={<VisualizePage />} />
+                <Route
+                  path="visualize"
+                  element={
+                    <Suspense fallback={<LoadingSpinner message="Loading 3D visualization..." />}>
+                      <VisualizePage />
+                    </Suspense>
+                  }
+                />
                 <Route
                   path="/library/artists/:artistName"
                   element={<LibraryAlbumsPage />}

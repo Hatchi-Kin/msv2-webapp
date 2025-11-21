@@ -11,6 +11,29 @@ export default defineConfig({
     },
   },
   build: {
-    chunkSizeWarningLimit: 1000,
+    chunkSizeWarningLimit: 1500,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // React core libraries
+          "vendor-react": ["react", "react-dom", "react-router-dom"],
+          // Three.js and related (only loaded on /visualize)
+          "vendor-three": [
+            "three",
+            "@react-three/fiber",
+            "@react-three/drei",
+          ],
+          // UI component libraries
+          "vendor-ui": [
+            "@radix-ui/react-dropdown-menu",
+            "@radix-ui/react-label",
+            "@radix-ui/react-slider",
+            "@radix-ui/react-slot",
+            "@radix-ui/react-switch",
+            "lucide-react",
+          ],
+        },
+      },
+    },
   },
 });
