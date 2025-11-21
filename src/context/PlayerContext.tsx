@@ -7,10 +7,10 @@ import React, {
   useCallback,
 } from "react";
 import type { MegasetTrack } from "@/types/api";
-import config from "@/lib/config";
 import { useAuth } from "@/context/AuthContext";
 import { setStopMusicCallback } from "@/context/authCallbacks";
 import { UI_CONSTANTS } from "@/constants/ui";
+import { media } from "@/lib/api";
 
 interface PlayerState {
   currentTrack: MegasetTrack | null;
@@ -128,30 +128,10 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({
       setCurrentTrack(track);
       setCurrentTime(0);
 
-      // Update audio source with auth header via fetch
-      // Note: We need to use fetch to add auth header, then create blob URL
-      const streamUrl = `${config.apiUrl}/stream/audio`;
-
-      fetch(streamUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({ track_id: track.id }),
-      })
-        .then((response) => {
-          if (!response.ok) {
-            console.error(
-              "Stream response not OK:",
-              response.status,
-              response.statusText
-            );
-            throw new Error(`Failed to stream audio: ${response.status}`);
-          }
-          return response.blob();
-        })
-        .then((blob) => {
+      // Stream audio using the media API
+      media
+        .streamAudio(track.id, accessToken)
+        .then((blob: Blob) => {
           const blobUrl = URL.createObjectURL(blob);
           audio.src = blobUrl;
           return audio.play();
@@ -159,7 +139,7 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({
         .then(() => {
           setIsPlaying(true);
         })
-        .catch((error) => {
+        .catch((error: Error) => {
           console.error("Error streaming audio:", error);
           setIsPlaying(false);
         });

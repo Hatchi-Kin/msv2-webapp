@@ -7,14 +7,14 @@ import type {
   SimilarTrackListResponse,
 } from "@/types/api";
 
-export const musicApi = {
+export const libraryApi = {
   async getArtists(
     accessToken: string,
     limit: number = 100,
     offset: number = 0
   ): Promise<ArtistListResponse> {
     return fetchWithAuth<ArtistListResponse>(
-      `${API_BASE_URL}/music/artists?limit=${limit}&offset=${offset}`,
+      `${API_BASE_URL}/library/artists?limit=${limit}&offset=${offset}`,
       {
         method: "GET",
         headers: {
@@ -29,7 +29,7 @@ export const musicApi = {
     accessToken: string
   ): Promise<AlbumListResponse> {
     return fetchWithAuth<AlbumListResponse>(
-      `${API_BASE_URL}/music/albums/${encodeURIComponent(artistName)}`,
+      `${API_BASE_URL}/library/albums/${encodeURIComponent(artistName)}`,
       {
         method: "GET",
         headers: {
@@ -45,7 +45,7 @@ export const musicApi = {
     includeEmbeddings: boolean = false
   ): Promise<TrackListResponse> {
     return fetchWithAuth<TrackListResponse>(
-      `${API_BASE_URL}/music/tracks/${encodeURIComponent(
+      `${API_BASE_URL}/library/tracks/${encodeURIComponent(
         albumFolder
       )}?include_embeddings=${includeEmbeddings}`,
       {
@@ -64,7 +64,7 @@ export const musicApi = {
     includeEmbeddings: boolean = false
   ): Promise<TrackListResponse> {
     return fetchWithAuth<TrackListResponse>(
-      `${API_BASE_URL}/music/tracks/${encodeURIComponent(
+      `${API_BASE_URL}/library/tracks/${encodeURIComponent(
         artistName
       )}/${encodeURIComponent(
         albumName
@@ -79,7 +79,7 @@ export const musicApi = {
   },
 
   async getSongCount(accessToken: string): Promise<number> {
-    return fetchWithAuth<number>(`${API_BASE_URL}/music/track_count`, {
+    return fetchWithAuth<number>(`${API_BASE_URL}/library/track_count`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -92,7 +92,7 @@ export const musicApi = {
     includeEmbeddings: boolean = false
   ): Promise<MegasetTrack> {
     return fetchWithAuth<MegasetTrack>(
-      `${API_BASE_URL}/music/random_track?include_embeddings=${includeEmbeddings}`,
+      `${API_BASE_URL}/library/random_track?include_embeddings=${includeEmbeddings}`,
       {
         method: "GET",
         headers: {
@@ -108,7 +108,7 @@ export const musicApi = {
     includeEmbeddings: boolean = false
   ): Promise<MegasetTrack> {
     return fetchWithAuth<MegasetTrack>(
-      `${API_BASE_URL}/music/track/${songId}?include_embeddings=${includeEmbeddings}`,
+      `${API_BASE_URL}/library/track/${songId}?include_embeddings=${includeEmbeddings}`,
       {
         method: "GET",
         headers: {
@@ -124,7 +124,7 @@ export const musicApi = {
     limit: number = 10
   ): Promise<SimilarTrackListResponse> {
     return fetchWithAuth<SimilarTrackListResponse>(
-      `${API_BASE_URL}/music/similar/${trackId}?limit=${limit}`,
+      `${API_BASE_URL}/library/similar/${trackId}?limit=${limit}`,
       {
         method: "GET",
         headers: {

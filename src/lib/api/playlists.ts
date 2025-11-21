@@ -10,7 +10,7 @@ export const playlistsApi = {
     name: string,
     accessToken: string
   ): Promise<PlaylistSummary> {
-    return fetchWithAuth(`${API_BASE_URL}/music/playlists`, {
+    return fetchWithAuth(`${API_BASE_URL}/user/playlists`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -21,7 +21,7 @@ export const playlistsApi = {
   },
 
   async getPlaylists(accessToken: string): Promise<PlaylistsListResponse> {
-    return fetchWithAuth(`${API_BASE_URL}/music/playlists`, {
+    return fetchWithAuth(`${API_BASE_URL}/user/playlists`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -33,7 +33,7 @@ export const playlistsApi = {
     playlistId: number,
     accessToken: string
   ): Promise<PlaylistDetail> {
-    return fetchWithAuth(`${API_BASE_URL}/music/playlists/${playlistId}`, {
+    return fetchWithAuth(`${API_BASE_URL}/user/playlists/${playlistId}`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -46,7 +46,7 @@ export const playlistsApi = {
     name: string,
     accessToken: string
   ): Promise<{ status: string; message: string }> {
-    return fetchWithAuth(`${API_BASE_URL}/music/playlists/${playlistId}`, {
+    return fetchWithAuth(`${API_BASE_URL}/user/playlists/${playlistId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -60,7 +60,7 @@ export const playlistsApi = {
     playlistId: number,
     accessToken: string
   ): Promise<{ status: string; message: string }> {
-    return fetchWithAuth(`${API_BASE_URL}/music/playlists/${playlistId}`, {
+    return fetchWithAuth(`${API_BASE_URL}/user/playlists/${playlistId}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -74,7 +74,7 @@ export const playlistsApi = {
     accessToken: string
   ): Promise<{ status: string; message: string }> {
     return fetchWithAuth(
-      `${API_BASE_URL}/music/playlists/${playlistId}/tracks/${trackId}`,
+      `${API_BASE_URL}/user/playlists/${playlistId}/tracks/${trackId}`,
       {
         method: "POST",
         headers: {
@@ -90,7 +90,7 @@ export const playlistsApi = {
     accessToken: string
   ): Promise<{ status: string; message: string }> {
     return fetchWithAuth(
-      `${API_BASE_URL}/music/playlists/${playlistId}/tracks/${trackId}`,
+      `${API_BASE_URL}/user/playlists/${playlistId}/tracks/${trackId}`,
       {
         method: "DELETE",
         headers: {

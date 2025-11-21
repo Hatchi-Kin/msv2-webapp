@@ -41,7 +41,7 @@ export interface TrackNeighbors {
 export const visualizationApi = {
   getPoints: async (accessToken: string, limit = 5000, offset = 0) => {
     return fetchWithAuth<{ points: VisualizationPoint[]; total: number }>(
-      `${API_BASE_URL}/coordinates/points?limit=${limit}&offset=${offset}`,
+      `${API_BASE_URL}/library/coordinates/points?limit=${limit}&offset=${offset}`,
       {
         method: "GET",
         headers: {
@@ -53,7 +53,7 @@ export const visualizationApi = {
 
   getStats: async (accessToken: string) => {
     return fetchWithAuth<VisualizationStats>(
-      `${API_BASE_URL}/coordinates/stats`,
+      `${API_BASE_URL}/library/coordinates/stats`,
       {
         method: "GET",
         headers: {
@@ -65,7 +65,7 @@ export const visualizationApi = {
 
   search: async (accessToken: string, query: string, limit = 50) => {
     return fetchWithAuth<VisualizationPoint[]>(
-      `${API_BASE_URL}/coordinates/search?q=${encodeURIComponent(
+      `${API_BASE_URL}/library/coordinates/search?q=${encodeURIComponent(
         query
       )}&limit=${limit}`,
       {
@@ -79,7 +79,7 @@ export const visualizationApi = {
 
   getCluster: async (accessToken: string, clusterId: number) => {
     return fetchWithAuth<ClusterDetails>(
-      `${API_BASE_URL}/coordinates/cluster/${clusterId}`,
+      `${API_BASE_URL}/library/coordinates/cluster/${clusterId}`,
       {
         method: "GET",
         headers: {
@@ -91,7 +91,7 @@ export const visualizationApi = {
 
   getNeighbors: async (accessToken: string, trackId: number, limit = 20) => {
     return fetchWithAuth<TrackNeighbors>(
-      `${API_BASE_URL}/coordinates/track/${trackId}/neighbors?limit=${limit}`,
+      `${API_BASE_URL}/library/coordinates/track/${trackId}/neighbors?limit=${limit}`,
       {
         method: "GET",
         headers: {

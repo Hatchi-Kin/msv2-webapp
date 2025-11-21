@@ -7,24 +7,27 @@
 
 export { setRefreshTokenHandler, setLogoutHandler } from "./client";
 export { authApi as auth } from "./auth";
-export { musicApi as music } from "./music";
+export { libraryApi as library } from "./library";
 export { favoritesApi as favorites } from "./favorites";
 export { playlistsApi as playlists } from "./playlists";
 export { visualizationApi as visualization } from "./visualization";
+export { mediaApi as media } from "./media";
 
 // Re-export for convenience
 import { authApi } from "./auth";
-import { musicApi } from "./music";
+import { libraryApi } from "./library";
 import { favoritesApi } from "./favorites";
 import { playlistsApi } from "./playlists";
 import { visualizationApi } from "./visualization";
+import { mediaApi } from "./media";
 
 export const api = {
   auth: authApi,
   music: {
-    ...musicApi,
+    ...libraryApi,
     ...favoritesApi,
     ...playlistsApi,
   },
   visualization: visualizationApi,
+  media: mediaApi,
 };

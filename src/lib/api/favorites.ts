@@ -6,7 +6,7 @@ export const favoritesApi = {
     trackId: number,
     accessToken: string
   ): Promise<{ status: string; message: string }> {
-    return fetchWithAuth(`${API_BASE_URL}/music/favorites/${trackId}`, {
+    return fetchWithAuth(`${API_BASE_URL}/user/favorites/${trackId}`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -18,7 +18,7 @@ export const favoritesApi = {
     trackId: number,
     accessToken: string
   ): Promise<{ status: string; message: string }> {
-    return fetchWithAuth(`${API_BASE_URL}/music/favorites/${trackId}`, {
+    return fetchWithAuth(`${API_BASE_URL}/user/favorites/${trackId}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -27,7 +27,7 @@ export const favoritesApi = {
   },
 
   async getFavorites(accessToken: string): Promise<FavoritesListResponse> {
-    return fetchWithAuth(`${API_BASE_URL}/music/favorites`, {
+    return fetchWithAuth(`${API_BASE_URL}/user/favorites`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -39,7 +39,7 @@ export const favoritesApi = {
     trackId: number,
     accessToken: string
   ): Promise<CheckFavoriteResponse> {
-    return fetchWithAuth(`${API_BASE_URL}/music/favorites/check/${trackId}`, {
+    return fetchWithAuth(`${API_BASE_URL}/user/favorites/check/${trackId}`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${accessToken}`,
