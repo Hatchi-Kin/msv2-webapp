@@ -1,9 +1,11 @@
 import React, { useEffect, useState, useRef, useMemo } from "react";
 import type { OrbitControls } from "three-stdlib";
 import { useAuth } from "@/context/AuthContext";
-import { api } from "@/lib/api";
 import { visualizationApi } from "@/lib/api/visualization";
-import type { VisualizationPoint } from "@/lib/api/visualization";
+import type {
+  VisualizationPoint,
+  VisualizationStats,
+} from "@/lib/api/visualization";
 import Scene from "./Scene";
 import TrackCard from "./TrackCard";
 import Controls from "./Controls";
@@ -24,16 +26,17 @@ const VisualizationPage: React.FC = () => {
     null
   );
 
-  const [showFavorites, setShowFavorites] = useState(false);
-  const [favoriteIds, setFavoriteIds] = useState<Set<number>>(new Set());
-
   const cameraRef = useRef<OrbitControls>(null);
 
   const [pointLimit, setPointLimit] = useState(DEFAULT_POINT_LIMIT);
   const [maxAvailablePoints, setMaxAvailablePoints] = useState(0);
   const [spreadFactor, setSpreadFactor] = useState(DEFAULT_SPREAD_FACTOR);
+  const [vizType, setVizType] = useState<"default" | "umap">("umap");
 
-  // Fetch points and favorites on mount - with batched loading for large datasets
+  const [stats, setStats] = useState<VisualizationStats | null>(null);
+  const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
+
+  // Fetch points on mount - with batched loading for large datasets
   useEffect(() => {
     if (!accessToken) return;
 
@@ -44,23 +47,50 @@ const VisualizationPage: React.FC = () => {
 
         const targetLimit = Math.min(pointLimit, MAX_POINTS);
 
-        // Fetch favorites and initial points in parallel
-        const [favResponse, firstBatch] = await Promise.all([
-          api.music.getFavorites(accessToken).catch((err) => {
-            console.error("Failed to fetch favorites:", err);
-            return { tracks: [] };
-          }),
+        // Fetch initial points and stats in parallel
+        const [firstBatch, statsResponse] = await Promise.all([
           visualizationApi.getPoints(
             accessToken,
             Math.min(BATCH_SIZE, targetLimit),
-            0
+            0,
+            vizType === "default" ? undefined : vizType
+          ),
+          visualizationApi.getStats(
+            accessToken,
+            vizType === "default" ? undefined : vizType
           ),
         ]);
 
-        const ids = new Set<number>(
-          favResponse.tracks.map((track: { id: number }) => track.id)
-        );
-        setFavoriteIds(ids);
+        if (statsResponse) {
+          // Normalize genres (merge Hip Hop and Hip-Hop)
+          const normalizedStats = { ...statsResponse };
+          const genreMap = new Map<
+            string,
+            { genre: string; count: number; percentage: number }
+          >();
+
+          normalizedStats.top_genres.forEach((g) => {
+            if (!g.genre) return; // Skip invalid genres
+            // Normalize key: lowercase, remove hyphens and spaces
+            const key = g.genre.toLowerCase().replace(/[-\s]/g, "");
+
+            if (genreMap.has(key)) {
+              const existing = genreMap.get(key)!;
+              existing.count += g.count;
+              // Keep the one with more counts or the first one as display name
+              // Or prefer "Hip Hop" over "Hip-Hop" if you want specific preference
+            } else {
+              genreMap.set(key, { ...g });
+            }
+          });
+
+          // Convert back to array and sort
+          normalizedStats.top_genres = Array.from(genreMap.values()).sort(
+            (a, b) => b.count - a.count
+          );
+
+          setStats(normalizedStats);
+        }
 
         let allPoints = [...firstBatch.points];
         setMaxAvailablePoints(firstBatch.total);
@@ -80,7 +110,8 @@ const VisualizationPage: React.FC = () => {
             const batch = await visualizationApi.getPoints(
               accessToken,
               limit,
-              offset
+              offset,
+              vizType === "default" ? undefined : vizType
             );
             allPoints = [...allPoints, ...batch.points];
 
@@ -104,24 +135,49 @@ const VisualizationPage: React.FC = () => {
     };
 
     fetchData();
-  }, [accessToken, pointLimit]);
+  }, [accessToken, pointLimit, vizType]);
 
   // Handle point selection
   const handleSelectPoint = (point: VisualizationPoint | null) => {
     setSelectedPoint(point);
   };
 
-  // Get favorite points from loaded data - must be before early returns
-  const favoritePoints = useMemo(
-    () => points.filter((p) => favoriteIds.has(p.id)),
-    [points, favoriteIds]
-  );
-
   const handleResetCamera = () => {
     if (cameraRef.current) {
       cameraRef.current.reset();
     }
     setSelectedPoint(null);
+    setSelectedGenre(null);
+  };
+
+  // Calculate highlighted points based on filter
+  const highlightedPointIds = useMemo(() => {
+    const ids = new Set<number>();
+
+    // If genre is selected, add matching points
+    if (selectedGenre) {
+      const selectedKey = selectedGenre.toLowerCase().replace(/[-\s]/g, "");
+
+      points.forEach((p) => {
+        if (!p.genre) return;
+        const pointGenreKey = p.genre.toLowerCase().replace(/[-\s]/g, "");
+
+        if (pointGenreKey === selectedKey) {
+          ids.add(p.id);
+        }
+      });
+    }
+
+    // If no filters active, return empty set (meaning show all)
+    if (!selectedGenre) {
+      return null;
+    }
+
+    return ids;
+  }, [selectedGenre, points]);
+
+  const handleGenreSelect = (genre: string | null) => {
+    setSelectedGenre(genre);
   };
 
   if (loading) {
@@ -157,20 +213,22 @@ const VisualizationPage: React.FC = () => {
         selectedPointId={selectedPoint?.id || null}
         cameraRef={cameraRef}
         spreadFactor={spreadFactor}
+        highlightedPointIds={highlightedPointIds}
       />
 
       <Controls
         onResetCamera={handleResetCamera}
-        showFavorites={showFavorites}
-        setShowFavorites={setShowFavorites}
         totalPoints={points.length}
         pointLimit={pointLimit}
         setPointLimit={setPointLimit}
         maxAvailablePoints={maxAvailablePoints}
-        favoritePoints={favoritePoints}
-        onSelectPoint={handleSelectPoint}
         spreadFactor={spreadFactor}
         setSpreadFactor={setSpreadFactor}
+        vizType={vizType}
+        setVizType={setVizType}
+        stats={stats}
+        selectedGenre={selectedGenre}
+        onSelectGenre={handleGenreSelect}
       />
 
       {selectedPoint && (

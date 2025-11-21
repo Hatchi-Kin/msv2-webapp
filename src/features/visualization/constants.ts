@@ -30,6 +30,6 @@ export const DEFAULT_SPREAD_FACTOR = 2.5;
 // Spread factor range
 export const SPREAD_RANGE = {
   MIN: 1.5,
-  MAX: 3.5,
+  MAX: 7.5,
   STEP: 0.5,
 } as const;

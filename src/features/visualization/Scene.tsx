@@ -13,6 +13,7 @@ interface SceneProps {
   selectedPointId: number | null;
   cameraRef: React.RefObject<OrbitControlsType | null>;
   spreadFactor: number;
+  highlightedPointIds: Set<number> | null;
 }
 
 const Scene: React.FC<SceneProps> = ({
@@ -21,6 +22,7 @@ const Scene: React.FC<SceneProps> = ({
   selectedPointId,
   cameraRef,
   spreadFactor,
+  highlightedPointIds,
 }) => {
   // Calculate center of points for camera target
   const center = useMemo(() => {
@@ -61,6 +63,7 @@ const Scene: React.FC<SceneProps> = ({
         onSelectPoint={onSelectPoint}
         selectedPointId={selectedPointId}
         spreadFactor={spreadFactor}
+        highlightedPointIds={highlightedPointIds}
       />
 
       <OrbitControls

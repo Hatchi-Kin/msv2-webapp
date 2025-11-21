@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { RotateCcw, Heart, Settings2, X } from "lucide-react";
-import type { VisualizationPoint } from "@/lib/api/visualization";
+import { RotateCcw, Settings2, X, Filter } from "lucide-react";
+import type { VisualizationStats } from "@/lib/api/visualization";
 import { SPREAD_RANGE } from "./constants";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
@@ -8,30 +8,32 @@ import { Label } from "@/components/ui/label";
 
 interface ControlsProps {
   onResetCamera: () => void;
-  showFavorites: boolean;
-  setShowFavorites: (show: boolean) => void;
   totalPoints: number;
   pointLimit: number;
   setPointLimit: (limit: number) => void;
   maxAvailablePoints: number;
-  favoritePoints: VisualizationPoint[];
-  onSelectPoint: (point: VisualizationPoint) => void;
   spreadFactor: number;
   setSpreadFactor: (factor: number) => void;
+  vizType: "default" | "umap";
+  setVizType: (type: "default" | "umap") => void;
+  stats: VisualizationStats | null;
+  selectedGenre: string | null;
+  onSelectGenre: (genre: string | null) => void;
 }
 
 const Controls: React.FC<ControlsProps> = ({
   onResetCamera,
-  showFavorites,
-  setShowFavorites,
   totalPoints,
   pointLimit,
   setPointLimit,
   maxAvailablePoints,
-  favoritePoints,
-  onSelectPoint,
   spreadFactor,
   setSpreadFactor,
+  vizType,
+  setVizType,
+  stats,
+  selectedGenre,
+  onSelectGenre,
 }) => {
   const [isOpen, setIsOpen] = useState(true);
 
@@ -53,6 +55,7 @@ const Controls: React.FC<ControlsProps> = ({
           <div className="text-xs font-mono text-muted-foreground px-1">
             {totalPoints.toLocaleString()} /{" "}
             {maxAvailablePoints.toLocaleString()} tracks
+            {stats && ` • ${stats.total_clusters} clusters`}
           </div>
 
           <div className="flex gap-2">
@@ -63,15 +66,6 @@ const Controls: React.FC<ControlsProps> = ({
               title="Reset Camera"
             >
               <RotateCcw size={20} />
-            </Button>
-
-            <Button
-              variant={showFavorites ? "default" : "ghost"}
-              size="icon"
-              onClick={() => setShowFavorites(!showFavorites)}
-              title="Favorites List"
-            >
-              <Heart size={20} fill={showFavorites ? "currentColor" : "none"} />
             </Button>
           </div>
 
@@ -104,44 +98,72 @@ const Controls: React.FC<ControlsProps> = ({
               onValueChange={(value) => setSpreadFactor(value[0])}
             />
           </div>
-        </div>
-      )}
 
-      {isOpen && showFavorites && (
-        <div className="bg-background/90 backdrop-blur-md border border-primary/20 rounded-lg p-0 shadow-xl animate-in slide-in-from-left-5 fade-in duration-200 w-64 max-h-[60vh] overflow-y-auto">
-          <div className="p-3 border-b border-border/50 sticky top-0 bg-background/95 backdrop-blur-md z-10">
-            <h3 className="font-semibold text-sm flex items-center gap-2">
-              <Heart size={14} className="text-primary" fill="currentColor" />
-              Favorites ({favoritePoints.length})
-            </h3>
+          {/* Visualization Type Toggle */}
+          <div className="px-1 pt-1 pb-2 border-t border-border/50 space-y-2">
+            <div className="flex items-center justify-between text-[10px] text-muted-foreground">
+              <Label className="text-xs">Algorithm</Label>
+            </div>
+            <div className="flex bg-muted rounded-lg p-1 gap-1">
+              <button
+                onClick={() => setVizType("default")}
+                className={`flex-1 text-[10px] font-medium py-1 rounded-md transition-all ${
+                  vizType === "default"
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                t-SNE
+              </button>
+              <button
+                onClick={() => setVizType("umap")}
+                className={`flex-1 text-[10px] font-medium py-1 rounded-md transition-all ${
+                  vizType === "umap"
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                UMAP
+              </button>
+            </div>
           </div>
 
-          <div className="p-1">
-            {favoritePoints.length === 0 ? (
-              <div className="p-4 text-center text-xs text-muted-foreground">
-                No favorites found in current view.
-              </div>
-            ) : (
-              <div className="flex flex-col gap-1">
-                {favoritePoints.map((point) => (
+          {/* Genre Filter */}
+          {stats && stats.top_genres.length > 0 && (
+            <div className="px-1 pt-1 pb-2 border-t border-border/50 space-y-2">
+              <div className="flex items-center justify-between text-[10px] text-muted-foreground">
+                <Label className="text-xs flex items-center gap-1">
+                  <Filter size={10} /> Top Genres
+                </Label>
+                {selectedGenre && (
                   <button
-                    key={point.id}
-                    onClick={() => {
-                      onSelectPoint(point);
-                    }}
-                    className="text-left px-3 py-2 rounded-md hover:bg-accent hover:text-accent-foreground text-xs transition-colors group w-full"
+                    onClick={() => onSelectGenre(null)}
+                    className="text-[10px] text-primary hover:underline"
                   >
-                    <div className="font-medium truncate group-hover:text-primary transition-colors">
-                      {point.title || "Unknown Title"}
-                    </div>
-                    <div className="text-muted-foreground truncate text-[10px]">
-                      {point.artist || "Unknown Artist"}
-                    </div>
+                    Reset
+                  </button>
+                )}
+              </div>
+              <div className="flex flex-wrap gap-1 max-h-24 overflow-y-auto pr-1 custom-scrollbar">
+                {stats.top_genres.slice(0, 10).map((g) => (
+                  <button
+                    key={g.genre}
+                    onClick={() =>
+                      onSelectGenre(selectedGenre === g.genre ? null : g.genre)
+                    }
+                    className={`text-[10px] px-2 py-0.5 rounded-full border transition-all ${
+                      selectedGenre === g.genre
+                        ? "bg-primary text-primary-foreground border-primary"
+                        : "bg-background text-muted-foreground border-border hover:border-primary/50"
+                    }`}
+                    title={`${g.count} tracks`}
+                  >
+                    {g.genre}
                   </button>
                 ))}
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       )}
     </div>

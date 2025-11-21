@@ -8,6 +8,7 @@ interface PointsProps {
   onSelectPoint: (point: VisualizationPoint | null) => void;
   selectedPointId: number | null;
   spreadFactor: number;
+  highlightedPointIds: Set<number> | null;
 }
 
 // Pre-create color objects for performance
@@ -63,6 +64,7 @@ const Points: React.FC<PointsProps> = ({
   onSelectPoint,
   selectedPointId,
   spreadFactor,
+  highlightedPointIds,
 }) => {
   const meshRef = useRef<THREE.Points>(null);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -104,16 +106,18 @@ const Points: React.FC<PointsProps> = ({
     const alphaAttr = geometry.getAttribute("alpha") as THREE.BufferAttribute;
     const colorAttr = geometry.getAttribute("color") as THREE.BufferAttribute;
 
-    // Find selected point index
-    const selectedIndex = selectedPointId
-      ? points.findIndex((p) => p.id === selectedPointId)
-      : -1;
-
     // Update all points
     for (let i = 0; i < points.length; i++) {
-      const isSelected = i === selectedIndex;
+      const point = points[i];
+      const isSelected = point.id === selectedPointId;
       const isHovered = i === hoveredIndex;
       const i3 = i * 3;
+
+      // Determine if point should be dimmed
+      // If highlighting is active (Set is not null), dim points NOT in the set
+      const isDimmed = highlightedPointIds
+        ? !highlightedPointIds.has(point.id)
+        : false;
 
       if (isSelected) {
         sizeAttr.setX(i, POINT_SIZES.SELECTED);
@@ -130,7 +134,8 @@ const Points: React.FC<PointsProps> = ({
         colorAttr.setXYZ(i, HOVER_COLOR.r, HOVER_COLOR.g, HOVER_COLOR.b);
       } else {
         sizeAttr.setX(i, POINT_SIZES.BASE);
-        alphaAttr.setX(i, POINT_ALPHAS.BASE);
+        // Apply dimming if needed
+        alphaAttr.setX(i, isDimmed ? 0.1 : POINT_ALPHAS.BASE);
         colorAttr.setXYZ(
           i,
           originalColors[i3],
@@ -143,7 +148,13 @@ const Points: React.FC<PointsProps> = ({
     sizeAttr.needsUpdate = true;
     alphaAttr.needsUpdate = true;
     colorAttr.needsUpdate = true;
-  }, [points, selectedPointId, hoveredIndex, originalColors]);
+  }, [
+    points,
+    selectedPointId,
+    hoveredIndex,
+    originalColors,
+    highlightedPointIds,
+  ]);
 
   const handlePointerMove = (e: { intersections: THREE.Intersection[] }) => {
     // Get the closest intersection by distance
