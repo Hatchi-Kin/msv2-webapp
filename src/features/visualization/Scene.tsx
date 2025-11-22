@@ -14,6 +14,7 @@ interface SceneProps {
   cameraRef: React.RefObject<OrbitControlsType | null>;
   spreadFactor: number;
   highlightedPointIds: Set<number> | null;
+  vizType?: "default" | "umap" | "sphere";
 }
 
 const Scene: React.FC<SceneProps> = ({
@@ -23,6 +24,7 @@ const Scene: React.FC<SceneProps> = ({
   cameraRef,
   spreadFactor,
   highlightedPointIds,
+  vizType,
 }) => {
   // Calculate center of points for camera target
   const center = useMemo(() => {
@@ -40,9 +42,21 @@ const Scene: React.FC<SceneProps> = ({
     );
   }, [points]);
 
+  // Adjust camera zoom based on visualization type
+  const cameraPosition = useMemo(() => {
+    switch (vizType) {
+      case "umap":
+        return [0, 0, 5] as const; // Closer zoom for UMAP
+      case "sphere":
+        return [0, 0, 10] as const; // Slightly zoomed out for Sphere
+      default:
+        return [0, 0, 15] as const; // Default zoom for t-SNE
+    }
+  }, [vizType]);
+
   return (
     <Canvas
-      camera={{ position: [0, 0, 15], fov: 60 }}
+      camera={{ position: cameraPosition, fov: 60 }}
       style={{ width: "100%", height: "100%", background: "transparent" }}
       dpr={[1, 2]}
       gl={{ alpha: true, antialias: true }}
@@ -64,6 +78,7 @@ const Scene: React.FC<SceneProps> = ({
         selectedPointId={selectedPointId}
         spreadFactor={spreadFactor}
         highlightedPointIds={highlightedPointIds}
+        vizType={vizType}
       />
 
       <OrbitControls

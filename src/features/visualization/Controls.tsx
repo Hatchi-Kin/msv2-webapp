@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { RotateCcw, Settings2, X, Filter } from "lucide-react";
 import type { VisualizationStats } from "@/lib/api/visualization";
-import { SPREAD_RANGE } from "./constants";
+import { SPREAD_RANGE, VISUALIZATION_DESCRIPTIONS } from "./constants";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
@@ -14,8 +14,8 @@ interface ControlsProps {
   maxAvailablePoints: number;
   spreadFactor: number;
   setSpreadFactor: (factor: number) => void;
-  vizType: "default" | "umap";
-  setVizType: (type: "default" | "umap") => void;
+  vizType: "default" | "umap" | "sphere";
+  setVizType: (type: "default" | "umap" | "sphere") => void;
   stats: VisualizationStats | null;
   selectedGenre: string | null;
   onSelectGenre: (genre: string | null) => void;
@@ -58,15 +58,57 @@ const Controls: React.FC<ControlsProps> = ({
             {stats && ` • ${stats.total_clusters} clusters`}
           </div>
 
-          <div className="flex gap-2">
+          <div className="text-[11px] text-muted-foreground px-1 py-1 border-t border-border/50 leading-relaxed">
+            {VISUALIZATION_DESCRIPTIONS[vizType]}
+          </div>
+
+          {/* Visualization Type Toggle */}
+          <div className="px-1 pt-1 pb-2 border-t border-border/50 space-y-2">
+            <div className="flex items-center justify-between text-[10px] text-muted-foreground">
+              <Label className="text-xs">Algorithm</Label>
+            </div>
+            <div className="flex bg-muted rounded-lg p-1 gap-1">
+              <button
+                onClick={() => setVizType("default")}
+                className={`flex-1 text-[10px] font-medium py-1 rounded-md transition-all ${vizType === "default"
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                  }`}
+              >
+                t-SNE
+              </button>
+              <button
+                onClick={() => setVizType("umap")}
+                className={`flex-1 text-[10px] font-medium py-1 rounded-md transition-all ${vizType === "umap"
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                  }`}
+              >
+                UMAP
+              </button>
+              <button
+                onClick={() => setVizType("sphere")}
+                className={`flex-1 text-[10px] font-medium py-1 rounded-md transition-all ${vizType === "sphere"
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                  }`}
+              >
+                Sphere
+              </button>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 px-1">
             <Button
               variant="ghost"
               size="icon"
               onClick={onResetCamera}
               title="Reset Camera"
+              className="h-8 w-8"
             >
-              <RotateCcw size={20} />
+              <RotateCcw size={16} />
             </Button>
+            <span className="text-[10px] text-muted-foreground">Reset Camera</span>
           </div>
 
           {/* Point Limit Slider */}
@@ -99,35 +141,6 @@ const Controls: React.FC<ControlsProps> = ({
             />
           </div>
 
-          {/* Visualization Type Toggle */}
-          <div className="px-1 pt-1 pb-2 border-t border-border/50 space-y-2">
-            <div className="flex items-center justify-between text-[10px] text-muted-foreground">
-              <Label className="text-xs">Algorithm</Label>
-            </div>
-            <div className="flex bg-muted rounded-lg p-1 gap-1">
-              <button
-                onClick={() => setVizType("default")}
-                className={`flex-1 text-[10px] font-medium py-1 rounded-md transition-all ${
-                  vizType === "default"
-                    ? "bg-background text-foreground shadow-sm"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                t-SNE
-              </button>
-              <button
-                onClick={() => setVizType("umap")}
-                className={`flex-1 text-[10px] font-medium py-1 rounded-md transition-all ${
-                  vizType === "umap"
-                    ? "bg-background text-foreground shadow-sm"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                UMAP
-              </button>
-            </div>
-          </div>
-
           {/* Genre Filter */}
           {stats && stats.top_genres.length > 0 && (
             <div className="px-1 pt-1 pb-2 border-t border-border/50 space-y-2">
@@ -151,11 +164,10 @@ const Controls: React.FC<ControlsProps> = ({
                     onClick={() =>
                       onSelectGenre(selectedGenre === g.genre ? null : g.genre)
                     }
-                    className={`text-[10px] px-2 py-0.5 rounded-full border transition-all ${
-                      selectedGenre === g.genre
+                    className={`text-[10px] px-2 py-0.5 rounded-full border transition-all ${selectedGenre === g.genre
                         ? "bg-primary text-primary-foreground border-primary"
                         : "bg-background text-muted-foreground border-border hover:border-primary/50"
-                    }`}
+                      }`}
                     title={`${g.count} tracks`}
                   >
                     {g.genre}

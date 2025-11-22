@@ -58,3 +58,5 @@ export const visualizationApi = {
     );
   },
 };
+
+export type VizType = "default" | "umap" | "sphere";

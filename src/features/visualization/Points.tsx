@@ -9,6 +9,7 @@ interface PointsProps {
   selectedPointId: number | null;
   spreadFactor: number;
   highlightedPointIds: Set<number> | null;
+  vizType?: "default" | "umap" | "sphere";
 }
 
 // Pre-create color objects for performance
@@ -65,9 +66,15 @@ const Points: React.FC<PointsProps> = ({
   selectedPointId,
   spreadFactor,
   highlightedPointIds,
+  vizType,
 }) => {
   const meshRef = useRef<THREE.Points>(null);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+
+  // Get point size multiplier based on viz type
+  const pointSizeMultiplier = useMemo(() => {
+    return vizType === "umap" ? 0.75 : 1.0; // 25% smaller for UMAP
+  }, [vizType]);
 
   // Create geometry attributes - memoized to avoid recreation on every render
   const { positions, colors, sizes, alphas, originalColors } = useMemo(() => {
@@ -90,12 +97,12 @@ const Points: React.FC<PointsProps> = ({
       colors[i3 + 1] = originalColors[i3 + 1] = colorObj.g;
       colors[i3 + 2] = originalColors[i3 + 2] = colorObj.b;
 
-      sizes[i] = POINT_SIZES.BASE;
+      sizes[i] = POINT_SIZES.BASE * pointSizeMultiplier;
       alphas[i] = POINT_ALPHAS.BASE;
     });
 
     return { positions, colors, sizes, alphas, originalColors };
-  }, [points, spreadFactor]);
+  }, [points, spreadFactor, pointSizeMultiplier]);
 
   // Update visual attributes based on selection and hover
   useEffect(() => {
@@ -120,7 +127,7 @@ const Points: React.FC<PointsProps> = ({
         : false;
 
       if (isSelected) {
-        sizeAttr.setX(i, POINT_SIZES.SELECTED);
+        sizeAttr.setX(i, POINT_SIZES.SELECTED * pointSizeMultiplier);
         alphaAttr.setX(i, POINT_ALPHAS.SELECTED);
         colorAttr.setXYZ(
           i,
@@ -129,11 +136,11 @@ const Points: React.FC<PointsProps> = ({
           SELECTED_COLOR.b
         );
       } else if (isHovered) {
-        sizeAttr.setX(i, POINT_SIZES.HOVER);
+        sizeAttr.setX(i, POINT_SIZES.HOVER * pointSizeMultiplier);
         alphaAttr.setX(i, POINT_ALPHAS.HOVER);
         colorAttr.setXYZ(i, HOVER_COLOR.r, HOVER_COLOR.g, HOVER_COLOR.b);
       } else {
-        sizeAttr.setX(i, POINT_SIZES.BASE);
+        sizeAttr.setX(i, POINT_SIZES.BASE * pointSizeMultiplier);
         // Apply dimming if needed
         alphaAttr.setX(i, isDimmed ? 0.1 : POINT_ALPHAS.BASE);
         colorAttr.setXYZ(
@@ -154,6 +161,7 @@ const Points: React.FC<PointsProps> = ({
     hoveredIndex,
     originalColors,
     highlightedPointIds,
+    pointSizeMultiplier,
   ]);
 
   const handlePointerMove = (e: { intersections: THREE.Intersection[] }) => {

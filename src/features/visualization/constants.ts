@@ -33,3 +33,12 @@ export const SPREAD_RANGE = {
   MAX: 7.5,
   STEP: 0.5,
 } as const;
+
+// Visualization descriptions
+export const VISUALIZATION_DESCRIPTIONS = {
+  default:
+    "t-SNE focuses on preserving local neighborhoods, creating a cloud-like structure where similar tracks cluster together tightly.",
+  umap: "Supervised UMAP with genre labels creates distinct musical islands, preserving both local and global structure for clear genre separation.",
+  sphere:
+    "Same supervised UMAP data but projected onto a hypersphere surface, creating an immersive contellation without edges.",
+} as const;

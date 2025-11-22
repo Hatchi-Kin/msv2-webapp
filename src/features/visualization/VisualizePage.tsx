@@ -29,12 +29,22 @@ const VisualizationPage: React.FC = () => {
   const cameraRef = useRef<OrbitControls>(null);
 
   const [pointLimit, setPointLimit] = useState(DEFAULT_POINT_LIMIT);
+  const [debouncedPointLimit, setDebouncedPointLimit] = useState(DEFAULT_POINT_LIMIT);
   const [maxAvailablePoints, setMaxAvailablePoints] = useState(0);
   const [spreadFactor, setSpreadFactor] = useState(DEFAULT_SPREAD_FACTOR);
-  const [vizType, setVizType] = useState<"default" | "umap">("umap");
+  const [vizType, setVizType] = useState<"default" | "umap" | "sphere">("umap");
 
   const [stats, setStats] = useState<VisualizationStats | null>(null);
   const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
+
+  // Debounce pointLimit changes (300ms delay)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedPointLimit(pointLimit);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [pointLimit]);
 
   // Fetch points on mount - with batched loading for large datasets
   useEffect(() => {
@@ -45,7 +55,7 @@ const VisualizationPage: React.FC = () => {
         setLoading(true);
         setError(null);
 
-        const targetLimit = Math.min(pointLimit, MAX_POINTS);
+        const targetLimit = Math.min(debouncedPointLimit, MAX_POINTS);
 
         // Fetch initial points and stats in parallel
         const [firstBatch, statsResponse] = await Promise.all([
@@ -135,7 +145,7 @@ const VisualizationPage: React.FC = () => {
     };
 
     fetchData();
-  }, [accessToken, pointLimit, vizType]);
+  }, [accessToken, debouncedPointLimit, vizType]);
 
   // Handle point selection
   const handleSelectPoint = (point: VisualizationPoint | null) => {
@@ -214,6 +224,7 @@ const VisualizationPage: React.FC = () => {
         cameraRef={cameraRef}
         spreadFactor={spreadFactor}
         highlightedPointIds={highlightedPointIds}
+        vizType={vizType}
       />
 
       <Controls
@@ -235,11 +246,6 @@ const VisualizationPage: React.FC = () => {
         <TrackCard
           point={selectedPoint}
           onClose={() => handleSelectPoint(null)}
-          onFindSimilar={(id) => {
-            // Find the point object for this id
-            const point = points.find((p) => p.id === id);
-            if (point) handleSelectPoint(point);
-          }}
         />
       )}
     </div>

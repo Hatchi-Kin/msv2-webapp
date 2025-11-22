@@ -1,8 +1,7 @@
 import React from "react";
-import { Play, Sparkles, X } from "lucide-react";
+import { Play, X } from "lucide-react";
 import { usePlayer } from "@/context/PlayerContext";
 import { Button } from "@/components/ui/button";
-import { PlaylistDropdown } from "@/features/library/PlaylistDropdown";
 import { FavoriteButton } from "@/features/library/FavoriteButton";
 import type { VisualizationPoint } from "@/lib/api/visualization";
 import type { MegasetTrack } from "@/types/api";
@@ -10,13 +9,11 @@ import type { MegasetTrack } from "@/types/api";
 interface TrackCardProps {
   point: VisualizationPoint;
   onClose: () => void;
-  onFindSimilar: (trackId: number) => void;
 }
 
 const TrackCard: React.FC<TrackCardProps> = ({
   point,
   onClose,
-  onFindSimilar,
 }) => {
   const { playTrack } = usePlayer();
 
@@ -40,7 +37,7 @@ const TrackCard: React.FC<TrackCardProps> = ({
   };
 
   return (
-    <div className="absolute top-4 right-4 w-80 bg-background/90 backdrop-blur-md border border-primary/20 rounded-xl shadow-2xl p-4 z-50 animate-in slide-in-from-right-10 fade-in duration-300">
+    <div className="absolute top-4 right-4 w-64 bg-background/90 backdrop-blur-md border border-primary/20 rounded-xl shadow-2xl p-4 z-50 animate-in slide-in-from-right-10 fade-in duration-300">
       <button
         onClick={onClose}
         className="absolute top-2 right-2 p-1 text-muted-foreground hover:text-foreground transition-colors"
@@ -66,24 +63,13 @@ const TrackCard: React.FC<TrackCardProps> = ({
         </div>
       </div>
 
-      <div className="mt-4 flex items-center justify-between gap-2">
-        <Button onClick={handlePlay} className="flex-1 gap-2">
+      <div className="mt-4 flex items-center gap-2">
+        <Button onClick={handlePlay} className="gap-2">
           <Play size={18} className="fill-current" />
           Play
         </Button>
 
         <FavoriteButton trackId={point.id} variant="icon" />
-
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={() => onFindSimilar(point.id)}
-          title="Find neighbors"
-        >
-          <Sparkles size={20} />
-        </Button>
-
-        <PlaylistDropdown trackId={point.id} variant="button" />
       </div>
 
       <div className="mt-3 pt-3 border-t border-border/50 text-xs text-muted-foreground flex justify-between">
