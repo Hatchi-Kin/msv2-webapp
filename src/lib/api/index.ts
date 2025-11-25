@@ -12,6 +12,7 @@ export { favoritesApi as favorites } from "./favorites";
 export { playlistsApi as playlists } from "./playlists";
 export { visualizationApi as visualization } from "./visualization";
 export { mediaApi as media } from "./media";
+export { agentApi as agent } from "./agent";
 
 // Re-export for convenience
 import { authApi } from "./auth";
@@ -20,6 +21,7 @@ import { favoritesApi } from "./favorites";
 import { playlistsApi } from "./playlists";
 import { visualizationApi } from "./visualization";
 import { mediaApi } from "./media";
+import { agentApi } from "./agent";
 
 export const api = {
   auth: authApi,
@@ -30,4 +32,5 @@ export const api = {
   },
   visualization: visualizationApi,
   media: mediaApi,
+  agent: agentApi,
 };

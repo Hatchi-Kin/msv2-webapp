@@ -5,4 +5,5 @@ export { default as LibraryArtistsPage } from "@/features/library/LibraryArtists
 export { default as LibraryAlbumsPage } from "@/features/library/LibraryAlbumsPage";
 export { default as LibraryTracksPage } from "@/features/library/LibraryTracksPage";
 export { default as LibrarySimilarPage } from "@/features/library/LibrarySimilarPage";
+export { default as GemFinderPage } from "@/features/agent/GemFinderPage";
 export { default as VisualizePage } from "@/features/visualization/VisualizePage";

@@ -1,3 +1,5 @@
+export type Playlist = PlaylistSummary;
+
 export interface MegasetTrack {
   id: number;
   filename: string;
