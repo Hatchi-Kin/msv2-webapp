@@ -25,6 +25,7 @@ import {
   LibraryAlbumsPage,
   LibraryTracksPage,
   LibrarySimilarPage,
+  GemFinderPage,
 } from "@/pages";
 import LibraryLayout from "@/features/library/LibraryLayout";
 import MainLayout from "@/components/layout/MainLayout";
@@ -83,6 +84,7 @@ function App() {
               </Route>
 
               <Route path="/my-library" element={<LibraryPage />} />
+              <Route path="/gems" element={<GemFinderPage />} />
             </Route>
           </Routes>
         </PlayerProvider>
