@@ -5,6 +5,7 @@ import { Play } from "lucide-react";
 import { UIState, ButtonOption } from "@/lib/api/agent";
 import { FavoriteButton } from "@/features/library/FavoriteButton";
 import { PlaylistDropdown } from "@/features/library/PlaylistDropdown";
+import { AgentMessage } from "./AgentMessage";
 
 interface AgentViewProps {
   uiState: UIState;
@@ -22,11 +23,11 @@ export const AgentView: React.FC<AgentViewProps> = ({
   return (
     <div className="space-y-8 animate-in slide-in-from-bottom-4 duration-500">
       {/* Message Bubble */}
-      <div className="bg-primary/10 border border-primary/20 p-6 rounded-2xl rounded-tl-none w-full">
-        <p className="text-base font-medium leading-relaxed">
-          {uiState.message}
-        </p>
-      </div>
+      <AgentMessage 
+        message={uiState.message} 
+        understanding={uiState.understanding}
+        selection={uiState.selection}
+      />
 
       {/* Artist Knowledge Check - Multi-select */}
       {uiState.options.length > 0 &&
@@ -81,7 +82,7 @@ export const AgentView: React.FC<AgentViewProps> = ({
             return (
               <Card
                 key={card.id}
-                className="p-4 bg-card/40 border-white/5 hover:bg-card/60 transition-colors"
+                className="p-4 glass-card border-0 hover:scale-[1.01] transition-all duration-300"
               >
                 <div className="flex items-center gap-4">
                   {/* Cover Placeholder - Matches SimilarTrackCard style */}

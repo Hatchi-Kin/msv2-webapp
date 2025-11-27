@@ -33,6 +33,8 @@ export interface ButtonOption {
 
 export interface UIState {
   message: string;
+  understanding?: string;
+  selection?: string;
   cards: TrackCard[];
   options: ButtonOption[];
 }
