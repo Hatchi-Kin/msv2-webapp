@@ -22,6 +22,13 @@ export interface TrackCard {
   
   // Agent-specific field
   reason: string; // The "Pitch" - why this track is recommended
+  
+  // Audio Features
+  bpm?: number | null;
+  energy?: number | null;
+  valence?: number | null;
+  danceability?: number | null;
+  spotify_id?: string | null;
 }
 
 export interface ButtonOption {

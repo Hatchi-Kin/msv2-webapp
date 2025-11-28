@@ -102,6 +102,22 @@ export const AgentView: React.FC<AgentViewProps> = ({
                     <p className="text-xs text-primary mt-1 italic">
                       "{card.reason}"
                     </p>
+                    
+                    {/* Audio Metrics */}
+                    {(card.energy !== undefined || card.valence !== undefined) && (
+                      <div className="flex gap-2 mt-2">
+                        {card.energy !== undefined && card.energy !== null && (
+                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">
+                            ⚡ Energy: {card.energy.toFixed(2)}
+                          </span>
+                        )}
+                        {card.valence !== undefined && card.valence !== null && (
+                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-secondary/10 text-secondary border border-secondary/20">
+                            😊 Mood: {card.valence.toFixed(2)}
+                          </span>
+                        )}
+                      </div>
+                    )}
                   </div>
 
                   {/* Actions */}
