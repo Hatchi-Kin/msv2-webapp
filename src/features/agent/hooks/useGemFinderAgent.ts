@@ -50,9 +50,9 @@ export const useGemFinderAgent = () => {
       option.action === "mark_known" ||
       option.action === "continue"
     ) {
-      defaultMessage = "🎸 Enriching tracks with Spotify metadata...";
+      defaultMessage = "🎯 Curating your personalized recommendations...";
     } else if (option.action === "set_vibe") {
-      defaultMessage = "🎨 Crafting personalized pitches...";
+      defaultMessage = "🔍 Searching through your library for hidden gems...";
     } else if (option.action === "add") {
       defaultMessage = "✨ Adding track to your playlist...";
     }
@@ -62,7 +62,7 @@ export const useGemFinderAgent = () => {
       setLoadingMessage(pendingFunFact);
     } else {
       setLoadingMessage(
-        `${defaultMessage}\n\n💡 Did you know? Our AI uses 512-dimensional audio embeddings to understand the sonic fingerprint of each track!`
+        `${defaultMessage}\n\n💡 Did you know? Our AI analyzes audio features like tempo, energy, brightness, and harmonic complexity to find tracks that perfectly match your vibe!`
       );
     }
 
