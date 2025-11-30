@@ -29,13 +29,19 @@ export interface TrackCard {
   valence?: number | null;
   danceability?: number | null;
   spotify_id?: string | null;
+  
+  // Explainability Fields
+  confidence?: number | null;
+  confidence_breakdown?: Record<string, number> | null;
+  explanations?: string[] | null;
+  risk_factors?: string[] | null;
 }
 
 export interface ButtonOption {
-  id: string;
   label: string;
-  action: string;
-  payload: Record<string, any>;
+  value: string;
+  action?: string;
+  payload?: Record<string, any>;
 }
 
 export interface UIState {
@@ -44,6 +50,7 @@ export interface UIState {
   selection?: string;
   cards: TrackCard[];
   options: ButtonOption[];
+  thought_process?: string[];
 }
 
 export const agentApi = {
