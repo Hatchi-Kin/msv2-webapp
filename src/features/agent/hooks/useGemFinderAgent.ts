@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { api } from "@/lib/api";
-import { UIState, ButtonOption } from "@/lib/api/agent";
+import { UIState, ButtonOption, AgentState } from "@/lib/api/agent";
 
 export const useGemFinderAgent = () => {
   const [uiState, setUiState] = useState<UIState | null>(null);
@@ -11,10 +11,10 @@ export const useGemFinderAgent = () => {
   const [pendingFunFact, setPendingFunFact] = useState<string | null>(null);
 
   // Update UI state and capture any fun_fact from the AgentState response
-  const updateState = (newState: any) => {
+  const updateState = (newState: AgentState) => {
     if (!newState) return;
     // The backend returns an AgentState dict with a 'ui_state' key
-    const ui = newState.ui_state ?? newState;
+    const ui = newState.ui_state;
     setUiState(ui);
     // Prefer the most recent fun fact (fun_fact_2 overrides fun_fact_1, then fun_fact)
     const fact =
@@ -73,10 +73,15 @@ export const useGemFinderAgent = () => {
         playlistId: playlistId,
         payload: option.payload,
       });
+
+      if (!option.action) {
+        throw new Error("Button option missing action");
+      }
+
       const newState = await api.agent.resumeAgent(
         option.action,
         playlistId,
-        option.payload
+        option.payload || {}
       );
       console.log("📥 Received new state:", newState);
       updateState(newState);
