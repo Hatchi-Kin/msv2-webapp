@@ -7,7 +7,11 @@ interface AgentMessageProps {
   selection?: string;
 }
 
-export const AgentMessage: React.FC<AgentMessageProps> = ({ message, understanding, selection }) => {
+export const AgentMessage: React.FC<AgentMessageProps> = ({
+  message,
+  understanding,
+  selection,
+}) => {
   // Use structured data if available, otherwise fallback to regex parsing
   let part1Text = understanding;
   let part2Text = selection;
@@ -15,8 +19,12 @@ export const AgentMessage: React.FC<AgentMessageProps> = ({ message, understandi
   if (!part1Text || !part2Text) {
     // Check if message follows the Part 1 / Part 2 structure (handling optional bold markers and variations)
     // Matches: "**PART 1 (Understanding):**", "**Understanding:**", "Understanding:", etc.
-    const part1Match = message.match(/(?:\*\*)?(?:PART 1\s*\(?)?Understanding(?:\))?:?(?:\*\*)?\s*(.*?)(?=(?:\*\*)?(?:PART 2\s*\(?)?Selection|$)/is);
-    const part2Match = message.match(/(?:\*\*)?(?:PART 2\s*\(?)?Selection(?:\))?:?(?:\*\*)?\s*(.*)/is);
+    const part1Match = message.match(
+      /(?:\*\*)?(?:PART 1\s*\(?)?Understanding(?:\))?:?(?:\*\*)?\s*(.*?)(?=(?:\*\*)?(?:PART 2\s*\(?)?Selection|$)/is
+    );
+    const part2Match = message.match(
+      /(?:\*\*)?(?:PART 2\s*\(?)?Selection(?:\))?:?(?:\*\*)?\s*(.*)/is
+    );
 
     if (part1Match) part1Text = part1Match[1].trim();
     if (part2Match) part2Text = part2Match[1].trim();
@@ -30,7 +38,7 @@ export const AgentMessage: React.FC<AgentMessageProps> = ({ message, understandi
           <div className="absolute -top-6 -right-6 p-8 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity rotate-12">
             <Brain className="w-48 h-48" />
           </div>
-          
+
           <div className="relative z-10">
             <div className="flex items-center gap-4 mb-6">
               <div className="p-3 bg-primary/10 rounded-2xl text-primary">

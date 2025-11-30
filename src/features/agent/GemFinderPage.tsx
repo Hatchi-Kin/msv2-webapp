@@ -7,6 +7,8 @@ import { Sparkles } from "lucide-react";
 import { useGemFinderAgent } from "./hooks/useGemFinderAgent";
 import { PlaylistSelection } from "./components/PlaylistSelection";
 import { AgentView } from "./components/AgentView";
+import { TrackCard } from "@/lib/api/agent";
+import { MegasetTrack } from "@/types/api";
 
 const GemFinderPage: React.FC = () => {
   const { playlists } = useLibrary();
@@ -35,16 +37,26 @@ const GemFinderPage: React.FC = () => {
     resetAgent();
   };
 
-  const handlePlayTrack = (card: any) => {
-    playTrack({
+  const handlePlayTrack = (card: TrackCard) => {
+    // Construct a MegasetTrack from the card data
+    const track: MegasetTrack = {
       id: card.id,
+      filename: card.filename,
+      filepath: card.filepath,
+      relative_path: card.relative_path,
       title: card.title,
       artist: card.artist,
-      album: "",
-      filename: "",
-      filepath: "",
-      relative_path: "",
-    } as any);
+      album: card.album,
+      album_folder: card.album_folder,
+      artist_folder: card.artist_folder,
+      filesize: card.filesize,
+      year: card.year,
+      tracknumber: card.tracknumber,
+      genre: card.genre,
+      top_5_genres: card.top_5_genres,
+      created_at: card.created_at || new Date().toISOString(),
+    };
+    playTrack(track);
   };
 
   // 1. Selection View

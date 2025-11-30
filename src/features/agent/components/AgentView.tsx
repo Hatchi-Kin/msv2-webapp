@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Play } from "lucide-react";
-import { UIState, ButtonOption } from "@/lib/api/agent";
+import { UIState, ButtonOption, TrackCard } from "@/lib/api/agent";
 import { FavoriteButton } from "@/features/library/FavoriteButton";
 import { PlaylistDropdown } from "@/features/library/PlaylistDropdown";
 import { AgentMessage } from "./AgentMessage";
@@ -10,7 +10,7 @@ import { AgentMessage } from "./AgentMessage";
 interface AgentViewProps {
   uiState: UIState;
   onAction: (option: ButtonOption) => void;
-  onPlayTrack: (card: any) => void;
+  onPlayTrack: (card: TrackCard) => void;
 }
 
 export const AgentView: React.FC<AgentViewProps> = ({
@@ -23,8 +23,8 @@ export const AgentView: React.FC<AgentViewProps> = ({
   return (
     <div className="space-y-8 animate-in slide-in-from-bottom-4 duration-500">
       {/* Message Bubble */}
-      <AgentMessage 
-        message={uiState.message} 
+      <AgentMessage
+        message={uiState.message}
         understanding={uiState.understanding}
         selection={uiState.selection}
       />
@@ -119,19 +119,24 @@ export const AgentView: React.FC<AgentViewProps> = ({
                   <p className="text-sm text-muted-foreground mt-2 line-clamp-2 group-hover:line-clamp-none transition-all">
                     {card.reason}
                   </p>
-                  
+
                   {/* Metrics & Confidence */}
                   <div className="flex flex-wrap gap-2 mt-2">
                     {/* Confidence Badge */}
-                    {card.confidence !== undefined && card.confidence !== null && (
-                       <span className={`text-[10px] px-2 py-0.5 rounded-full border font-medium ${
-                         card.confidence > 0.8 ? 'bg-green-500/10 text-green-500 border-green-500/20' :
-                         card.confidence > 0.6 ? 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20' :
-                         'bg-red-500/10 text-red-500 border-red-500/20'
-                       }`}>
-                         ★ {Math.round(card.confidence * 100)}% Match
-                       </span>
-                    )}
+                    {card.confidence !== undefined &&
+                      card.confidence !== null && (
+                        <span
+                          className={`text-[10px] px-2 py-0.5 rounded-full border font-medium ${
+                            card.confidence > 0.8
+                              ? "bg-green-500/10 text-green-500 border-green-500/20"
+                              : card.confidence > 0.6
+                              ? "bg-yellow-500/10 text-yellow-500 border-yellow-500/20"
+                              : "bg-red-500/10 text-red-500 border-red-500/20"
+                          }`}
+                        >
+                          ★ {Math.round(card.confidence * 100)}% Match
+                        </span>
+                      )}
 
                     {/* Energy */}
                     {card.energy !== undefined && card.energy !== null && (
@@ -139,7 +144,7 @@ export const AgentView: React.FC<AgentViewProps> = ({
                         ⚡ Energy: {card.energy.toFixed(2)}
                       </span>
                     )}
-                    
+
                     {/* Mood */}
                     {card.valence !== undefined && card.valence !== null && (
                       <span className="text-[10px] px-2 py-0.5 rounded-full bg-secondary/10 text-secondary border border-secondary/20">
@@ -152,7 +157,10 @@ export const AgentView: React.FC<AgentViewProps> = ({
                   {card.explanations && card.explanations.length > 0 && (
                     <div className="mt-2 space-y-1">
                       {card.explanations.slice(0, 2).map((exp, i) => (
-                        <p key={i} className="text-[10px] text-muted-foreground flex items-center gap-1">
+                        <p
+                          key={i}
+                          className="text-[10px] text-muted-foreground flex items-center gap-1"
+                        >
                           <span className="w-1 h-1 rounded-full bg-primary/50" />
                           {exp}
                         </p>

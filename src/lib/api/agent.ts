@@ -6,7 +6,7 @@ export interface TrackCard {
   filename: string;
   filepath: string;
   relative_path: string;
-  
+
   // Metadata
   album_folder?: string | null;
   artist_folder?: string | null;
@@ -19,17 +19,17 @@ export interface TrackCard {
   genre?: string | null;
   top_5_genres?: string | null;
   created_at?: string | null;
-  
+
   // Agent-specific field
   reason: string; // The "Pitch" - why this track is recommended
-  
+
   // Audio Features
   bpm?: number | null;
   energy?: number | null;
   valence?: number | null;
   danceability?: number | null;
   spotify_id?: string | null;
-  
+
   // Explainability Fields
   confidence?: number | null;
   confidence_breakdown?: Record<string, number> | null;
@@ -41,7 +41,7 @@ export interface ButtonOption {
   label: string;
   value: string;
   action?: string;
-  payload?: Record<string, any>;
+  payload?: Record<string, unknown>;
 }
 
 export interface UIState {
@@ -53,20 +53,31 @@ export interface UIState {
   thought_process?: string[];
 }
 
+export interface AgentState {
+  ui_state: UIState;
+  fun_fact?: string;
+  fun_fact_1?: string;
+  fun_fact_2?: string;
+  [key: string]: unknown;
+}
+
 export const agentApi = {
-  startRecommendation: async (playlistId: number): Promise<UIState> => {
-    return fetchWithAuth<UIState>(`${API_BASE_URL}/agent/recommend/${playlistId}`, {
-      method: "POST",
-    });
+  startRecommendation: async (playlistId: number): Promise<AgentState> => {
+    return fetchWithAuth<AgentState>(
+      `${API_BASE_URL}/agent/recommend/${playlistId}`,
+      {
+        method: "POST",
+      }
+    );
   },
 
   resumeAgent: async (
     action: string,
     playlistId: number,
-    payload: Record<string, any> = {},
+    payload: Record<string, unknown> = {},
     trackId?: number
-  ): Promise<UIState> => {
-    return fetchWithAuth<UIState>(`${API_BASE_URL}/agent/resume`, {
+  ): Promise<AgentState> => {
+    return fetchWithAuth<AgentState>(`${API_BASE_URL}/agent/resume`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
