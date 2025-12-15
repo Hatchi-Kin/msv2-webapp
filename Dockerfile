@@ -1,5 +1,5 @@
 # Multi-stage build for optimal image size
-FROM node:20-alpine AS builder
+FROM node:22-bookworm-slim AS builder
 
 # Set working directory
 WORKDIR /app
@@ -17,10 +17,10 @@ COPY . .
 RUN npm run build
 
 # Production stage
-FROM nginx:alpine
+FROM nginx:bookworm
 
-# Install envsubst (part of gettext package)
-RUN apk add --no-cache gettext
+# Install envsubst (part of gettext-base package) and curl for healthcheck
+RUN apt-get update && apt-get install -y gettext-base curl && rm -rf /var/lib/apt/lists/*
 
 # Copy custom nginx config
 COPY nginx.conf /etc/nginx/conf.d/default.conf
@@ -34,7 +34,7 @@ RUN chmod +x /docker-entrypoint.sh
 
 # Add healthcheck
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://localhost:80/ || exit 1
+  CMD curl -f http://localhost:80/ || exit 1
 
 # Expose port
 EXPOSE 80
