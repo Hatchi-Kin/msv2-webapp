@@ -10,7 +10,7 @@ import ErrorAlert from "@/components/ui/ErrorAlert";
 const LandingPage: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { login, loading, error } = useAuth();
+  const { login, loginAsGuest, loading, error } = useAuth();
 
   const location = useLocation();
 
@@ -76,6 +76,24 @@ const LandingPage: React.FC = () => {
         <SubmitButton loading={loading} loadingText="Signing in...">
           Sign in
         </SubmitButton>
+
+        <div className="relative my-6">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t border-border/50" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-background px-2 text-muted-foreground">Or</span>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => loginAsGuest()}
+          disabled={loading}
+          className="w-full h-12 text-primary font-semibold rounded-xl border-2 border-primary/20 hover:border-primary/50 hover:bg-primary/5 transition-all duration-300 hover:-translate-y-0.5"
+        >
+          Try as Guest
+        </button>
       </form>
     </AuthPageLayout>
   );

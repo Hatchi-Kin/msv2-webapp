@@ -19,6 +19,7 @@ interface AuthContextType {
   loading: boolean;
   error: string | null;
   login: (email: string, password: string) => Promise<void>;
+  loginAsGuest: () => Promise<void>;
   register: (user: UserCreate) => Promise<void>;
   logout: () => Promise<void>;
   refreshAccessToken: () => Promise<void>;
@@ -105,6 +106,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     },
     [fetchUser, navigate, clearAuth]
   );
+
+  const loginAsGuest = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const tokenResponse: Token = await api.auth.guest();
+      storeAccessToken(tokenResponse.access_token);
+      await fetchUser(tokenResponse.access_token);
+      navigate("/library"); // Redirect to library on successful guest login
+    } catch (err) {
+      console.error("Guest login failed:", err);
+      setError(getErrorMessage(err));
+      clearAuth();
+    } finally {
+      setLoading(false);
+    }
+  }, [fetchUser, navigate, clearAuth]);
 
   const register = useCallback(
     async (userCreate: UserCreate) => {
@@ -199,6 +217,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     loading,
     error,
     login,
+    loginAsGuest,
     register,
     logout,
     refreshAccessToken,

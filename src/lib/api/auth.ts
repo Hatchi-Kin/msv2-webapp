@@ -29,6 +29,14 @@ export const authApi = {
     return handleResponse(response);
   },
 
+  async guest(): Promise<Token> {
+    const response = await fetch(`${API_BASE_URL}/auth/guest`, {
+        method: "POST",
+        credentials: "include", // Required to receive refresh token cookie
+    });
+    return handleResponse(response);
+  },
+
   async refresh(): Promise<Token> {
     const response = await fetch(`${API_BASE_URL}/auth/refresh`, {
       method: "POST",
