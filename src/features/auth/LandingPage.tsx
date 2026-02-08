@@ -90,9 +90,21 @@ const LandingPage: React.FC = () => {
           type="button"
           onClick={() => loginAsGuest()}
           disabled={loading}
-          className="w-full h-12 text-primary font-semibold rounded-xl border-2 border-primary/20 hover:border-primary/50 hover:bg-primary/5 transition-all duration-300 hover:-translate-y-0.5"
+          className="relative w-full h-14 text-base font-bold rounded-xl bg-gradient-to-r from-primary/10 to-secondary/10 border-2 border-primary/30 hover:border-primary transition-all duration-300 hover:shadow-lg hover:shadow-primary/20 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden group"
         >
-          Try as Guest
+          {/* Animated background on hover */}
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          
+          {/* Content */}
+          <span className="relative flex items-center justify-center gap-2.5 text-primary">
+            <svg className="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+            <span>Try as Guest</span>
+            <svg className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </span>
         </button>
       </form>
     </AuthPageLayout>
