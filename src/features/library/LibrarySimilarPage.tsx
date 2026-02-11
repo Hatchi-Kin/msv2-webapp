@@ -11,8 +11,7 @@ const LibrarySimilarPage: React.FC = () => {
   const navigate = useNavigate();
 
   const id = trackId ? parseInt(trackId, 10) : undefined;
-
-  const { similarTracks, originTrack, loading, error } = useSimilarTracks(id);
+  const { scoredTracks, originTrack, loading, error } = useSimilarTracks(id);
 
   const handleFindSimilar = (newTrackId: number) => {
     navigate(`/library/similar/${newTrackId}`);
@@ -43,7 +42,7 @@ const LibrarySimilarPage: React.FC = () => {
           <ErrorMessage title="Error finding similar tracks" message={error} />
         ) : (
           <SimilarTracksView
-            similarTracks={similarTracks}
+            scoredTracks={scoredTracks}
             onFindSimilar={handleFindSimilar}
             onViewArtist={handleViewArtist}
           />

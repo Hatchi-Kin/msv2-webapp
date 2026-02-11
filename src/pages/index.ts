@@ -7,3 +7,4 @@ export { default as LibraryTracksPage } from "@/features/library/LibraryTracksPa
 export { default as LibrarySimilarPage } from "@/features/library/LibrarySimilarPage";
 export { default as GemFinderPage } from "@/features/agent/GemFinderPage";
 export { default as VisualizePage } from "@/features/visualization/VisualizePage";
+export { default as DiscoveryPage } from "@/features/discovery/DiscoveryPage";

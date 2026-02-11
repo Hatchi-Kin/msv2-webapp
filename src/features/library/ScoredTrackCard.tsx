@@ -1,5 +1,5 @@
 import React from "react";
-import type { SimilarTrack } from "@/types/api";
+import type { ScoredTrack } from "@/types/api";
 import { Play, Sparkles, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PlaylistDropdown } from "./PlaylistDropdown";
@@ -7,18 +7,18 @@ import { FavoriteButton } from "./FavoriteButton";
 import { getSimilarityBadgeColor } from "@/constants/similarity";
 import { usePlayer } from "@/context/PlayerContext";
 
-interface SimilarTrackCardProps {
-  similarTrack: SimilarTrack;
+interface ScoredTrackCardProps {
+  scoredTrack: ScoredTrack;
   onFindSimilar: (trackId: number) => void;
   onViewArtist: (artistName: string) => void;
 }
 
-const SimilarTrackCard: React.FC<SimilarTrackCardProps> = ({
-  similarTrack,
+const ScoredTrackCard: React.FC<ScoredTrackCardProps> = ({
+  scoredTrack,
   onFindSimilar,
   onViewArtist,
 }) => {
-  const { track, similarity_score } = similarTrack;
+  const { track, similarity_score } = scoredTrack;
   const { playTrack } = usePlayer();
 
   // Convert cosine distance to similarity percentage
@@ -42,14 +42,14 @@ const SimilarTrackCard: React.FC<SimilarTrackCardProps> = ({
       </div>
 
       {/* Album Art Placeholder - Compact */}
-      <div className="w-full aspect-[4/3] flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-muted to-muted-foreground">
-        <div className="text-4xl font-bold transition-transform duration-300 group-hover:scale-110 text-primary opacity-40">
+      <div className="w-full aspect-[3/2] flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-muted to-muted-foreground">
+        <div className="text-3xl font-bold transition-transform duration-300 group-hover:scale-110 text-primary opacity-40">
           🎵
         </div>
       </div>
 
       {/* Track Info */}
-      <div className="p-3 space-y-1.5">
+      <div className="p-2.5 space-y-1.5">
         <h3 className="font-semibold text-sm line-clamp-1 text-foreground">
           {track.title || track.filename}
         </h3>
@@ -67,7 +67,7 @@ const SimilarTrackCard: React.FC<SimilarTrackCardProps> = ({
         )}
 
         {/* Action Buttons - Compact icon-only row */}
-        <div className="flex gap-1.5 pt-2">
+        <div className="flex gap-1.5 pt-1.5">
           <Button
             size="icon"
             onClick={(e) => {
@@ -117,4 +117,4 @@ const SimilarTrackCard: React.FC<SimilarTrackCardProps> = ({
   );
 };
 
-export default SimilarTrackCard;
+export default ScoredTrackCard;

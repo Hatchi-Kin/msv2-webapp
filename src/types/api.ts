@@ -32,13 +32,18 @@ export interface TrackListResponse {
   tracks: MegasetTrack[];
 }
 
-export interface SimilarTrack {
+export interface ScoredTrack {
   track: MegasetTrack;
   similarity_score: number;
 }
 
-export interface SimilarTrackListResponse {
-  tracks: SimilarTrack[];
+export interface ScoredTrackListResponse {
+  tracks: ScoredTrack[];
+}
+
+export interface DiscoveryResponse {
+  results: ScoredTrackListResponse;
+  query_vector: number[];
 }
 
 export interface User {

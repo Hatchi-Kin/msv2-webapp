@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import { api } from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
 import { getErrorMessage } from "@/lib/utils/errors";
-import type { SimilarTrack, MegasetTrack } from "@/types/api";
+import type { ScoredTrack, MegasetTrack } from "@/types/api";
 
 interface UseSimilarTracksResult {
-  similarTracks: SimilarTrack[];
+  scoredTracks: ScoredTrack[];
   originTrack: MegasetTrack | null;
   loading: boolean;
   error: string | null;
@@ -14,7 +14,7 @@ interface UseSimilarTracksResult {
 export const useSimilarTracks = (
   trackId: number | undefined
 ): UseSimilarTracksResult => {
-  const [similarTracks, setSimilarTracks] = useState<SimilarTrack[]>([]);
+  const [scoredTracks, setScoredTracks] = useState<ScoredTrack[]>([]);
   const [originTrack, setOriginTrack] = useState<MegasetTrack | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -39,7 +39,7 @@ export const useSimilarTracks = (
 
         // Then fetch similar tracks
         const response = await api.music.getSimilarTracks(trackId, accessToken);
-        setSimilarTracks(response.tracks);
+        setScoredTracks(response.tracks);
       } catch (err) {
         console.error("Failed to fetch similar tracks:", err);
         setError(getErrorMessage(err));
@@ -52,7 +52,7 @@ export const useSimilarTracks = (
   }, [isAuthenticated, accessToken, trackId]);
 
   return {
-    similarTracks,
+    scoredTracks,
     originTrack,
     loading,
     error,

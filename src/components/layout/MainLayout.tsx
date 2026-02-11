@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate, Outlet, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
-import { Music, LogOut, Heart, Box, Sparkles } from "lucide-react";
+import { Music, LogOut, Heart, Box, Sparkles, Compass } from "lucide-react";
 import MusicPlayer from "@/features/player/MusicPlayer";
 import { cn } from "@/lib/utils";
 
@@ -65,6 +65,19 @@ const Layout: React.FC = () => {
               >
                 <Heart className="h-4 w-4" />
                 <span className="hidden md:inline">Like</span>
+              </button>
+              <button
+                onClick={() => navigate("/discovery")}
+                className={cn(
+                  "flex items-center space-x-2 px-3 py-2 rounded-xl font-semibold text-sm md:text-base transition-all duration-300",
+                  location.pathname === "/discovery"
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-transparent text-primary hover:bg-accent hover:scale-105"
+                )}
+                title="Discovery"
+              >
+                <Compass className="h-4 w-4" />
+                <span className="hidden md:inline">Discovery</span>
               </button>
               <button
                 onClick={() => navigate("/visualize")}

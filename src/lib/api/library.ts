@@ -4,7 +4,7 @@ import type {
   AlbumListResponse,
   TrackListResponse,
   MegasetTrack,
-  SimilarTrackListResponse,
+  ScoredTrackListResponse,
 } from "@/types/api";
 
 export const libraryApi = {
@@ -122,8 +122,8 @@ export const libraryApi = {
     trackId: number,
     accessToken: string,
     limit: number = 10
-  ): Promise<SimilarTrackListResponse> {
-    return fetchWithAuth<SimilarTrackListResponse>(
+  ): Promise<ScoredTrackListResponse> {
+    return fetchWithAuth<ScoredTrackListResponse>(
       `${API_BASE_URL}/library/similar/${trackId}?limit=${limit}`,
       {
         method: "GET",

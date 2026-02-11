@@ -26,6 +26,7 @@ import {
   LibraryTracksPage,
   LibrarySimilarPage,
   GemFinderPage,
+  DiscoveryPage,
 } from "@/pages";
 import LibraryLayout from "@/features/library/LibraryLayout";
 import MainLayout from "@/components/layout/MainLayout";
@@ -81,6 +82,7 @@ function App() {
                   path="/library/similar/:trackId"
                   element={<LibrarySimilarPage />}
                 />
+                <Route path="/discovery" element={<DiscoveryPage />} />
               </Route>
 
               <Route path="/my-library" element={<LibraryPage />} />
