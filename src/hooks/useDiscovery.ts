@@ -29,13 +29,18 @@ export const useDiscovery = () => {
     }
   };
 
-  const refine = async (adjustments: Record<string, number>) => {
+  const refine = async (sliders: {
+    digital_organic: number;
+    energy: number;
+    urban: number;
+    bass: number;
+  }) => {
     if (!baseVector || !accessToken) return;
 
     try {
       setLoading(true);
       setError(null);
-      const data = await discoveryApi.refine(baseVector, adjustments, accessToken);
+      const data = await discoveryApi.refine(baseVector, sliders, accessToken);
       setResults(data.results.tracks);
     } catch (err) {
       console.error("Discovery refine failed:", err);

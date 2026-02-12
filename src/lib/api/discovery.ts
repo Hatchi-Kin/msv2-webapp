@@ -7,7 +7,7 @@ export const discoveryApi = {
    */
   search: async (
     query: string,
-    accessToken: string
+    accessToken: string,
   ): Promise<DiscoveryResponse> => {
     return fetchWithAuth<DiscoveryResponse>(
       `${API_BASE_URL}/discovery/search?query=${encodeURIComponent(query)}`,
@@ -16,7 +16,7 @@ export const discoveryApi = {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
-      }
+      },
     );
   },
 
@@ -25,11 +25,16 @@ export const discoveryApi = {
    */
   refine: async (
     baseVector: number[],
-    adjustments: Record<string, number>,
-    accessToken: string
+    sliders: {
+      digital_organic: number;
+      energy: number;
+      urban: number;
+      bass: number;
+    },
+    accessToken: string,
   ): Promise<DiscoveryResponse> => {
     return fetchWithAuth<DiscoveryResponse>(
-      `${API_BASE_URL}/discovery/search/refine`,
+      `${API_BASE_URL}/discovery/refine`,
       {
         method: "POST",
         headers: {
@@ -38,9 +43,9 @@ export const discoveryApi = {
         },
         body: JSON.stringify({
           base_vector: baseVector,
-          adjustments: adjustments,
+          ...sliders,
         }),
-      }
+      },
     );
   },
 };

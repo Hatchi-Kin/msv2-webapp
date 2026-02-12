@@ -10,13 +10,55 @@ import { useNavigate } from "react-router-dom";
 
 const DiscoveryPage: React.FC = () => {
   const [query, setQuery] = useState("");
-  const { results, loading, error, search, hasBaseVector } = useDiscovery();
+  const { results, loading, error, search, refine, hasBaseVector } =
+    useDiscovery();
   const navigate = useNavigate();
+
+  const [sliders, setSliders] = useState({
+    digital_organic: 0,
+    energy: 0,
+    urban: 0,
+    bass: 0,
+  });
+
+  // Effect to handle refinement when sliders change
+  React.useEffect(() => {
+    if (!hasBaseVector) return;
+
+    const timer = setTimeout(() => {
+      refine(sliders);
+    }, 400); // 400ms debounce
+
+    return () => clearTimeout(timer);
+  }, [sliders, hasBaseVector]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     search(query);
+    // Reset sliders on new search
+    setSliders({
+      digital_organic: 0,
+      energy: 0,
+      urban: 0,
+      bass: 0,
+    });
   };
+
+  const handleSliderChange = (key: keyof typeof sliders, value: number) => {
+    setSliders((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const sliderDefinitions = [
+    {
+      key: "digital_organic",
+      label: "Timbre",
+      low: "Organic",
+      high: "Digital",
+    },
+    { key: "energy", label: "Energy", low: "Chill", high: "Aggressive" },
+    { key: "urban", label: "Urban Nudge", low: "General", high: "Hip-Hop" },
+    { key: "bass", label: "Bass Culture", low: "Clean", high: "Reggae" },
+  ] as const;
 
   const handleFindSimilar = (trackId: number) => {
     navigate(`/library/similar/${trackId}`);
@@ -49,12 +91,18 @@ const DiscoveryPage: React.FC = () => {
                 />
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground h-5 w-5" />
               </div>
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 className="w-full py-6 rounded-2xl font-bold flex items-center justify-center gap-2"
                 disabled={loading || !query.trim()}
               >
-                {loading ? <LoadingSpinner /> : <><Sparkles className="h-5 w-5" /> Explore</>}
+                {loading ? (
+                  <LoadingSpinner />
+                ) : (
+                  <>
+                    <Sparkles className="h-5 w-5" /> Explore
+                  </>
+                )}
               </Button>
             </form>
 
@@ -66,42 +114,67 @@ const DiscoveryPage: React.FC = () => {
                 <div>
                   <h4 className="font-bold text-sm">Semantic Search</h4>
                   <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
-                    Powered by CLAP. It understands the "vibe" and "context" of your words, 
-                    not just keywords.
+                    Powered by CLAP. It understands the "vibe" and "context" of
+                    your words, not just keywords.
                   </p>
                 </div>
               </div>
-              
+
               <div className="pt-2 border-t border-primary/10">
                 <p className="text-[10px] text-muted-foreground leading-relaxed">
-                  <span className="font-bold text-primary/80 uppercase mr-1">Pro Tip:</span> 
-                  Describe <strong>sounds</strong> (e.g., "warm bass", "distorted") over 
-                  just genres. The model is better at hearing textures than understanding culture!
+                  <span className="font-bold text-primary/80 uppercase mr-1">
+                    Pro Tip:
+                  </span>
+                  Describe <strong>sounds</strong> (e.g., "warm bass",
+                  "distorted") over just genres. The model is better at hearing
+                  textures than understanding culture!
                 </p>
               </div>
             </div>
 
-            {/* Vibe Sliders (Placeholder) */}
-            <div className={`space-y-4 transition-all duration-500 ${hasBaseVector ? 'opacity-100' : 'opacity-40 grayscale pointer-events-none'}`}>
-              <div className="flex items-center justify-between">
-                <h4 className="font-bold">Refine Vibe</h4>
-                {!hasBaseVector && <span className="text-[10px] uppercase font-bold text-muted-foreground">Perform search first</span>}
+            {/* Vibe Sliders */}
+            <div
+              className={`space-y-4 transition-all duration-500 ${hasBaseVector ? "opacity-100" : "opacity-40 grayscale pointer-events-none"}`}
+            >
+              <div className="flex items-center justify-between border-b border-border pb-2">
+                <h4 className="font-bold text-sm uppercase tracking-wider text-muted-foreground">
+                  Refine Space
+                </h4>
+                {!hasBaseVector && (
+                  <span className="text-[10px] uppercase font-bold text-primary/60 animate-pulse">
+                    Search first to unlock
+                  </span>
+                )}
               </div>
-              <div className="space-y-6 py-4">
-                {[ 'Acoustic', 'Electronic', 'Energy', 'Mood' ].map((vibe) => (
-                  <div key={vibe} className="space-y-2">
-                    <div className="flex justify-between text-xs font-medium">
-                      <span>{vibe}</span>
-                      <span className="text-muted-foreground">0</span>
+
+              <div className="space-y-6 pt-2">
+                {sliderDefinitions.map((slider) => (
+                  <div key={slider.key} className="space-y-3">
+                    <div className="flex justify-between items-center text-[11px] font-bold uppercase tracking-tight">
+                      <span className="text-muted-foreground">
+                        {slider.low}
+                      </span>
+                      <span className="text-primary">{slider.label}</span>
+                      <span className="text-muted-foreground">
+                        {slider.high}
+                      </span>
                     </div>
-                    <div className="h-1.5 w-full bg-border rounded-full relative">
-                      <div className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 h-4 w-4 rounded-full bg-primary shadow-md border-2 border-background" />
-                    </div>
+                    <input
+                      type="range"
+                      min="-1"
+                      max="1"
+                      step="0.1"
+                      value={sliders[slider.key]}
+                      onChange={(e) =>
+                        handleSliderChange(
+                          slider.key,
+                          parseFloat(e.target.value),
+                        )
+                      }
+                      className="w-full h-1.5 bg-muted rounded-lg appearance-none cursor-pointer accent-primary hover:accent-primary/80 transition-all"
+                    />
                   </div>
                 ))}
-                <p className="text-[10px] text-center text-muted-foreground italic">
-                  Sliders are coming soon to allow real-time latent space manipulation!
-                </p>
               </div>
             </div>
           </div>
@@ -122,7 +195,8 @@ const DiscoveryPage: React.FC = () => {
               </div>
               <h3 className="text-xl font-bold">Find your next vibe</h3>
               <p className="text-muted-foreground max-w-xs mt-2">
-                Type something like "Dark atmospheric industrial" or "Happy upbeat acoustic folk" to begin exploration.
+                Type something like "Dark atmospheric industrial" or "Happy
+                upbeat acoustic folk" to begin exploration.
               </p>
             </div>
           )}
