@@ -4,69 +4,315 @@
 
 @layer base {
   :root {
-    /* Modern Mocha Theme Colors - Cleaner & Crisper */
-    --background: 30 20% 98%; /* #FAF9F8 - Almost white cream */
-    --foreground: 20 10% 15%; /* #2A2624 - Soft black */
+    /* Comfort Mode (Light/Base) - Swappable using .immersive class for dark void */
+    --background: 210 40% 98%; /* Light mode background */
+    --foreground: 0 0% 2%;
 
-    --primary: 25 30% 45%; /* #956C50 - Muted coffee */
-    --primary-foreground: 0 0% 100%; /* White text */
+    --primary: 188 86% 53%; /* #22D3EE Cyan */
+    --primary-foreground: 0 0% 2%;
 
-    --secondary: 30 20% 92%; /* #EFECE9 - Very light foam */
-    --secondary-foreground: 20 10% 15%; /* Soft black */
-    --tertiary-foreground: 36 100% 21%; /* Darker soft brown */
+    --secondary: 43 96% 56%; /* #FBBF24 Amber */
+    --secondary-foreground: 0 0% 2%;
 
-    --muted: 30 10% 96%; /* #F5F4F3 */
-    --muted-foreground: 20 5% 45%; /* #767371 */
+    --muted: 215 16% 90%;
+    --muted-foreground: 215 16% 40%;
 
-    --accent: 30 30% 90%; /* #EBE6E1 */
-    --accent-foreground: 25 30% 45%; /* Primary color */
+    --accent: 188 86% 53%;
+    --accent-foreground: 0 0% 2%;
 
-    --border: 30 10% 90%; /* #E6E4E3 */
-    --input: 30 10% 90%;
-    --ring: 25 30% 45%;
+    --border: 215 16% 85%;
+    --input: 215 16% 90%;
+    --ring: 188 86% 53%;
 
     --card: 0 0% 100%;
-    --card-foreground: 20 10% 15%;
+    --card-foreground: 0 0% 2%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 20 10% 15%;
+    --popover-foreground: 0 0% 2%;
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 98%;
+    --radius: 12px;
 
-    --radius: 1rem; /* 16px - Modern rounded corners */
+    /* Custom Design Variables */
+    --bg-color: #f8fafc;
+    --panel-bg: rgba(255, 255, 255, 0.95);
+    --accent-cyan: #22d3ee;
+    --accent-amber: #fbbf24;
+    --text-primary: #050505;
+    --text-muted: #64748b;
+    --border-glow: 1px solid rgba(34, 211, 238, 0.3);
   }
 
+  /* === DARK (Neon/Sci-Fi) THEME - DEFAULT === */
   .dark {
-    /* Dark mode - Deep Espresso */
-    --background: 20 10% 10%; /* #1C1A19 */
-    --foreground: 30 10% 95%; /* #F2F1F0 */
+    /* Immersive Mode (Dark/High Contrast 3D) */
+    --background: 0 0% 2%; /* #050505 */
+    --foreground: 210 40% 98%; /* #F8FAFC */
 
-    --primary: 30 20% 70%; /* #BFB5AD */
-    --primary-foreground: 20 10% 10%;
+    --primary: 188 86% 53%; /* #22D3EE Cyan */
+    --primary-foreground: 0 0% 2%;
 
-    --secondary: 20 10% 15%;
-    --secondary-foreground: 30 10% 95%;
-    --tertiary-foreground: 30 20% 80%; /* Lighter brown for dark mode */
+    --secondary: 43 96% 56%; /* #FBBF24 Amber */
+    --secondary-foreground: 0 0% 2%;
 
-    --muted: 20 10% 15%;
-    --muted-foreground: 30 5% 60%;
+    --muted: 223 48% 12%;
+    --muted-foreground: 215 16% 65%; /* #94A3B8 */
 
-    --accent: 20 10% 15%;
-    --accent-foreground: 30 10% 95%;
+    --accent: 188 86% 53%;
+    --accent-foreground: 0 0% 2%;
 
-    --border: 20 10% 20%;
-    --input: 20 10% 20%;
-    --ring: 30 20% 70%;
+    --border: 188 86% 53%; /* For the border glow */
+    --input: 223 48% 12%;
+    --ring: 188 86% 53%;
 
-    --card: 20 10% 12%;
-    --card-foreground: 30 10% 95%;
+    --card: 223 48% 6%; /* #0b1120 */
+    --card-foreground: 210 40% 98%;
 
-    --popover: 20 10% 12%;
-    --popover-foreground: 30 10% 95%;
+    --popover: 223 48% 6%;
+    --popover-foreground: 210 40% 98%;
 
-    --destructive: 0 62% 30%;
-    --destructive-foreground: 0 0% 98%;
+    /* Custom Design Variables */
+    --bg-color: #050505;
+    --panel-bg: rgba(11, 17, 32, 0.92);
+    --accent-cyan: #22d3ee;
+    --accent-amber: #fbbf24;
+    --text-primary: #f8fafc;
+    --text-muted: #94a3b8;
+    --border-glow: 1px solid rgba(34, 211, 238, 0.3);
+
+    --success: 142 70% 55%; /* Green */
+    --warning: 43 96% 56%; /* Amber */
+    --info: 188 86% 53%; /* Cyan */
+    --gray: 215 16% 45%;
+
+    --viz-glow-1: rgba(34, 211, 238, 0.4);
+    --viz-glow-2: rgba(251, 191, 36, 0.1);
+    --star-color: rgba(255, 255, 255, 0.5);
+  }
+
+  /* === LIGHT (Clean/Minimalist) THEME === */
+  .light {
+    --background: 210 40% 98%;
+    --foreground: 0 0% 10%;
+
+    --primary: 220 90% 50%; /* Royal Blue */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 25 90% 50%; /* Orange */
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 0 0% 90%;
+    --muted-foreground: 0 0% 40%;
+
+    --accent: 220 90% 50%;
+    --accent-foreground: 0 0% 100%;
+
+    --border: 0 0% 80%;
+    --input: 0 0% 95%;
+    --ring: 220 90% 50%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 10%;
+
+    /* Custom Design Variables */
+    --bg-color: #f8fafc;
+    --panel-bg: rgba(255, 255, 255, 0.96);
+    --accent-cyan: #2563eb;
+    --accent-amber: #ea580c;
+    --text-primary: #0f172a;
+    --text-muted: #64748b;
+    --border-glow: 1px solid rgba(37, 99, 235, 0.2);
+
+    --success: 142 70% 45%;
+    --warning: 25 90% 50%;
+    --info: 220 90% 50%;
+    --gray: 215 16% 65%;
+
+    --viz-glow-1: rgba(37, 99, 235, 0.2);
+    --viz-glow-2: rgba(234, 88, 12, 0.05);
+    --star-color: rgba(0, 0, 0, 0.2);
+  }
+
+  /* === MIDNIGHT (Deep Indigo) === */
+  .midnight {
+    --background: 230 50% 10%;
+    --foreground: 220 20% 90%;
+
+    --primary: 250 80% 65%; /* Soft purple */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 190 80% 60%; /* Cyan accent */
+    --secondary-foreground: 0 0% 0%;
+
+    --muted: 230 40% 20%;
+    --muted-foreground: 230 20% 65%;
+
+    --accent: 250 80% 65%;
+    --accent-foreground: 0 0% 100%;
+
+    --border: 250 80% 65%;
+    --input: 230 40% 15%;
+    --ring: 250 80% 65%;
+
+    --card: 230 50% 15%;
+    --card-foreground: 220 20% 90%;
+
+    --popover: 230 50% 15%;
+    --popover-foreground: 220 20% 90%;
+
+    --bg-color: #0b0f19;
+    --panel-bg: rgba(15, 23, 42, 0.94);
+    --accent-cyan: #22d3ee;
+    --accent-amber: #c084fc; /* Actually purple here */
+    --text-primary: #f1f5f9;
+    --text-muted: #94a3b8;
+    --border-glow: 1px solid rgba(168, 85, 247, 0.4);
+
+    --success: 160 80% 60%;
+    --warning: 280 80% 70%;
+    --info: 190 80% 60%;
+    --gray: 230 20% 45%;
+
+    --viz-glow-1: rgba(168, 85, 247, 0.3);
+    --viz-glow-2: rgba(34, 211, 238, 0.1);
+    --star-color: rgba(255, 255, 255, 0.4);
+  }
+
+  /* === MOCHA (Warm Earth Original) === */
+  .mocha {
+    --background: 30 20% 12%;
+    --foreground: 30 20% 90%;
+
+    --primary: 25 60% 50%; /* Warm Orange/Brown */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 40 50% 60%; /* Gold */
+    --secondary-foreground: 0 0% 0%;
+
+    --muted: 30 20% 20%;
+    --muted-foreground: 30 20% 65%;
+
+    --accent: 25 60% 50%;
+    --accent-foreground: 0 0% 100%;
+
+    --border: 25 60% 50%;
+    --input: 30 20% 18%;
+    --ring: 25 60% 50%;
+
+    --card: 30 20% 16%;
+    --card-foreground: 30 20% 90%;
+
+    --popover: 30 20% 16%;
+    --popover-foreground: 30 20% 90%;
+
+    --bg-color: #2b2521;
+    --panel-bg: rgba(56, 48, 43, 0.96);
+    --accent-cyan: #d97706; /* amber */
+    --accent-amber: #fcd34d; /* yellow-gold */
+    --text-primary: #fffbeb;
+    --text-muted: #a8a29e;
+    --border-glow: 1px solid rgba(217, 119, 6, 0.3);
+
+    --success: 142 50% 45%;
+    --warning: 40 50% 60%;
+    --info: 25 60% 50%;
+    --gray: 30 15% 45%;
+
+    --viz-glow-1: rgba(217, 119, 6, 0.3);
+    --viz-glow-2: rgba(252, 211, 77, 0.1);
+    --star-color: rgba(255, 255, 255, 0.5);
+  }
+
+  /* === LATTE (Light Mocha Original) === */
+  .latte {
+    --background: 30 30% 95%; /* Cream / Off-white */
+    --foreground: 30 30% 15%; /* Deep Espresso Brown */
+
+    --primary: 25 60% 45%; /* Warm Orange/Brown */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 40 60% 50%; /* Amber/Gold */
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 30 20% 88%; /* Light Tan */
+    --muted-foreground: 30 20% 45%; /* Medium Brown */
+
+    --accent: 25 60% 45%;
+    --accent-foreground: 0 0% 100%;
+
+    --border: 30 20% 85%;
+    --input: 30 30% 92%;
+    --ring: 25 60% 45%;
+
+    --card: 30 40% 98%;
+    --card-foreground: 30 30% 15%;
+
+    --popover: 30 40% 98%;
+    --popover-foreground: 30 30% 15%;
+
+    --bg-color: #f9f5f0;
+    --panel-bg: rgba(245, 238, 230, 0.96);
+    --accent-cyan: #d97706; /* amber */
+    --accent-amber: #b45309; /* dark amber */
+    --text-primary: #431407; /* Dark reddish brown text */
+    --text-muted: #78350f; /* Lighter brown text */
+    --border-glow: 1px solid rgba(217, 119, 6, 0.2);
+
+    --success: 142 50% 40%;
+    --warning: 35 60% 50%;
+    --info: 25 60% 45%;
+    --gray: 30 15% 65%;
+
+    --viz-glow-1: rgba(217, 119, 6, 0.15);
+    --viz-glow-2: rgba(252, 211, 77, 0.05);
+    --star-color: rgba(0, 0, 0, 0.15);
+  }
+
+  /* === CYBERPUNK (High Contrast Yellow/Black) === */
+  .cyberpunk {
+    --background: 60 10% 5%;
+    --foreground: 50 100% 90%;
+
+    --primary: 50 100% 50%; /* Electric Yellow */
+    --primary-foreground: 0 0% 0%;
+
+    --secondary: 190 100% 50%; /* Cyan */
+    --secondary-foreground: 0 0% 0%;
+
+    --muted: 60 10% 15%;
+    --muted-foreground: 60 10% 65%;
+
+    --accent: 50 100% 50%;
+    --accent-foreground: 0 0% 0%;
+
+    --border: 50 100% 50%;
+    --input: 60 10% 10%;
+    --ring: 50 100% 50%;
+
+    --card: 60 10% 8%;
+    --card-foreground: 50 100% 90%;
+
+    --popover: 60 10% 8%;
+    --popover-foreground: 50 100% 90%;
+
+    --bg-color: #0d0d0c;
+    --panel-bg: rgba(20, 20, 18, 0.98);
+    --accent-cyan: #0ff;
+    --accent-amber: #ff0;
+    --text-primary: #ffffaa;
+    --text-muted: #888877;
+    --border-glow: 1px solid rgba(255, 255, 0, 0.6);
+
+    --success: 142 100% 50%;
+    --warning: 50 100% 50%;
+    --info: 190 100% 50%;
+    --gray: 60 10% 45%;
+
+    --viz-glow-1: rgba(255, 255, 0, 0.4);
+    --viz-glow-2: rgba(0, 255, 255, 0.1);
+    --star-color: rgba(255, 255, 0, 0.5);
   }
 }
 
@@ -77,78 +323,53 @@
 
   body {
     @apply text-foreground font-sans antialiased selection:bg-primary/20 selection:text-primary;
+    background-color: var(--bg-color);
   }
 }
 
-/* Premium Glass Effect - v5.0 BALANCED */
+/* Glass Effect specified in Design */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.8) !important;
-  backdrop-filter: blur(30px) saturate(150%) !important;
-  -webkit-backdrop-filter: blur(30px) saturate(150%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.3) !important;
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15) !important;
+  background: var(--panel-bg) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border-radius: var(--radius) !important;
+  border: var(--border-glow) !important;
 }
 
 .dark .glass-panel {
-  background: rgba(0, 0, 0, 0.5) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  background: var(--panel-bg) !important;
+  border: var(--border-glow) !important;
 }
 
 .glass-card {
-  background: rgba(255, 255, 255, 0.65) !important;
-  backdrop-filter: blur(16px) saturate(150%) !important;
-  -webkit-backdrop-filter: blur(16px) saturate(150%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.3) !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+  background: var(--panel-bg) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border-radius: var(--radius) !important;
+  border: var(--border-glow) !important;
   transition: all 0.3s ease !important;
 }
 
 .dark .glass-card {
-  background: rgba(255, 255, 255, 0.1) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  background: var(--panel-bg) !important;
+  border: var(--border-glow) !important;
 }
 
 .glass-card:hover {
-  background: rgba(255, 255, 255, 0.8) !important;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12) !important;
+  background: rgba(34, 211, 238, 0.1) !important;
+  box-shadow: 0 8px 20px rgba(34, 211, 238, 0.2) !important;
   transform: scale(1.02) !important;
-  border: 1px solid rgba(255, 255, 255, 0.4) !important;
-}
-
-.dark .glass-card:hover {
-  background: rgba(255, 255, 255, 0.15) !important;
+  border: 1px solid rgba(34, 211, 238, 0.6) !important;
 }
 
 @layer components {
+  /* Using immersive void background style */
   .mesh-gradient-bg {
-    background-color: hsl(var(--background));
-    background-image: radial-gradient(
-        at 0% 0%,
-        hsla(25, 40%, 85%, 0.4) 0px,
-        transparent 50%
-      ),
-      radial-gradient(at 100% 0%, hsla(30, 40%, 90%, 0.4) 0px, transparent 50%),
-      radial-gradient(
-        at 100% 100%,
-        hsla(20, 30%, 85%, 0.4) 0px,
-        transparent 50%
-      ),
-      radial-gradient(at 0% 100%, hsla(35, 40%, 90%, 0.4) 0px, transparent 50%);
+    background-color: var(--bg-color);
   }
 
   .dark .mesh-gradient-bg {
-    background-image: radial-gradient(
-        at 0% 0%,
-        hsla(25, 30%, 20%, 0.4) 0px,
-        transparent 50%
-      ),
-      radial-gradient(at 100% 0%, hsla(30, 30%, 25%, 0.4) 0px, transparent 50%),
-      radial-gradient(
-        at 100% 100%,
-        hsla(20, 20%, 20%, 0.4) 0px,
-        transparent 50%
-      ),
-      radial-gradient(at 0% 100%, hsla(35, 30%, 25%, 0.4) 0px, transparent 50%);
+    background-color: var(--bg-color);
   }
 }
 

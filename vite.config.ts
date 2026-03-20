@@ -10,6 +10,40 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  server: {
+    proxy: {
+       // Everything not starting with /assets or /src etc needs to be proxied?
+       // The API routes are: /auth, /library, /favorites, /playlists, /media, /coordinates, /health
+      "/auth": {
+        target: "http://localhost:8000",
+        changeOrigin: true,
+      },
+      "/library": {
+        target: "http://localhost:8000",
+        changeOrigin: true,
+      },
+      "/favorites": {
+        target: "http://localhost:8000",
+        changeOrigin: true,
+      },
+      "/playlists": {
+        target: "http://localhost:8000",
+        changeOrigin: true,
+      },
+      "/media": {
+        target: "http://localhost:8000",
+        changeOrigin: true,
+      },
+      "/coordinates": {
+        target: "http://localhost:8000",
+        changeOrigin: true,
+      },
+      "/health": {
+        target: "http://localhost:8000",
+        changeOrigin: true,
+      },
+    },
+  },
   build: {
     chunkSizeWarningLimit: 1500,
     rollupOptions: {

@@ -13,7 +13,11 @@ interface TrackItemProps {
   onRemove?: () => void;
 }
 
-const TrackItem: React.FC<TrackItemProps> = ({ track, onFindSimilar, onRemove }) => {
+const TrackItem: React.FC<TrackItemProps> = ({
+  track,
+  onFindSimilar,
+  onRemove,
+}) => {
   const { playTrack } = usePlayer();
   const [isPlayLoading, setIsPlayLoading] = useState(false);
 
@@ -31,7 +35,7 @@ const TrackItem: React.FC<TrackItemProps> = ({ track, onFindSimilar, onRemove })
   };
 
   return (
-    <div className="group flex items-center gap-2 md:gap-4 p-2 md:p-3 rounded-xl transition-all duration-300 bg-transparent border border-transparent hover:bg-accent hover:border-primary/20 hover:translate-x-1">
+    <div className="group flex items-center gap-2 md:gap-4 p-2 md:p-3 rounded-xl transition-all duration-300 bg-transparent border border-transparent hover:bg-primary/10 hover:border-primary/20 hover:translate-x-1">
       {/* Track Number - Hidden on mobile */}
       <div className="hidden md:block flex-shrink-0 w-8 text-center">
         {track.tracknumber ? (
@@ -65,7 +69,7 @@ const TrackItem: React.FC<TrackItemProps> = ({ track, onFindSimilar, onRemove })
           disabled={isPlayLoading}
           className={cn(
             "h-8 w-8 md:h-10 md:w-10 hover:scale-110 hover:bg-primary/10",
-            isPlayLoading && "opacity-30 cursor-wait"
+            isPlayLoading && "opacity-30 cursor-wait",
           )}
           title="Play track"
         >

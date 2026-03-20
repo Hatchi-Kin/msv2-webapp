@@ -19,10 +19,10 @@ const AuthPageLayout: React.FC<AuthPageLayoutProps> = ({
   footer,
 }) => {
   return (
-    <div className="min-h-screen flex items-center justify-center p-5 relative overflow-hidden bg-mocha-gradient">
+    <div className="min-h-screen flex items-center justify-center p-5 relative overflow-hidden mesh-gradient-bg">
       <FloatingMusicNotes />
 
-      <div className="relative z-10 backdrop-blur-lg rounded-3xl shadow-2xl px-5 py-6 md:p-12 animate-slideUp max-w-md w-full mx-5 bg-background">
+      <div className="relative z-10 rounded-3xl p-6 md:p-12 animate-slideUp max-w-md w-full mx-5 glass-panel">
         {/* Logo Section */}
         <div className="text-center mb-10">
           <div className="text-6xl mb-4 animate-pulse">🎵</div>

@@ -1,7 +1,8 @@
 import React, { useMemo, useRef, useEffect, useState } from "react";
 import * as THREE from "three";
 import type { VisualizationPoint } from "@/lib/api/visualization";
-import { POINT_SIZES, POINT_ALPHAS, POINT_COLORS } from "./constants";
+import { getThemeThreeColor } from "@/lib/theme-utils";
+import { POINT_SIZES, POINT_ALPHAS } from "./constants";
 
 interface PointsProps {
   points: VisualizationPoint[];
@@ -11,10 +12,6 @@ interface PointsProps {
   highlightedPointIds: Set<number> | null;
   vizType?: "default" | "umap" | "sphere";
 }
-
-// Pre-create color objects for performance
-const SELECTED_COLOR = new THREE.Color(POINT_COLORS.SELECTED);
-const HOVER_COLOR = new THREE.Color(POINT_COLORS.HOVER);
 
 // Create material once and reuse
 const createDotMaterial = () =>
@@ -42,17 +39,22 @@ const createDotMaterial = () =>
       vec2 coord = gl_PointCoord - vec2(0.5);
       float dist = length(coord);
       
+      // Hard circular edge
       if (dist > 0.5) discard;
       
+      // Slight dark ring on the very edge for anti-aliasing/crispness
       if (dist > 0.45) {
         gl_FragColor = vec4(0.0, 0.0, 0.0, vAlpha);
       } else {
-        gl_FragColor = vec4(vColor, vAlpha);
+        // Boost the vibrance of the color slightly so it doesn't look washed out (pastel)
+        vec3 vividColor = mix(vColor, max(vColor, vec3(0.5)), 0.3);
+        gl_FragColor = vec4(vividColor, vAlpha); // Use dynamic alpha for dimming!
       }
     }
   `,
     vertexColors: true,
     transparent: true,
+    blending: THREE.NormalBlending,
     depthWrite: true,
     depthTest: true,
   });
@@ -70,6 +72,16 @@ const Points: React.FC<PointsProps> = ({
 }) => {
   const meshRef = useRef<THREE.Points>(null);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+
+  // Theme-aware colors
+  const selectedColor = useMemo(
+    () => getThemeThreeColor("--text-primary", "#FFFFFF"),
+    [selectedPointId],
+  );
+  const hoverColor = useMemo(
+    () => getThemeThreeColor("--accent-cyan", "#22D3EE"),
+    [hoveredIndex],
+  );
 
   // Get point size multiplier based on viz type
   const pointSizeMultiplier = useMemo(() => {
@@ -129,16 +141,11 @@ const Points: React.FC<PointsProps> = ({
       if (isSelected) {
         sizeAttr.setX(i, POINT_SIZES.SELECTED * pointSizeMultiplier);
         alphaAttr.setX(i, POINT_ALPHAS.SELECTED);
-        colorAttr.setXYZ(
-          i,
-          SELECTED_COLOR.r,
-          SELECTED_COLOR.g,
-          SELECTED_COLOR.b
-        );
+        colorAttr.setXYZ(i, selectedColor.r, selectedColor.g, selectedColor.b);
       } else if (isHovered) {
         sizeAttr.setX(i, POINT_SIZES.HOVER * pointSizeMultiplier);
         alphaAttr.setX(i, POINT_ALPHAS.HOVER);
-        colorAttr.setXYZ(i, HOVER_COLOR.r, HOVER_COLOR.g, HOVER_COLOR.b);
+        colorAttr.setXYZ(i, hoverColor.r, hoverColor.g, hoverColor.b);
       } else {
         sizeAttr.setX(i, POINT_SIZES.BASE * pointSizeMultiplier);
         // Apply dimming if needed
@@ -147,7 +154,7 @@ const Points: React.FC<PointsProps> = ({
           i,
           originalColors[i3],
           originalColors[i3 + 1],
-          originalColors[i3 + 2]
+          originalColors[i3 + 2],
         );
       }
     }
@@ -170,7 +177,7 @@ const Points: React.FC<PointsProps> = ({
 
     if (e.intersections && e.intersections.length > 0) {
       const sortedIntersections = [...e.intersections].sort(
-        (a, b) => a.distance - b.distance
+        (a, b) => a.distance - b.distance,
       );
       closestIndex = sortedIntersections[0].index ?? null;
     }
@@ -194,7 +201,7 @@ const Points: React.FC<PointsProps> = ({
     if (e.intersections && e.intersections.length > 0) {
       // Sort by distance to camera (closest first)
       const sortedIntersections = [...e.intersections].sort(
-        (a, b) => a.distance - b.distance
+        (a, b) => a.distance - b.distance,
       );
       const closest = sortedIntersections[0];
 

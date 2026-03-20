@@ -3,11 +3,12 @@ name: Build and Push to Docker Hub
 on:
   push:
     branches: [ main ]
-
+  pull_request:
+    branches: [ main ]
   workflow_dispatch:
 
 env:
-  DOCKER_IMAGE: hatchikin/msv2-webapp
+  DOCKER_IMAGE: hatchikin/msv2-api
   REGISTRY: docker.io
 
 jobs:

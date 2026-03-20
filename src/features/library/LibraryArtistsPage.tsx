@@ -32,7 +32,7 @@ const LibraryArtistsPage: React.FC = () => {
 
   return (
     <div className="space-y-6 pt-6">
-      <LibraryHeader title="Your Music Library" subtitle="Browse by artist" />
+      <LibraryHeader title="EXPLORE LIBRARY" subtitle="Browse by artist" />
 
       <div className="glass-panel p-6 rounded-3xl min-h-[650px]">
         {loading && artists.length === 0 ? (

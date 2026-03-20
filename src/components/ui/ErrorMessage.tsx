@@ -7,9 +7,9 @@ interface ErrorMessageProps {
 
 const ErrorMessage: React.FC<ErrorMessageProps> = ({ title, message }) => {
   return (
-    <div className="flex flex-col items-center justify-center h-full bg-gradient-to-br from-[hsl(30,30%,82%)] to-[hsl(30,23%,70%)]">
-      <div className="p-8 rounded-2xl backdrop-blur-lg max-w-md text-center bg-background border border-border">
-        <p className="text-xl font-bold mb-4 text-primary">{title}</p>
+    <div className="flex flex-col items-center justify-center h-full p-6 glass-panel rounded-3xl border border-destructive/20 bg-destructive/5">
+      <div className="p-8 rounded-2xl max-w-md text-center bg-background/50 backdrop-blur-sm border border-border">
+        <p className="text-xl font-bold mb-4 text-destructive">{title}</p>
         <p className="text-sm text-foreground opacity-70">{message}</p>
       </div>
     </div>
