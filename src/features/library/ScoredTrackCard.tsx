@@ -1,6 +1,6 @@
 import React from "react";
 import type { ScoredTrack } from "@/types/api";
-import { Play, Sparkles, User } from "lucide-react";
+import { Play, Sparkles, User, Disc3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PlaylistDropdown } from "./PlaylistDropdown";
 import { FavoriteButton } from "./FavoriteButton";
@@ -42,10 +42,24 @@ const ScoredTrackCard: React.FC<ScoredTrackCardProps> = ({
       </div>
 
       {/* Album Art Placeholder - Compact */}
-      <div className="w-full aspect-[3/2] flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-muted to-muted-foreground">
-        <div className="text-3xl font-bold transition-transform duration-300 group-hover:scale-110 text-primary opacity-40">
-          🎵
-        </div>
+      <div className="w-full aspect-[3/2] flex items-center justify-center relative overflow-hidden bg-background border-b border-border">
+        {/* Galaxy radial background effect */}
+        <div
+          className="absolute inset-0 opacity-50 transition-opacity duration-300 group-hover:opacity-80"
+          style={{
+            background: `radial-gradient(circle at center, var(--viz-glow-1) 0%, var(--viz-glow-2) 40%, transparent 70%)`,
+          }}
+        />
+        {/* Twinkling star-like dots grid background */}
+        <div
+          className="absolute inset-0 opacity-20"
+          style={{
+            backgroundImage: `radial-gradient(var(--star-color) 1px, transparent 1px)`,
+            backgroundSize: "20px 20px",
+            backgroundPosition: "0 0, 10px 10px",
+          }}
+        />
+        <Disc3 className="w-12 h-12 relative z-10 transition-transform duration-700 group-hover:scale-110 group-hover:rotate-180 text-primary drop-shadow-[0_0_10px_rgba(34,211,238,0.8)] opacity-70" />
       </div>
 
       {/* Track Info */}

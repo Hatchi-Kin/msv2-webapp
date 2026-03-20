@@ -9,10 +9,13 @@ export const SIMILARITY_THRESHOLDS = {
 } as const;
 
 export const SIMILARITY_BADGE_COLORS = {
-  EXCELLENT: { bg: "#4ade80", text: "#064e3b" }, // Green
-  VERY_GOOD: { bg: "#22d3ee", text: "#164e63" }, // Cyan
-  GOOD: { bg: "#fbbf24", text: "#78350f" }, // Amber
-  DECENT: { bg: "#9ca3af", text: "#1f2937" }, // Gray
+  EXCELLENT: {
+    bg: "hsl(var(--success))",
+    text: "hsl(var(--primary-foreground))",
+  },
+  VERY_GOOD: { bg: "hsl(var(--info))", text: "hsl(var(--primary-foreground))" },
+  GOOD: { bg: "hsl(var(--warning))", text: "hsl(var(--primary-foreground))" },
+  DECENT: { bg: "hsl(var(--gray))", text: "hsl(var(--primary-foreground))" },
 } as const;
 
 /**

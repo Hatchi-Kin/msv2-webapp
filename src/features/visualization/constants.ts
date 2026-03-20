@@ -1,8 +1,8 @@
 // Visual styling constants for 3D point cloud
 export const POINT_SIZES = {
   BASE: 0.5,
-  HOVER: 0.75,
-  SELECTED: 0.8,
+  HOVER: 1.0,
+  SELECTED: 1.5,
 } as const;
 
 export const POINT_ALPHAS = {
@@ -12,8 +12,8 @@ export const POINT_ALPHAS = {
 } as const;
 
 export const POINT_COLORS = {
-  SELECTED: "#4a3728", // Mocha brown
-  HOVER: "#ffffff", // White
+  SELECTED: "#FFFFFF", // Bright White for selected
+  HOVER: "#22D3EE", // Neon Cyan for hover
 } as const;
 
 // Raycaster configuration

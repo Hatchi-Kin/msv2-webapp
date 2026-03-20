@@ -57,37 +57,48 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // Initialize audio element
+  // Queue state refs so the audio 'ended' listener can access latest without re-subscribing
+  const queueRef = useRef(queue);
+  const queueIndexRef = useRef(queueIndex);
+  const isRepeatRef = useRef(isRepeat);
+
+  useEffect(() => {
+    queueRef.current = queue;
+    queueIndexRef.current = queueIndex;
+    isRepeatRef.current = isRepeat;
+  }, [queue, queueIndex, isRepeat]);
+
+  // Global Audio Initialization
   useEffect(() => {
     const audio = new Audio();
     audioRef.current = audio;
 
-    // Set initial volume from state
-    const logarithmicVolume = volume * volume;
-    audio.volume = logarithmicVolume;
+    // Set initial volume
+    const savedVolume = localStorage.getItem("player-volume");
+    if (savedVolume) {
+      const v = parseFloat(savedVolume);
+      audio.volume = v * v;
+    }
 
-    // Event listeners
-    const handleTimeUpdate = () => {
-      setCurrentTime(audio.currentTime);
-    };
-
-    const handleDurationChange = () => {
-      setDuration(audio.duration);
-    };
+    const handleTimeUpdate = () => setCurrentTime(audio.currentTime);
+    const handleDurationChange = () => setDuration(audio.duration);
 
     const handleEnded = () => {
-      // If repeat is on, restart current track
-      if (isRepeat) {
+      if (isRepeatRef.current) {
         audio.currentTime = 0;
-        audio.play();
+        audio.play().catch((e) => console.error("Repeat play failed:", e));
         return;
       }
 
-      // Auto-play next track if in queue
-      if (queueIndex < queue.length - 1) {
-        const nextIndex = queueIndex + 1;
+      const q = queueRef.current;
+      const idx = queueIndexRef.current;
+
+      if (idx < q.length - 1) {
+        const nextIndex = idx + 1;
         setQueueIndex(nextIndex);
-        // Will trigger playback via separate effect
+        // Note: The playNext logic actually needs to call playTrack via a separate queue processor or effect in a real app,
+        // but since we rely on useEffect for queue watching, we will just trigger state.
+        // An anti-pattern was here before. Let's fix it by setting state and an effect will handle it.
       } else {
         setIsPlaying(false);
       }
@@ -109,20 +120,66 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({
       audio.removeEventListener("ended", handleEnded);
       audio.removeEventListener("error", handleError);
       audio.pause();
+      audio.src = "";
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [queueIndex, queue.length, isRepeat]); // Added isRepeat
+  }, []); // Run ONCE on mount
+
+  // Watch for queue index change after audio ended to trigger next song
+  useEffect(() => {
+    if (queue.length > 0 && queueIndex > 0 && queue[queueIndex]) {
+      // Did we auto-advance? Let's check if the audio is paused and we have a current track mismatch
+      if (
+        currentTrack?.id !== queue[queueIndex].id &&
+        !isPlaying &&
+        currentTime > 0
+      ) {
+        playTrack(queue[queueIndex]);
+      }
+    }
+  }, [queueIndex, queue, currentTrack, isPlaying, currentTime]);
+
+  const currentTrackRef = useRef(currentTrack);
+  useEffect(() => {
+    currentTrackRef.current = currentTrack;
+  }, [currentTrack]);
+
+  const togglePlayPause = useCallback(() => {
+    if (!audioRef.current || !currentTrackRef.current) return;
+    const audio = audioRef.current;
+    if (!audio.paused) {
+      audio.pause();
+      setIsPlaying(false);
+    } else {
+      audio.play().catch(console.error);
+      setIsPlaying(true);
+    }
+  }, []);
 
   const playTrack = useCallback(
     (track: MegasetTrack) => {
       if (!audioRef.current) return;
-
       const audio = audioRef.current;
 
       if (!accessToken) {
         console.error("No access token found - user not authenticated");
         return;
       }
+
+      // If playing the same track, just toggle it to prevent creating 2 streams
+      if (currentTrackRef.current?.id === track.id) {
+        if (audio.paused) {
+          audio.play().catch(console.error);
+          setIsPlaying(true);
+        } else {
+          audio.pause();
+          setIsPlaying(false);
+        }
+        return;
+      }
+
+      // Pause current stream before loading new one
+      audio.pause();
+      audio.removeAttribute("src"); // Clean completely
 
       // Set new track
       setCurrentTrack(track);
@@ -144,21 +201,8 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({
           setIsPlaying(false);
         });
     },
-    [accessToken]
+    [accessToken],
   );
-
-  const togglePlayPause = () => {
-    if (!audioRef.current || !currentTrack) return;
-
-    const audio = audioRef.current;
-    if (isPlaying) {
-      audio.pause();
-      setIsPlaying(false);
-    } else {
-      audio.play();
-      setIsPlaying(true);
-    }
-  };
 
   const seekTo = useCallback((time: number) => {
     if (!audioRef.current) return;

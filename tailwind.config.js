@@ -16,6 +16,7 @@ export default {
       fontFamily: {
         sans: ["Inter", "sans-serif"],
         heading: ["Outfit", "sans-serif"],
+        mono: ["JetBrains Mono", "monospace"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -54,12 +55,18 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // Centralized Design Tokens
+        "accent-cyan": "var(--accent-cyan)",
+        "accent-amber": "var(--accent-amber)",
+        "text-primary": "var(--text-primary)",
+        "text-muted": "var(--text-muted)",
+        success: "hsl(var(--success))",
+        warning: "hsl(var(--warning))",
+        info: "hsl(var(--info))",
+        gray: "hsl(var(--gray))",
       },
       backgroundImage: {
-        "mocha-gradient":
-          "linear-gradient(135deg, hsl(30, 30%, 82%) 0%, hsl(30, 23%, 70%) 100%)",
-        "mocha-primary":
-          "linear-gradient(135deg, hsl(25, 40%, 39%) 0%, hsl(30, 48%, 61%) 100%)",
+        "theme-gradient": "linear-gradient(135deg, var(--bg-color) 0%, var(--panel-bg) 100%)",
       },
       borderRadius: {
         lg: "var(--radius)",
