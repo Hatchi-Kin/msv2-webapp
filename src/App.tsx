@@ -42,6 +42,15 @@ const VisualizePage = lazy(() =>
   }))
 );
 
+// Apply saved theme immediately before first render (fixes login page not respecting theme)
+(function applyInitialTheme() {
+  const ALL_THEMES = ["dark", "light", "latte", "nord", "vaporwave", "obsidian"];
+  const saved = localStorage.getItem("theme") || "dark";
+  const root = document.documentElement;
+  ALL_THEMES.forEach((t) => root.classList.remove(t));
+  root.classList.add(saved);
+})();
+
 function App() {
   return (
     // Catch any errors and show a friendly error page

@@ -1,181 +1,189 @@
-# MSV2 Music Library WebApp
+# 🎵 MSV2 Music Library
 
-A beautiful, modern music library web application with a coffee-inspired "Mocha Beats" theme. Built with React, TypeScript, and Tailwind CSS.
+<div align="center">
 
-## 🎵 Features
+![MSV2 Logo](https://img.shields.io/badge/MSV2-Music%20Library-blue)
+![React](https://img.shields.io/badge/React-19.2.1-61DAFB?logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-blue)
+![Vite](https://img.shields.io/badge/Vite-7.2.2-646CFF)
+![License](https://img.shields.io/badge/License-MIT-green)
 
-- **User Authentication** - Secure JWT-based login/register with refresh tokens
-- **Music Library Browser** - Browse artists, albums, and tracks with intuitive navigation
-- **Smart Recommendations** - Find similar tracks based on audio features
-- **Personal Library** - Save favorite tracks and create custom playlists (max 20 tracks each)
-- **Music Player** - Built-in audio player with playback controls
-- **Deep Linking** - Share links to specific albums or artists
-- **Responsive Pagination** - 25 items on desktop, 15 on mobile
-- **Interactive UI** - Floating music notes with hover effects
-- **Modern Design** - Glassmorphism effects with warm coffee-themed colors
+A modern, full-featured music library application with 3D visualization, AI-powered recommendations, and an intuitive interface.
+
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Online-brightgreen)](https://msv2-music.vercel.app)
+[![Documentation](https://img.shields.io/badge/Docs-API_Reference-blue)](https://docs.msv2-music.com)
+
+</div>
+
+## ✨ Features
+
+### 🎵 **Music Library Management**
+
+- **Browse & Discover**: Intuitive navigation through artists, albums, and tracks
+- **Natural Language Queries**: Browse library with prompts !
+- **Personal Library**: Save favorites, create playlists, build collections
+- **3D Visualization**: Explore your music in interactive 3D space
+- **AI Recommendations**: Personalized track suggestions
+
+### 🎨 **Modern UI/UX**
+
+- **Responsive Design**: Beautiful interface across all devices
+- **Multiple Themes**: Dark, Light, Nord, Obsidian, and Vaporwave themes
+- **Real-time Updates**: Live updates for playlists and favorites
+
+### 🚀 **Key Features**
+
+- **JWT Authentication**: Secure login with refresh tokens
+- **Built-in Audio Player**: Full-featured music player with playlist support
+- **Smart Recommendations**: AI-powered track suggestions
+- **3D Music Explorer**: Visualize your library in 3D space
+- **Playlist Management**: Create, edit, and share playlists
+- **Favorites System**: Save and organize favorite tracks
 
 ## 🏗️ Architecture
 
 ### Tech Stack
 
-- **Frontend**: React 19 + TypeScript
-- **Styling**: Tailwind CSS v3 + shadcn/ui components
+- **Frontend**: React 19 + TypeScript + Vite
+- **Styling**: Tailwind CSS + shadcn/ui components
+- **3D Visualization**: Three.js + React Three Fiber
+- **State Management**: React Context + Custom Hooks
 - **Routing**: React Router v7
 - **Build Tool**: Vite
-- **Backend**: FastAPI (Python) with PostgreSQL
 
-### Project Structure
+### Backend Stack
 
-```
-src/
-├── components/          # Reusable UI components
-│   ├── ui/             # shadcn/ui base components (Button, Input, Card)
-│   ├── player/         # Music player components
-│   ├── library/        # Library-specific components
-│   │   ├── views/      # Sub-views (Artists, Albums, Tracks)
-│   │   ├── LibraryHeader.tsx # Standard header for library pages
-│   │   └── LibraryLayout.tsx # Layout wrapper for library pages
-│   ├── ...             # Other shared components
-│   └── Layout.tsx      # Main app layout with header
-│
-├── pages/              # Page components
-│   ├── library/        # Library pages
-│   │   ├── LibraryArtistsPage.tsx
-│   │   ├── LibraryAlbumsPage.tsx
-│   │   ├── LibraryTracksPage.tsx
-│   │   └── LibrarySimilarPage.tsx
-│   ├── LandingPage.tsx
-│   ├── RegisterPage.tsx
-│   └── UserLibraryPage.tsx
-│
-├── context/            # React Context providers
-│   ├── AuthContext.tsx       # Authentication state management
-│   ├── LibraryContext.tsx    # Favorites & playlists state
-│   └── PlayerContext.tsx     # Music player state
-│
-├── hooks/              # Custom React hooks
-│   ├── useArtists.ts         # Fetch artist list
-│   ├── useAlbums.ts          # Fetch albums
-│   ├── useTracks.ts          # Fetch tracks
-│   ├── useSimilarTracks.ts   # Fetch recommendations
-│   ├── usePagination.ts      # Client-side pagination logic
-│   └── ...                   # Other utility hooks
-│
-├── lib/                # Utilities and API client
-│   ├── api/                  # API client modules
-│   └── config.ts             # App configuration
-│
-├── types/              # TypeScript type definitions
-├── App.tsx             # Root component with routing
-└── main.tsx            # App entry point
-```
+- **API**: FastAPI (Python) with async PostgreSQL
+- **Database**: PostgreSQL with pgvector for embeddings
+- **Storage**: MinIO for audio file storage
+- **Authentication**: JWT with refresh tokens
+- **Deployment**: Docker + Kubernetes ready
 
-## 🚀 Getting Started
+## 🚀 Quick Start
 
 ### Prerequisites
 
 - Node.js 18+
-- npm or yarn
-- Backend API running (see backend README)
+- Python 3.11+ (for backend)
+- PostgreSQL 14+
+- Docker (optional)
 
 ### Installation
 
+1. **Clone and install:**
+
 ```bash
-# Install dependencies
+git clone https://github.com/yourusername/msv2-music.git
+cd msv2-music
 npm install
-
-# Set up environment variables
-cp .env.example .env
-# Edit .env with your API URL
-
-# Start development server
-npm run dev
 ```
 
-### Environment Variables
-For nip io
-```env
-VITE_API_BASE_URL=http://localhost:8000
 ```
-There is also a domain name
+http://localhost:5173
+```
 
-## 📝 Code Quality & Philosophy
+## 📁 Project Structure
 
-This project follows a **"Simplicity > All"** philosophy. We prioritize clear, readable code over complex abstractions.
+```
+msv2-music/
+├── frontend/                 # React frontend
+│   ├── src/
+│   │   ├── components/     # Reusable UI components
+│   │   ├── features/       # Feature-based components
+│   │   ├── hooks/         # Custom React hooks
+│   │   ├── lib/           # API clients & utilities
+│   │   ├── pages/         # Page components
+│   │   └── types/         # TypeScript definitions
+│   └── public/            # Static assets
+├── backend/                # FastAPI backend
+│   ├── api/               # API endpoints
+│   ├── core/              # Core functionality
+│   ├── models/            # Database models
+│   └── services/          # Business logic
+└── docker/                # Docker configuration
+```
 
-### Key Principles
+## 🚀 Deployment
 
-1.  **Small, Focused Components**: We avoid "God Components". For example, the music library is split into:
-    -   `LibraryArtistsPage`
-    -   `LibraryAlbumsPage`
-    -   `LibraryTracksPage`
-    -   `LibrarySimilarPage`
+### Docker Deployment
 
-2.  **Custom Hooks for Data**: We don't fetch data inside UI components. We use custom hooks:
-    -   ❌ `useEffect(() => { fetch('/api/artists')... })` inside a component.
-    -   ✅ `const { artists, loading } = useArtists();`
+```bash
+# Build and run with Docker Compose
+docker-compose up -d
+```
 
-3.  **Routing over State**: We use URLs to drive navigation, not internal state.
-    -   ❌ `setState('albums')` to show albums.
-    -   ✅ `navigate('/library/artists/Adele')` to show albums.
-    -   **Benefit**: Users can bookmark and share links!
+### Kubernetes Deployment
 
-### For New Developers
+```yaml
+# k8s/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: msv2-frontend
+spec:
+  replicas: 3
+  template:
+    spec:
+      containers:
+        - name: msv2-frontend
+          image: msv2-frontend:latest
+          ports:
+            - containerPort: 3000
+```
 
-If you want to add a new feature:
+## 📚 API Documentation
 
-1.  **Add the API call** in `src/lib/api/`.
-2.  **Create a Custom Hook** in `src/hooks/` to handle the data fetching and loading state.
-3.  **Create a Page Component** in `src/pages/` that uses the hook.
-4.  **Add the Route** in `src/App.tsx`.
+### Authentication
 
-## 🎨 Theme System
+```http
+POST /api/auth/login
+Content-Type: application/json
 
-The app uses a centralized theme system defined in `src/index.css` using CSS variables and Tailwind configuration.
-
-### Mocha Beats Color Palette
-
-The theme uses HSL values to allow for easy opacity manipulation.
-
-```css
-:root {
-  /* Mocha Theme Colors */
-  --primary: 25 40% 39%;              /* #8B5E3C - Dark roast coffee */
-  --secondary: 30 48% 61%;            /* #CE9A6A - Caramel latte */
-  --background: 30 43% 95%;           /* #F6F2EE - Cream */
-  --foreground: 20 24% 20%;           /* #3B2F28 - Espresso dark */
-  --muted: 30 33% 90%;                /* #EDE5DF - Soft cream */
+{
+  "email": "user@example.com",
+  "password": "password123"
 }
 ```
 
-To use these colors in Tailwind:
-- `bg-primary`
-- `text-secondary`
-- `border-muted`
+### Library Endpoints
 
-
-
-
-# For local development
-## you might port-forward the k3s postgres services:
-```sh
-kubectl port-forward service/postgres-service 5432:5432 -n glasgow-prod
-```
-and
-```sh
-kubectl port-forward -n glasgow-prod svc/minio-service 9000:9000
+```http
+GET    /api/library/artists
+GET    /api/library/artists/{id}/albums
+GET    /api/library/search?q=query
+POST   /api/favorites
+GET    /api/playlists
 ```
 
-# or maybe just port forward the prod api directly
-```sh
-kubectl port-forward -n glasgow-prod svc/fastapi-msv2-api-service 8000:8010
+### 3D Visualization
+
+```http
+GET    /api/visualization/points
+GET    /api/visualization/clusters
+POST   /api/visualization/search
 ```
 
+## 🧪 Development
 
-# Then start the app
-```sh
-uvicorn api.main:app --reload --host 0.0.0.0 --port 8000
+### Code Quality
+
+```bash
+# Linting
+npm run lint
+
+# Type checking
+npm run type-check
+
+# Build for production
+npm run build
 ```
 
+## 🎨 Theming System
 
+The app supports multiple themes:
 
+- **Dark/Light Mode**: Automatic system detection
+- **Nord Theme**: Cool blue theme
+- **Obsidian**: Dark theme with purple accents
+- **Vaporwave**: Retro 80s aesthetic
+- **Custom Themes**: Create your own!
