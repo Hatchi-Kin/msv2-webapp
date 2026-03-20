@@ -4,35 +4,24 @@
 
 @layer base {
   :root {
-    /* Comfort Mode (Light/Base) - Swappable using .immersive class for dark void */
-    --background: 210 40% 98%; /* Light mode background */
+    --background: 210 40% 98%;
     --foreground: 0 0% 2%;
-
-    --primary: 188 86% 53%; /* #22D3EE Cyan */
+    --primary: 188 86% 53%;
     --primary-foreground: 0 0% 2%;
-
-    --secondary: 43 96% 56%; /* #FBBF24 Amber */
+    --secondary: 43 96% 56%;
     --secondary-foreground: 0 0% 2%;
-
     --muted: 215 16% 90%;
     --muted-foreground: 215 16% 40%;
-
     --accent: 188 86% 53%;
     --accent-foreground: 0 0% 2%;
-
     --border: 215 16% 85%;
     --input: 215 16% 90%;
     --ring: 188 86% 53%;
-
     --card: 0 0% 100%;
     --card-foreground: 0 0% 2%;
-
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 2%;
-
     --radius: 12px;
-
-    /* Custom Design Variables */
     --bg-color: #f8fafc;
     --panel-bg: rgba(255, 255, 255, 0.95);
     --accent-cyan: #22d3ee;
@@ -42,277 +31,220 @@
     --border-glow: 1px solid rgba(34, 211, 238, 0.3);
   }
 
-  /* === DARK (Neon/Sci-Fi) THEME - DEFAULT === */
+  /* ── DARK (Neon / Sci-Fi) ─────────────────────────────── */
   .dark {
-    /* Immersive Mode (Dark/High Contrast 3D) */
-    --background: 0 0% 2%; /* #050505 */
-    --foreground: 210 40% 98%; /* #F8FAFC */
-
-    --primary: 188 86% 53%; /* #22D3EE Cyan */
+    --background: 0 0% 2%;
+    --foreground: 210 40% 98%;
+    --primary: 188 86% 53%;
     --primary-foreground: 0 0% 2%;
-
-    --secondary: 43 96% 56%; /* #FBBF24 Amber */
+    --secondary: 43 96% 56%;
     --secondary-foreground: 0 0% 2%;
-
     --muted: 223 48% 12%;
-    --muted-foreground: 215 16% 65%; /* #94A3B8 */
-
+    --muted-foreground: 215 16% 65%;
     --accent: 188 86% 53%;
     --accent-foreground: 0 0% 2%;
-
-    --border: 188 86% 53%; /* For the border glow */
+    --border: 188 86% 53%;
     --input: 223 48% 12%;
     --ring: 188 86% 53%;
-
-    --card: 223 48% 6%; /* #0b1120 */
+    --card: 223 48% 6%;
     --card-foreground: 210 40% 98%;
-
     --popover: 223 48% 6%;
     --popover-foreground: 210 40% 98%;
-
-    /* Custom Design Variables */
     --bg-color: #050505;
     --panel-bg: rgba(11, 17, 32, 0.92);
+    --card-bg: rgba(20, 30, 55, 0.88);
     --accent-cyan: #22d3ee;
     --accent-amber: #fbbf24;
     --text-primary: #f8fafc;
     --text-muted: #94a3b8;
     --border-glow: 1px solid rgba(34, 211, 238, 0.3);
-
-    --success: 142 70% 55%; /* Green */
-    --warning: 43 96% 56%; /* Amber */
-    --info: 188 86% 53%; /* Cyan */
+    --success: 142 70% 55%;
+    --warning: 43 96% 56%;
+    --info: 188 86% 53%;
     --gray: 215 16% 45%;
-
     --viz-glow-1: rgba(34, 211, 238, 0.4);
     --viz-glow-2: rgba(251, 191, 36, 0.1);
     --star-color: rgba(255, 255, 255, 0.5);
   }
 
-  /* === LIGHT (Clean/Minimalist) THEME === */
+  /* ── LIGHT (Clean / Minimalist) ──────────────────────── */
   .light {
     --background: 210 40% 98%;
     --foreground: 0 0% 10%;
-
-    --primary: 220 90% 50%; /* Royal Blue */
+    --primary: 220 90% 50%;
     --primary-foreground: 0 0% 100%;
-
-    --secondary: 25 90% 50%; /* Orange */
+    --secondary: 25 90% 50%;
     --secondary-foreground: 0 0% 100%;
-
     --muted: 0 0% 90%;
     --muted-foreground: 0 0% 40%;
-
     --accent: 220 90% 50%;
     --accent-foreground: 0 0% 100%;
-
     --border: 0 0% 80%;
     --input: 0 0% 95%;
     --ring: 220 90% 50%;
-
     --card: 0 0% 100%;
     --card-foreground: 0 0% 10%;
-
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 10%;
-
-    /* Custom Design Variables */
     --bg-color: #f8fafc;
     --panel-bg: rgba(255, 255, 255, 0.96);
+    --card-bg: rgba(241, 245, 249, 0.98);
     --accent-cyan: #2563eb;
     --accent-amber: #ea580c;
     --text-primary: #0f172a;
     --text-muted: #64748b;
     --border-glow: 1px solid rgba(37, 99, 235, 0.2);
-
     --success: 142 70% 45%;
     --warning: 25 90% 50%;
     --info: 220 90% 50%;
     --gray: 215 16% 65%;
-
     --viz-glow-1: rgba(37, 99, 235, 0.2);
     --viz-glow-2: rgba(234, 88, 12, 0.05);
     --star-color: rgba(0, 0, 0, 0.2);
   }
 
-  /* === MIDNIGHT (Deep Indigo) === */
-  .midnight {
-    --background: 230 50% 10%;
-    --foreground: 220 20% 90%;
-
-    --primary: 250 80% 65%; /* Soft purple */
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 190 80% 60%; /* Cyan accent */
-    --secondary-foreground: 0 0% 0%;
-
-    --muted: 230 40% 20%;
-    --muted-foreground: 230 20% 65%;
-
-    --accent: 250 80% 65%;
-    --accent-foreground: 0 0% 100%;
-
-    --border: 250 80% 65%;
-    --input: 230 40% 15%;
-    --ring: 250 80% 65%;
-
-    --card: 230 50% 15%;
-    --card-foreground: 220 20% 90%;
-
-    --popover: 230 50% 15%;
-    --popover-foreground: 220 20% 90%;
-
-    --bg-color: #0b0f19;
-    --panel-bg: rgba(15, 23, 42, 0.94);
-    --accent-cyan: #22d3ee;
-    --accent-amber: #c084fc; /* Actually purple here */
-    --text-primary: #f1f5f9;
-    --text-muted: #94a3b8;
-    --border-glow: 1px solid rgba(168, 85, 247, 0.4);
-
-    --success: 160 80% 60%;
-    --warning: 280 80% 70%;
-    --info: 190 80% 60%;
-    --gray: 230 20% 45%;
-
-    --viz-glow-1: rgba(168, 85, 247, 0.3);
-    --viz-glow-2: rgba(34, 211, 238, 0.1);
-    --star-color: rgba(255, 255, 255, 0.4);
-  }
-
-  /* === MOCHA (Warm Earth Original) === */
-  .mocha {
-    --background: 30 20% 12%;
-    --foreground: 30 20% 90%;
-
-    --primary: 25 60% 50%; /* Warm Orange/Brown */
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 40 50% 60%; /* Gold */
-    --secondary-foreground: 0 0% 0%;
-
-    --muted: 30 20% 20%;
-    --muted-foreground: 30 20% 65%;
-
-    --accent: 25 60% 50%;
-    --accent-foreground: 0 0% 100%;
-
-    --border: 25 60% 50%;
-    --input: 30 20% 18%;
-    --ring: 25 60% 50%;
-
-    --card: 30 20% 16%;
-    --card-foreground: 30 20% 90%;
-
-    --popover: 30 20% 16%;
-    --popover-foreground: 30 20% 90%;
-
-    --bg-color: #2b2521;
-    --panel-bg: rgba(56, 48, 43, 0.96);
-    --accent-cyan: #d97706; /* amber */
-    --accent-amber: #fcd34d; /* yellow-gold */
-    --text-primary: #fffbeb;
-    --text-muted: #a8a29e;
-    --border-glow: 1px solid rgba(217, 119, 6, 0.3);
-
-    --success: 142 50% 45%;
-    --warning: 40 50% 60%;
-    --info: 25 60% 50%;
-    --gray: 30 15% 45%;
-
-    --viz-glow-1: rgba(217, 119, 6, 0.3);
-    --viz-glow-2: rgba(252, 211, 77, 0.1);
-    --star-color: rgba(255, 255, 255, 0.5);
-  }
-
-  /* === LATTE (Light Mocha Original) === */
+  /* ── LATTE (Light Mocha) ─────────────────────────────── */
   .latte {
-    --background: 30 30% 95%; /* Cream / Off-white */
-    --foreground: 30 30% 15%; /* Deep Espresso Brown */
-
-    --primary: 25 60% 45%; /* Warm Orange/Brown */
+    --background: 30 30% 92%;
+    --foreground: 30 30% 15%;
+    --primary: 25 60% 45%;
     --primary-foreground: 0 0% 100%;
-
-    --secondary: 40 60% 50%; /* Amber/Gold */
+    --secondary: 40 60% 50%;
     --secondary-foreground: 0 0% 100%;
-
-    --muted: 30 20% 88%; /* Light Tan */
-    --muted-foreground: 30 20% 45%; /* Medium Brown */
-
+    --muted: 30 20% 88%;
+    --muted-foreground: 30 20% 45%;
     --accent: 25 60% 45%;
     --accent-foreground: 0 0% 100%;
-
     --border: 30 20% 85%;
     --input: 30 30% 92%;
     --ring: 25 60% 45%;
-
-    --card: 30 40% 98%;
+    --card: 30 35% 95%;
     --card-foreground: 30 30% 15%;
-
-    --popover: 30 40% 98%;
+    --popover: 30 35% 95%;
     --popover-foreground: 30 30% 15%;
-
-    --bg-color: #f9f5f0;
-    --panel-bg: rgba(245, 238, 230, 0.96);
-    --accent-cyan: #d97706; /* amber */
-    --accent-amber: #b45309; /* dark amber */
-    --text-primary: #431407; /* Dark reddish brown text */
-    --text-muted: #78350f; /* Lighter brown text */
+    --bg-color: #f0e9de;
+    --panel-bg: rgba(238, 228, 214, 0.97);
+    --card-bg: rgba(225, 213, 196, 0.99);
+    --accent-cyan: #d97706;
+    --accent-amber: #b45309;
+    --text-primary: #431407;
+    --text-muted: #78350f;
     --border-glow: 1px solid rgba(217, 119, 6, 0.2);
-
     --success: 142 50% 40%;
     --warning: 35 60% 50%;
     --info: 25 60% 45%;
     --gray: 30 15% 65%;
-
     --viz-glow-1: rgba(217, 119, 6, 0.15);
     --viz-glow-2: rgba(252, 211, 77, 0.05);
     --star-color: rgba(0, 0, 0, 0.15);
   }
 
-  /* === CYBERPUNK (High Contrast Yellow/Black) === */
-  .cyberpunk {
-    --background: 60 10% 5%;
-    --foreground: 50 100% 90%;
+  /* ── NORD (Arctic / Cool Blue) ───────────────────────── */
+  .nord {
+    --background: 220 17% 16%;
+    --foreground: 219 28% 88%;
+    --primary: 193 43% 67%;
+    --primary-foreground: 220 17% 10%;
+    --secondary: 40 71% 73%;
+    --secondary-foreground: 220 17% 10%;
+    --muted: 220 17% 22%;
+    --muted-foreground: 220 17% 60%;
+    --accent: 193 43% 67%;
+    --accent-foreground: 220 17% 10%;
+    --border: 193 43% 67%;
+    --input: 220 17% 20%;
+    --ring: 193 43% 67%;
+    --card: 220 17% 20%;
+    --card-foreground: 219 28% 88%;
+    --popover: 220 17% 20%;
+    --popover-foreground: 219 28% 88%;
+    --bg-color: #2e3440;
+    --panel-bg: rgba(46, 52, 64, 0.96);
+    --card-bg: rgba(59, 66, 82, 0.95);
+    --accent-cyan: #88c0d0;
+    --accent-amber: #ebcb8b;
+    --text-primary: #eceff4;
+    --text-muted: #9aa2b4;
+    --border-glow: 1px solid rgba(136, 192, 208, 0.3);
+    --success: 92 28% 65%;
+    --warning: 40 71% 73%;
+    --info: 193 43% 67%;
+    --gray: 220 17% 50%;
+    --viz-glow-1: rgba(136, 192, 208, 0.3);
+    --viz-glow-2: rgba(235, 203, 139, 0.1);
+    --star-color: rgba(255, 255, 255, 0.3);
+  }
 
-    --primary: 50 100% 50%; /* Electric Yellow */
+  /* ── VAPORWAVE (Retro Pink / Cyan) ───────────────────── */
+  .vaporwave {
+    --background: 270 60% 7%;
+    --foreground: 300 60% 94%;
+    --primary: 316 80% 65%;
     --primary-foreground: 0 0% 0%;
-
-    --secondary: 190 100% 50%; /* Cyan */
+    --secondary: 195 100% 55%;
     --secondary-foreground: 0 0% 0%;
-
-    --muted: 60 10% 15%;
-    --muted-foreground: 60 10% 65%;
-
-    --accent: 50 100% 50%;
+    --muted: 270 40% 16%;
+    --muted-foreground: 270 20% 65%;
+    --accent: 316 80% 65%;
     --accent-foreground: 0 0% 0%;
+    --border: 316 80% 65%;
+    --input: 270 40% 11%;
+    --ring: 316 80% 65%;
+    --card: 270 60% 10%;
+    --card-foreground: 300 60% 94%;
+    --popover: 270 60% 10%;
+    --popover-foreground: 300 60% 94%;
+    --bg-color: #0f0524;
+    --panel-bg: rgba(20, 6, 42, 0.94);
+    --card-bg: rgba(35, 12, 65, 0.95);
+    --accent-cyan: #ff71ce;
+    --accent-amber: #01cdfe;
+    --text-primary: #f5d0fe;
+    --text-muted: #c084fc;
+    --border-glow: 1px solid rgba(255, 113, 206, 0.4);
+    --success: 142 60% 55%;
+    --warning: 316 80% 65%;
+    --info: 195 100% 55%;
+    --gray: 270 15% 45%;
+    --viz-glow-1: rgba(255, 113, 206, 0.4);
+    --viz-glow-2: rgba(1, 205, 254, 0.15);
+    --star-color: rgba(255, 113, 206, 0.5);
+  }
 
-    --border: 50 100% 50%;
-    --input: 60 10% 10%;
-    --ring: 50 100% 50%;
-
-    --card: 60 10% 8%;
-    --card-foreground: 50 100% 90%;
-
-    --popover: 60 10% 8%;
-    --popover-foreground: 50 100% 90%;
-
-    --bg-color: #0d0d0c;
-    --panel-bg: rgba(20, 20, 18, 0.98);
-    --accent-cyan: #0ff;
-    --accent-amber: #ff0;
-    --text-primary: #ffffaa;
-    --text-muted: #888877;
-    --border-glow: 1px solid rgba(255, 255, 0, 0.6);
-
-    --success: 142 100% 50%;
-    --warning: 50 100% 50%;
-    --info: 190 100% 50%;
-    --gray: 60 10% 45%;
-
-    --viz-glow-1: rgba(255, 255, 0, 0.4);
-    --viz-glow-2: rgba(0, 255, 255, 0.1);
-    --star-color: rgba(255, 255, 0, 0.5);
+  /* ── OBSIDIAN (Near-Black / Silver) ──────────────────── */
+  .obsidian {
+    --background: 240 10% 5%;
+    --foreground: 240 10% 90%;
+    --primary: 0 0% 85%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 240 10% 40%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 240 10% 12%;
+    --muted-foreground: 240 10% 55%;
+    --accent: 0 0% 85%;
+    --accent-foreground: 0 0% 0%;
+    --border: 0 0% 70%;
+    --input: 240 10% 10%;
+    --ring: 0 0% 85%;
+    --card: 240 10% 8%;
+    --card-foreground: 240 10% 90%;
+    --popover: 240 10% 8%;
+    --popover-foreground: 240 10% 90%;
+    --bg-color: #0a0a0c;
+    --panel-bg: rgba(14, 14, 18, 0.97);
+    --card-bg: rgba(26, 26, 30, 0.99);
+    --accent-cyan: #d1d5db;
+    --accent-amber: #6b7280;
+    --text-primary: #f9fafb;
+    --text-muted: #6b7280;
+    --border-glow: 1px solid rgba(209, 213, 219, 0.2);
+    --success: 142 60% 55%;
+    --warning: 43 90% 60%;
+    --info: 0 0% 85%;
+    --gray: 240 10% 45%;
+    --viz-glow-1: rgba(209, 213, 219, 0.25);
+    --viz-glow-2: rgba(107, 114, 128, 0.1);
+    --star-color: rgba(255, 255, 255, 0.3);
   }
 }
 
@@ -327,7 +259,7 @@
   }
 }
 
-/* Glass Effect specified in Design */
+/* Glass Effect */
 .glass-panel {
   background: var(--panel-bg) !important;
   backdrop-filter: blur(12px) !important;
@@ -342,28 +274,29 @@
 }
 
 .glass-card {
-  background: var(--panel-bg) !important;
+  background: var(--card-bg, var(--panel-bg)) !important;
   backdrop-filter: blur(12px) !important;
   -webkit-backdrop-filter: blur(12px) !important;
   border-radius: var(--radius) !important;
   border: var(--border-glow) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15) !important;
   transition: all 0.3s ease !important;
 }
 
-.dark .glass-card {
-  background: var(--panel-bg) !important;
-  border: var(--border-glow) !important;
-}
-
 .glass-card:hover {
-  background: rgba(34, 211, 238, 0.1) !important;
-  box-shadow: 0 8px 20px rgba(34, 211, 238, 0.2) !important;
+  background: color-mix(
+    in srgb,
+    var(--card-bg, var(--panel-bg)) 70%,
+    var(--accent-cyan) 30%
+  ) !important;
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.25),
+    0 0 12px color-mix(in srgb, var(--accent-cyan) 40%, transparent) !important;
   transform: scale(1.02) !important;
-  border: 1px solid rgba(34, 211, 238, 0.6) !important;
+  border: 1px solid color-mix(in srgb, var(--accent-cyan) 60%, transparent) !important;
 }
 
 @layer components {
-  /* Using immersive void background style */
   .mesh-gradient-bg {
     background-color: var(--bg-color);
   }
@@ -397,7 +330,6 @@
 .animate-float {
   animation: float 6s ease-in-out infinite;
 }
-
 .animate-slideUp {
   animation: slideUp 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
