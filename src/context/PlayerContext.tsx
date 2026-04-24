@@ -96,9 +96,7 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({
       if (idx < q.length - 1) {
         const nextIndex = idx + 1;
         setQueueIndex(nextIndex);
-        // Note: The playNext logic actually needs to call playTrack via a separate queue processor or effect in a real app,
-        // but since we rely on useEffect for queue watching, we will just trigger state.
-        // An anti-pattern was here before. Let's fix it by setting state and an effect will handle it.
+        // The useEffect watching queueIndex will handle playing the next track
       } else {
         setIsPlaying(false);
       }
@@ -123,20 +121,6 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({
       audio.src = "";
     };
   }, []); // Run ONCE on mount
-
-  // Watch for queue index change after audio ended to trigger next song
-  useEffect(() => {
-    if (queue.length > 0 && queueIndex > 0 && queue[queueIndex]) {
-      // Did we auto-advance? Let's check if the audio is paused and we have a current track mismatch
-      if (
-        currentTrack?.id !== queue[queueIndex].id &&
-        !isPlaying &&
-        currentTime > 0
-      ) {
-        playTrack(queue[queueIndex]);
-      }
-    }
-  }, [queueIndex, queue, currentTrack, isPlaying, currentTime]);
 
   const currentTrackRef = useRef(currentTrack);
   useEffect(() => {
@@ -204,6 +188,16 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({
     [accessToken],
   );
 
+  // Watch for queue index change after audio ended to trigger next song
+  useEffect(() => {
+    if (queue.length > 0 && queue[queueIndex]) {
+      // If the current track doesn't match the queue track at this index, play it
+      if (currentTrack?.id !== queue[queueIndex].id) {
+        playTrack(queue[queueIndex]);
+      }
+    }
+  }, [queueIndex, queue, currentTrack?.id, playTrack]);
+
   const seekTo = useCallback((time: number) => {
     if (!audioRef.current) return;
     audioRef.current.currentTime = time;
@@ -254,8 +248,10 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({
   const playQueue = (tracks: MegasetTrack[], startIndex: number = 0) => {
     if (tracks.length === 0) return;
 
+    // Set queue and index first, then play the track
     setQueue(tracks);
     setQueueIndex(startIndex);
+    // Directly play the track instead of relying on useEffect
     playTrack(tracks[startIndex]);
   };
 
